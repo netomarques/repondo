@@ -1,0 +1,2 @@
+D:/Repondo/repondo/android/app/.cxx/RelWithDebInfo/5j265e3l/x86_64/CMakeFiles/edit_cache.dir
+D:/Repondo/repondo/android/app/.cxx/RelWithDebInfo/5j265e3l/x86_64/CMakeFiles/rebuild_cache.dir

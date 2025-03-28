@@ -1,0 +1,43 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "repondo-22eca",
+          "appId": "1:355943040604:android:f37226eaf6b7e536c74899",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "repondo-22eca",
+          "configurations": {
+            "android": "1:355943040604:android:f37226eaf6b7e536c74899"
+          }
+        }
+      }
+    }
+  },
+  "emulators": {
+    "auth": {
+      "port": 8080
+    },
+    "firestore": {
+      "port": 8082
+    },
+    "storage": {
+      "port": 8083
+    },
+    "ui": {
+      "enabled": true,
+      "port": 8084
+    },
+    "singleProjectMode": true
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  }
+}

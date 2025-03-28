@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "355943040604",
+    "project_id": "repondo-22eca",
+    "storage_bucket": "repondo-22eca.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:355943040604:android:f37226eaf6b7e536c74899",
+        "android_client_info": {
+          "package_name": "com.example.repondo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcQoJhoYNz4u71d-K4w20ufixEYO654Vc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
