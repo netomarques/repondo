@@ -6,52 +6,260 @@ import 'package:repondo/core/firestore_service.dart';
 
 import 'firestore_service_test.mocks.dart';
 
-// Gerar os mocks antes de rodar os testes: flutter pub run build_runner build
 @GenerateMocks([
   FirebaseFirestore,
+  Transaction,
   CollectionReference<Map<String, dynamic>>,
-  DocumentReference<Map<String, dynamic>>
+  DocumentReference<Map<String, dynamic>>,
 ])
 void main() {
   group('FirestoreService', () {
     late FirestoreService firestoreService;
     late MockFirebaseFirestore mockFirestore;
-    late MockCollectionReference<Map<String, dynamic>> mockCollection;
-    late MockDocumentReference<Map<String, dynamic>> mockDocument;
+    late MockTransaction mockTransaction;
+    late MockCollectionReference<Map<String, dynamic>> mockDespensasCollection;
+    late MockCollectionReference<Map<String, dynamic>> mockUsersCollection;
+    late MockCollectionReference<Map<String, dynamic>> mockUsuariosCollection;
+    late MockCollectionReference<Map<String, dynamic>>
+        mockUserDespensasCollection;
+    late MockDocumentReference<Map<String, dynamic>> mockDespensaDoc;
+    late MockDocumentReference<Map<String, dynamic>> mockUserDoc;
+    late MockDocumentReference<Map<String, dynamic>> mockUsuarioDoc;
+    late MockDocumentReference<Map<String, dynamic>> mockUserDespensaDoc;
+
+    const testUserId = 'testUserId';
+    const testDespensaId = 'testDespensaId';
 
     setUp(() {
       mockFirestore = MockFirebaseFirestore();
-      mockCollection = MockCollectionReference();
-      mockDocument = MockDocumentReference();
-      firestoreService = FirestoreService(firebaseFirestore: mockFirestore);
+      mockTransaction = MockTransaction();
+      mockDespensasCollection = MockCollectionReference();
+      mockUsersCollection = MockCollectionReference();
+      mockUsuariosCollection = MockCollectionReference();
+      mockUserDespensasCollection = MockCollectionReference();
+      mockDespensaDoc = MockDocumentReference();
+      mockUserDoc = MockDocumentReference();
+      mockUsuarioDoc = MockDocumentReference();
+      mockUserDespensaDoc = MockDocumentReference();
 
-      // Configura os mocks para retornar as referências corretas
-      when(mockFirestore.collection(any)).thenReturn(mockCollection);
-      when(mockCollection.doc(any)).thenReturn(mockDocument);
-      when(mockDocument.collection(any)).thenReturn(mockCollection);
-      when(mockCollection.doc(any)).thenReturn(mockDocument);
+      // Configuração base dos mocks
+      when(mockFirestore.collection(FirestoreConstants.despensasCollection))
+          .thenReturn(mockDespensasCollection);
+      when(mockFirestore.collection(FirestoreConstants.usersCollection))
+          .thenReturn(mockUsersCollection);
+
+      when(mockDespensasCollection.doc(testDespensaId))
+          .thenReturn(mockDespensaDoc);
+      when(mockUsersCollection.doc(testUserId)).thenReturn(mockUserDoc);
+
+      when(mockDespensaDoc.collection(FirestoreConstants.usuariosSubcollection))
+          .thenReturn(mockUsuariosCollection);
+      when(mockUserDoc.collection(FirestoreConstants.despensasSubcollection))
+          .thenReturn(mockUserDespensasCollection);
+
+      when(mockUsuariosCollection.doc(testUserId)).thenReturn(mockUsuarioDoc);
+      when(mockUserDespensasCollection.doc(testDespensaId))
+          .thenReturn(mockUserDespensaDoc);
+
+      firestoreService = FirestoreService(firebaseFirestore: mockFirestore);
     });
 
     test('Deve adicionar um usuário à despensa', () async {
-      final userId = 'userId';
-      final despensaId = 'despensaId';
+      when(mockFirestore.runTransaction(any)).thenAnswer((invocation) async {
+        final transactionCallback = invocation.positionalArguments.first
+            as Future<void> Function(Transaction);
+        await transactionCallback(mockTransaction);
+      });
 
-      when(mockDocument.set(any)).thenAnswer((_) async {});
+      // Configura os mocks para as operações de set
+      when(mockTransaction.set(mockUsuarioDoc, {
+        FirestoreConstants.roleField: FirestoreConstants.memberRole
+      })).thenReturn(mockTransaction);
+      when(mockTransaction.set(mockUserDespensaDoc, {}))
+          .thenReturn(mockTransaction);
 
-      await firestoreService.addUserToDespensa(userId, despensaId);
+      await firestoreService.addUserToDespensa(testUserId, testDespensaId);
 
-      verify(mockDocument.set(any)).called(greaterThanOrEqualTo(1));
+      verify(mockFirestore.runTransaction(any)).called(1);
+
+      // Verifica se os sets foram chamados com os parâmetros corretos
+      verify(mockTransaction.set(mockUsuarioDoc, {
+        FirestoreConstants.roleField: FirestoreConstants.memberRole
+      })).called(1);
+      verify(mockTransaction.set(mockUserDespensaDoc, {})).called(1);
     });
 
     test('Deve remover um usuário de uma despensa', () async {
-      final userId = 'userId';
-      final despensaId = 'despensaId';
+      // Configura os mocks para as operações de delete
+      when(mockFirestore.runTransaction(any)).thenAnswer((invocation) async {
+        final transactionCallback = invocation.positionalArguments.first
+            as Future<void> Function(Transaction);
+        await transactionCallback(mockTransaction);
+      });
 
-      when(mockDocument.delete()).thenAnswer((_) async {});
+      when(mockTransaction.delete(mockUsuarioDoc)).thenReturn(mockTransaction);
+      when(mockTransaction.delete(mockUserDespensaDoc))
+          .thenReturn(mockTransaction);
 
-      await firestoreService.removeUserFromDespensa(userId, despensaId);
+      await firestoreService.removeUserFromDespensa(testUserId, testDespensaId);
 
-      verify(mockDocument.delete()).called(greaterThanOrEqualTo(1));
+      // Verifica se os deletes foram chamados
+      verify(mockFirestore.runTransaction(any)).called(1);
+      verify(mockTransaction.delete(mockUsuarioDoc)).called(1);
+      verify(mockTransaction.delete(mockUserDespensaDoc)).called(1);
+    });
+
+    test(
+        'Deve lançar FirestoreException em caso de erro ao adicionar um usuário à despensa, erro deve ocorrer na transaction',
+        () async {
+      when(mockFirestore.runTransaction(any))
+          .thenThrow(FirebaseException(plugin: 'firestore'));
+
+      when(mockTransaction.set(mockUsuarioDoc, {
+        FirestoreConstants.roleField: FirestoreConstants.memberRole
+      })).thenReturn(mockTransaction);
+      when(mockTransaction.set(mockUserDespensaDoc, {}))
+          .thenReturn(mockTransaction);
+
+      expect(
+        () => firestoreService.addUserToDespensa(testUserId, testDespensaId),
+        throwsA(isA<FirestoreException>()),
+      );
+
+      verify(mockFirestore.runTransaction(any)).called(1);
+
+      verifyNever(mockTransaction.set(mockUsuarioDoc,
+          {FirestoreConstants.roleField: FirestoreConstants.memberRole}));
+      verifyNever(mockTransaction.set(mockUserDespensaDoc, {}));
+    });
+
+    test(
+        'Deve lançar FirestoreException em caso de erro ao adicionar usuário na despensa, erro deve ocorrer quando adicionar usuário na collection despensas',
+        () async {
+      when(mockFirestore.runTransaction(any)).thenAnswer((invocation) async {
+        final transactionCallback = invocation.positionalArguments.first
+            as Future<void> Function(Transaction);
+        await transactionCallback(mockTransaction);
+      });
+
+      when(mockTransaction.set(mockUsuarioDoc, {
+        FirestoreConstants.roleField: FirestoreConstants.memberRole
+      })).thenThrow(FirebaseException(plugin: 'firestore'));
+      when(mockTransaction.set(mockUserDespensaDoc, {}))
+          .thenReturn(mockTransaction);
+
+      expect(
+        () => firestoreService.addUserToDespensa(testUserId, testDespensaId),
+        throwsA(isA<FirestoreException>()),
+      );
+
+      verify(mockFirestore.runTransaction(any)).called(1);
+
+      verify(mockTransaction.set(mockUsuarioDoc, {
+        FirestoreConstants.roleField: FirestoreConstants.memberRole
+      })).called(1);
+      verifyNever(mockTransaction.set(mockUserDespensaDoc, {}));
+    });
+
+    test(
+        'Deve lançar FirestoreException em caso de erro ao adicionar usuário na despensa, erro deve ocorrer quando adicionar despensa na collection users',
+        () async {
+      // Configura um mock para lançar exceção
+      when(mockFirestore.runTransaction(any)).thenAnswer((invocation) async {
+        final transactionCallback = invocation.positionalArguments.first
+            as Future<void> Function(Transaction);
+        await transactionCallback(mockTransaction);
+      });
+
+      when(mockTransaction.set(mockUsuarioDoc, {
+        FirestoreConstants.roleField: FirestoreConstants.memberRole
+      })).thenReturn(mockTransaction);
+      when(mockTransaction.set(mockUserDespensaDoc, {}))
+          .thenThrow(FirebaseException(plugin: 'firestore'));
+
+      expect(
+        () => firestoreService.addUserToDespensa(testUserId, testDespensaId),
+        throwsA(isA<FirestoreException>()),
+      );
+
+      verify(mockFirestore.runTransaction(any)).called(1);
+      verify(mockTransaction.set(mockUsuarioDoc, {
+        FirestoreConstants.roleField: FirestoreConstants.memberRole
+      })).called(1);
+      verify(mockTransaction.set(mockUserDespensaDoc, {})).called(1);
+    });
+
+    test(
+        'Deve lançar FirestoreException em caso de erro ao remover, erro deve ocorrer na transaction',
+        () async {
+      // Configura um mock para lançar exceção
+      when(mockFirestore.runTransaction(any))
+          .thenThrow(FirebaseException(plugin: 'firestore'));
+
+      when(mockTransaction.delete(mockUsuarioDoc)).thenReturn(mockTransaction);
+      when(mockTransaction.delete(mockUserDespensaDoc))
+          .thenReturn(mockTransaction);
+
+      expect(
+        () =>
+            firestoreService.removeUserFromDespensa(testUserId, testDespensaId),
+        throwsA(isA<FirestoreException>()),
+      );
+
+      verify(mockFirestore.runTransaction(any)).called(1);
+      verifyNever(mockTransaction.delete(mockUsuarioDoc));
+      verifyNever(mockTransaction.delete(mockUserDespensaDoc));
+    });
+
+    test(
+        'Deve lançar FirestoreException em caso de erro ao remover, erro deve ocorrer quando remover usuário da collection despensas',
+        () async {
+      // Configura um mock para lançar exceção
+      when(mockFirestore.runTransaction(any)).thenAnswer((invocation) async {
+        final transactionCallback = invocation.positionalArguments.first
+            as Future<void> Function(Transaction);
+        await transactionCallback(mockTransaction);
+      });
+
+      when(mockTransaction.delete(mockUsuarioDoc))
+          .thenThrow(FirebaseException(plugin: 'firestore'));
+      when(mockTransaction.delete(mockUserDespensaDoc))
+          .thenReturn(mockTransaction);
+
+      expect(
+        () =>
+            firestoreService.removeUserFromDespensa(testUserId, testDespensaId),
+        throwsA(isA<FirestoreException>()),
+      );
+
+      verify(mockFirestore.runTransaction(any)).called(1);
+      verify(mockTransaction.delete(mockUsuarioDoc)).called(1);
+      verifyNever(mockTransaction.delete(mockUserDespensaDoc));
+    });
+
+    test(
+        'Deve lançar FirestoreException em caso de erro ao remover, erro deve ocorrer quando remover despensa da collection users',
+        () async {
+      // Configura um mock para lançar exceção
+      when(mockFirestore.runTransaction(any)).thenAnswer((invocation) async {
+        final transactionCallback = invocation.positionalArguments.first
+            as Future<void> Function(Transaction);
+        await transactionCallback(mockTransaction);
+      });
+
+      when(mockTransaction.delete(mockUsuarioDoc)).thenReturn(mockTransaction);
+      when(mockTransaction.delete(mockUserDespensaDoc))
+          .thenThrow(FirebaseException(plugin: 'firestore'));
+
+      expect(
+        () =>
+            firestoreService.removeUserFromDespensa(testUserId, testDespensaId),
+        throwsA(isA<FirestoreException>()),
+      );
+
+      verify(mockFirestore.runTransaction(any)).called(1);
+      verify(mockTransaction.delete(mockUsuarioDoc)).called(1);
+      verify(mockTransaction.delete(mockUserDespensaDoc)).called(1);
     });
   });
 }

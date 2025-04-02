@@ -77,21 +77,26 @@ class _FakeFuture_8<T1> extends _i1.SmartFake implements _i5.Future<T1> {
     : super(parent, parentInvocation);
 }
 
-class _FakeFirebaseFirestore_9 extends _i1.SmartFake
-    implements _i4.FirebaseFirestore {
-  _FakeFirebaseFirestore_9(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
-}
-
-class _FakeAggregateQuery_10 extends _i1.SmartFake
-    implements _i4.AggregateQuery {
-  _FakeAggregateQuery_10(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
-}
-
-class _FakeDocumentSnapshot_11<T1 extends Object?> extends _i1.SmartFake
+class _FakeDocumentSnapshot_9<T1 extends Object?> extends _i1.SmartFake
     implements _i4.DocumentSnapshot<T1> {
-  _FakeDocumentSnapshot_11(Object parent, Invocation parentInvocation)
+  _FakeDocumentSnapshot_9(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeTransaction_10 extends _i1.SmartFake implements _i4.Transaction {
+  _FakeTransaction_10(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeFirebaseFirestore_11 extends _i1.SmartFake
+    implements _i4.FirebaseFirestore {
+  _FakeFirebaseFirestore_11(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeAggregateQuery_12 extends _i1.SmartFake
+    implements _i4.AggregateQuery {
+  _FakeAggregateQuery_12(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
@@ -421,6 +426,70 @@ class MockFirebaseFirestore extends _i1.Mock implements _i4.FirebaseFirestore {
           as _i5.Future<void>);
 }
 
+/// A class which mocks [Transaction].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockTransaction extends _i1.Mock implements _i4.Transaction {
+  MockTransaction() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.Future<_i4.DocumentSnapshot<T>> get<T extends Object?>(
+    _i4.DocumentReference<T>? documentReference,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#get, [documentReference]),
+            returnValue: _i5.Future<_i4.DocumentSnapshot<T>>.value(
+              _FakeDocumentSnapshot_9<T>(
+                this,
+                Invocation.method(#get, [documentReference]),
+              ),
+            ),
+          )
+          as _i5.Future<_i4.DocumentSnapshot<T>>);
+
+  @override
+  _i4.Transaction delete(_i4.DocumentReference<Object?>? documentReference) =>
+      (super.noSuchMethod(
+            Invocation.method(#delete, [documentReference]),
+            returnValue: _FakeTransaction_10(
+              this,
+              Invocation.method(#delete, [documentReference]),
+            ),
+          )
+          as _i4.Transaction);
+
+  @override
+  _i4.Transaction update(
+    _i4.DocumentReference<Object?>? documentReference,
+    Map<String, dynamic>? data,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#update, [documentReference, data]),
+            returnValue: _FakeTransaction_10(
+              this,
+              Invocation.method(#update, [documentReference, data]),
+            ),
+          )
+          as _i4.Transaction);
+
+  @override
+  _i4.Transaction set<T>(
+    _i4.DocumentReference<T>? documentReference,
+    T? data, [
+    _i3.SetOptions? options,
+  ]) =>
+      (super.noSuchMethod(
+            Invocation.method(#set, [documentReference, data, options]),
+            returnValue: _FakeTransaction_10(
+              this,
+              Invocation.method(#set, [documentReference, data, options]),
+            ),
+          )
+          as _i4.Transaction);
+}
+
 /// A class which mocks [CollectionReference].
 ///
 /// See the documentation for Mockito's code generation for more information.
@@ -451,7 +520,7 @@ class MockCollectionReference<T extends Object?> extends _i1.Mock
   _i4.FirebaseFirestore get firestore =>
       (super.noSuchMethod(
             Invocation.getter(#firestore),
-            returnValue: _FakeFirebaseFirestore_9(
+            returnValue: _FakeFirebaseFirestore_11(
               this,
               Invocation.getter(#firestore),
             ),
@@ -721,7 +790,7 @@ class MockCollectionReference<T extends Object?> extends _i1.Mock
   _i4.AggregateQuery count() =>
       (super.noSuchMethod(
             Invocation.method(#count, []),
-            returnValue: _FakeAggregateQuery_10(
+            returnValue: _FakeAggregateQuery_12(
               this,
               Invocation.method(#count, []),
             ),
@@ -794,7 +863,7 @@ class MockCollectionReference<T extends Object?> extends _i1.Mock
               aggregateField29,
               aggregateField30,
             ]),
-            returnValue: _FakeAggregateQuery_10(
+            returnValue: _FakeAggregateQuery_12(
               this,
               Invocation.method(#aggregate, [
                 aggregateField1,
@@ -847,7 +916,7 @@ class MockDocumentReference<T extends Object?> extends _i1.Mock
   _i4.FirebaseFirestore get firestore =>
       (super.noSuchMethod(
             Invocation.getter(#firestore),
-            returnValue: _FakeFirebaseFirestore_9(
+            returnValue: _FakeFirebaseFirestore_11(
               this,
               Invocation.getter(#firestore),
             ),
@@ -917,7 +986,7 @@ class MockDocumentReference<T extends Object?> extends _i1.Mock
       (super.noSuchMethod(
             Invocation.method(#get, [options]),
             returnValue: _i5.Future<_i4.DocumentSnapshot<T>>.value(
-              _FakeDocumentSnapshot_11<T>(
+              _FakeDocumentSnapshot_9<T>(
                 this,
                 Invocation.method(#get, [options]),
               ),
