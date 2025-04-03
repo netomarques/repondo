@@ -19,6 +19,9 @@ class FirestoreService {
 
   // Adicionar um usuário a uma despensa
   Future<void> addUserToDespensa(String userId, String despensaId) async {
+    _assertNotEmpty(userId, 'userId');
+    _assertNotEmpty(despensaId, 'despensaId');
+
     try {
       await _db.runTransaction((transaction) async {
         final despensaUsuariosRef = _db
@@ -43,11 +46,18 @@ class FirestoreService {
     } on FirebaseException catch (e) {
       throw FirestoreException(
           'Erro ao adicionar usuário à despensa: ${e.message}');
+    } on ArgumentError catch (e) {
+      throw ArgumentError(e);
+    } on Exception {
+      throw FirestoreException('Erro desconhecido');
     }
   }
 
   // Remover usuário de uma despensa
   Future<void> removeUserFromDespensa(String userId, String despensaId) async {
+    _assertNotEmpty(userId, 'userId');
+    _assertNotEmpty(despensaId, 'despensaId');
+
     try {
       await _db.runTransaction((transaction) async {
         final despensaUsuariosRef = _db
@@ -69,6 +79,14 @@ class FirestoreService {
     } on FirebaseException catch (e) {
       throw FirestoreException(
           'Erro ao remover usuário da despensa: ${e.message}');
+    } on Exception {
+      throw FirestoreException('Erro desconhecido');
+    }
+  }
+
+  void _assertNotEmpty(String? value, String fieldName) {
+    if (value == null || value.isEmpty) {
+      throw ArgumentError('$fieldName não pode ser nulo ou vazio.');
     }
   }
 }
