@@ -89,6 +89,27 @@ void main() {
             .thenReturn(mockTransaction);
       });
 
+      group('runTransaction', () {
+        test('Deve chamar runTransaction uma vez por operação', () async {
+          const testUserId2 = 'testUserId2';
+          const testDespensaId2 = 'testDespensaId2';
+
+          when(mockDespensasCollection.doc(testDespensaId2))
+              .thenReturn(mockDespensaDoc);
+          when(mockUsersCollection.doc(testUserId2)).thenReturn(mockUserDoc);
+
+          when(mockUsuariosCollection.doc(testUserId2))
+              .thenReturn(mockUsuarioDoc);
+          when(mockUserDespensasCollection.doc(testDespensaId2))
+              .thenReturn(mockUserDespensaDoc);
+
+          await firestoreService.addUserToDespensa(testUserId, testDespensaId);
+          await firestoreService.addUserToDespensa(
+              testUserId2, testDespensaId2);
+          verify(mockFirestore.runTransaction(any)).called(2);
+        });
+      });
+
       group('Validação de parâmetros', () {
         test('Deve lançar exceção para userId vazio', () async {
           expect(
@@ -102,10 +123,40 @@ void main() {
           verifyNever(mockTransaction.set(mockUserDespensaDoc, {}));
         });
 
+        test('Deve lançar exceção para userId null', () async {
+          const userIdIsNull = null;
+
+          expect(
+            () => firestoreService.addUserToDespensa(
+                userIdIsNull, testDespensaId),
+            throwsA(isA<TypeError>()),
+          );
+
+          verifyNever(mockFirestore.runTransaction(any));
+          verifyNever(mockTransaction.set(mockUsuarioDoc,
+              {FirestoreConstants.roleField: FirestoreConstants.memberRole}));
+          verifyNever(mockTransaction.set(mockUserDespensaDoc, {}));
+        });
+
         test('Deve lançar exceção para despensaId vazio', () async {
           expect(
             () => firestoreService.addUserToDespensa(testUserId, ''),
             throwsA(isA<ArgumentError>()),
+          );
+
+          verifyNever(mockFirestore.runTransaction(any));
+          verifyNever(mockTransaction.set(mockUsuarioDoc,
+              {FirestoreConstants.roleField: FirestoreConstants.memberRole}));
+          verifyNever(mockTransaction.set(mockUserDespensaDoc, {}));
+        });
+
+        test('Deve lançar exceção para despensaId null', () async {
+          const despensaIdIsNull = null;
+
+          expect(
+            () => firestoreService.addUserToDespensa(
+                testUserId, despensaIdIsNull),
+            throwsA(isA<TypeError>()),
           );
 
           verifyNever(mockFirestore.runTransaction(any));
@@ -211,6 +262,81 @@ void main() {
         when(mockTransaction.delete(mockUserDespensaDoc))
             .thenReturn(mockTransaction);
       });
+
+      group('runTransaction', () {
+        test('Deve chamar runTransaction uma vez por operação', () async {
+          const testUserId2 = 'testUserId2';
+          const testDespensaId2 = 'testDespensaId2';
+
+          when(mockDespensasCollection.doc(testDespensaId2))
+              .thenReturn(mockDespensaDoc);
+          when(mockUsersCollection.doc(testUserId2)).thenReturn(mockUserDoc);
+
+          when(mockUsuariosCollection.doc(testUserId2))
+              .thenReturn(mockUsuarioDoc);
+          when(mockUserDespensasCollection.doc(testDespensaId2))
+              .thenReturn(mockUserDespensaDoc);
+
+          await firestoreService.removeUserFromDespensa(
+              testUserId, testDespensaId);
+          await firestoreService.removeUserFromDespensa(
+              testUserId2, testDespensaId2);
+          verify(mockFirestore.runTransaction(any)).called(2);
+        });
+      });
+
+      group('Validação de parâmetros', () {
+        test('Deve lançar exceção para userId vazio', () async {
+          expect(
+            () => firestoreService.removeUserFromDespensa('', testDespensaId),
+            throwsA(isA<ArgumentError>()),
+          );
+
+          verifyNever(mockFirestore.runTransaction(any));
+          verifyNever(mockTransaction.delete(mockUsuarioDoc));
+          verifyNever(mockTransaction.delete(mockUserDespensaDoc));
+        });
+
+        test('Deve lançar exceção para userId null', () async {
+          const userIdIsNull = null;
+
+          expect(
+            () => firestoreService.removeUserFromDespensa(
+                userIdIsNull, testDespensaId),
+            throwsA(isA<TypeError>()),
+          );
+
+          verifyNever(mockFirestore.runTransaction(any));
+          verifyNever(mockTransaction.delete(mockUsuarioDoc));
+          verifyNever(mockTransaction.delete(mockUserDespensaDoc));
+        });
+
+        test('Deve lançar exceção para despensaId vazio', () async {
+          expect(
+            () => firestoreService.removeUserFromDespensa(testUserId, ''),
+            throwsA(isA<ArgumentError>()),
+          );
+
+          verifyNever(mockFirestore.runTransaction(any));
+          verifyNever(mockTransaction.delete(mockUsuarioDoc));
+          verifyNever(mockTransaction.delete(mockUserDespensaDoc));
+        });
+
+        test('Deve lançar exceção para despensaId null', () async {
+          const despensaIdIsNull = null;
+
+          expect(
+            () => firestoreService.removeUserFromDespensa(
+                testUserId, despensaIdIsNull),
+            throwsA(isA<TypeError>()),
+          );
+
+          verifyNever(mockFirestore.runTransaction(any));
+          verifyNever(mockTransaction.delete(mockUsuarioDoc));
+          verifyNever(mockTransaction.delete(mockUserDespensaDoc));
+        });
+      });
+
       group('casos de sucesso', () {
         test('Deve remover um usuário de uma despensa', () async {
           await firestoreService.removeUserFromDespensa(
