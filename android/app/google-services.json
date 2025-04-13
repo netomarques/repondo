@@ -12,7 +12,20 @@
           "package_name": "com.example.repondo"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "355943040604-uhugk3hqjalm8bpk13n1hj5r710amu22.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.repondo",
+            "certificate_hash": "0cb009fe974301e75553c841de9379e1a6523749"
+          }
+        },
+        {
+          "client_id": "355943040604-usqpoic4940bomuftvphs2h65i4p6ook.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBcQoJhoYNz4u71d-K4w20ufixEYO654Vc"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "355943040604-usqpoic4940bomuftvphs2h65i4p6ook.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
