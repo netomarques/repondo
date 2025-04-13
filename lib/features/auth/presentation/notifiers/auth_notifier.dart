@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repondo/features/auth/application/usecases/exports.dart';
-import 'package:repondo/features/auth/domain/entities/usuario.dart';
+import 'package:repondo/features/auth/domain/entities/user.dart';
 
 sealed class AuthState {}
 
@@ -9,8 +9,8 @@ class AuthInitial extends AuthState {}
 class AuthLoading extends AuthState {}
 
 class Authenticated extends AuthState {
-  final Usuario usuario;
-  Authenticated(this.usuario);
+  final User user;
+  Authenticated(this.user);
 }
 
 class Unauthenticated extends AuthState {}
@@ -30,16 +30,16 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   Future<void> login() async {
     state = AuthLoading();
-    final usuario = await signInUseCase.execute();
-    state = Authenticated(usuario);
+    final user = await signInUseCase.execute();
+    state = Authenticated(user);
   }
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     state = AuthLoading();
     try {
-      final usuario =
+      final user =
           await signInWithEmailAndPasswordUseCase.execute(email, password);
-      state = Authenticated(usuario);
+      state = Authenticated(user);
     } catch (e) {
       state = Unauthenticated();
     }
@@ -48,8 +48,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> signInWithGoogle() async {
     state = AuthLoading();
     try {
-      final usuario = await signInWithGoogleUseCase.execute();
-      state = Authenticated(usuario);
+      final user = await signInWithGoogleUseCase.execute();
+      state = Authenticated(user);
     } catch (e) {
       state = Unauthenticated();
     }

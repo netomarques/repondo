@@ -1,11 +1,11 @@
-class Usuario {
+class User {
   final String id;
-  final String nome;
+  final String name;
   final String email;
 
-  Usuario({
+  User({
     required this.id,
-    required this.nome,
+    required this.name,
     required this.email,
   });
 }

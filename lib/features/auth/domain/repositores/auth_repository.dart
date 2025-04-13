@@ -1,10 +1,10 @@
-import '../entities/usuario.dart';
+import '../entities/user.dart';
 
 abstract class AuthRepository {
-  Future<Usuario?> getUsuarioAtual();
-  Stream<Usuario?> get usuarioStream;
-  Future<Usuario> loginAnonimo();
-  Future<Usuario> signInWithEmailAndPassword(String email, String password);
-  Future<Usuario> signInWithGoogle();
-  Future<void> logout();
+  Future<User?> getCurrentUser();
+  Stream<User?> get userStream;
+  Future<User> signInAnonymously();
+  Future<User> signInWithEmailAndPassword(String email, String password);
+  Future<User> signInWithGoogle();
+  Future<void> signOut();
 }

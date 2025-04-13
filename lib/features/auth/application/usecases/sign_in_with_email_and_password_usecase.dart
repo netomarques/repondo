@@ -5,6 +5,6 @@ class SignInWithEmailAndPasswordUseCase {
 
   SignInWithEmailAndPasswordUseCase(this.repository);
 
-  Future<Usuario> execute(String email, String password) =>
+  Future<User> execute(String email, String password) =>
       repository.signInWithEmailAndPassword(email, password);
 }

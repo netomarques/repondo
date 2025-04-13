@@ -5,7 +5,7 @@ class SignInWithGoogle {
 
   SignInWithGoogle(this.repository);
 
-  Future<Usuario> execute() {
+  Future<User> execute() {
     return repository.signInWithGoogle();
   }
 }
