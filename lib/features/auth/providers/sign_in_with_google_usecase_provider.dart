@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:repondo/features/auth/application/usecases/sign_in_with_google.dart';
-import 'package:repondo/features/auth/providers/auth_repository_provider.dart';
+import 'package:repondo/features/auth/application/usecases/google_auth/sign_in_with_google_usecase.dart';
+import 'package:repondo/features/auth/providers/google_auth_repository_provider.dart';
 
 final signInWithGoogleUseCaseProvider = Provider<SignInWithGoogle>((ref) {
-  final repository = ref.read(authRepositoryProvider);
+  final repository = ref.read(googleAuthRepositoryProvider);
   return SignInWithGoogle(repository);
 });

@@ -5,5 +5,5 @@ class SignInUseCase {
 
   SignInUseCase(this.repository);
 
-  Future<User> execute() => repository.signInAnonymously();
+  Future<User?> execute() => repository.signInAnonymously();
 }

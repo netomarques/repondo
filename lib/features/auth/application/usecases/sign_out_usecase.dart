@@ -1,4 +1,4 @@
-import 'package:repondo/features/auth/domain/repositores/exports.dart';
+import 'package:repondo/features/auth/domain/repositories/exports.dart';
 
 class SignOutUseCase {
   final AuthRepository repository;
