@@ -19,7 +19,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   final SignInUseCase signInUseCase;
   final SignOutUseCase signOutUseCase;
   final SignInWithEmailAndPasswordUseCase signInWithEmailAndPasswordUseCase;
-  final SignInWithGoogle signInWithGoogleUseCase;
+  final SignInWithGoogleUseCase signInWithGoogleUseCase;
 
   AuthNotifier({
     required this.signInUseCase,

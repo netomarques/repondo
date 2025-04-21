@@ -1,12 +1,9 @@
-import 'package:repondo/features/auth/domain/entities/user.dart';
-import 'package:repondo/features/auth/domain/repositories/google_auth_repository.dart';
+import 'package:repondo/features/auth/domain/exports.dart';
 
-class GetCurrentUserFromGoogleUsecase {
-  final GoogleAuthRepository repository;
+class GetCurrentUserFromGoogleUseCase {
+  final GoogleAuthRepository _repository;
 
-  GetCurrentUserFromGoogleUsecase(this.repository);
+  GetCurrentUserFromGoogleUseCase(this._repository);
 
-  Future<User?> execute() {
-    return repository.getCurrentUser();
-  }
+  Future<User> execute() => _repository.getCurrentUser();
 }

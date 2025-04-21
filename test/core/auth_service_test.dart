@@ -1,21 +1,10 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:repondo/core/auth_service.dart';
 
-import 'auth_service_test.mocks.dart';
+import '../mocks/mocks.mocks.dart';
 
-// Gerar os mocks antes de rodar os testes: flutter pub run build_runner build
-@GenerateMocks([
-  FirebaseAuth,
-  User,
-  UserCredential,
-  GoogleSignIn,
-  GoogleSignInAccount,
-  GoogleSignInAuthentication
-])
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   group('AuthService', () {

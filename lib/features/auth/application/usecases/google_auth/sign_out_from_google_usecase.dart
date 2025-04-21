@@ -1,11 +1,9 @@
-import 'package:repondo/features/auth/domain/exports.dart';
+import 'package:repondo/features/auth/domain/repositories/google_auth_repository.dart';
 
-class SignOutFromGoogle {
-  final GoogleAuthRepository repository;
+class SignOutFromGoogleUseCase {
+  final GoogleAuthRepository _repository;
 
-  SignOutFromGoogle(this.repository);
+  SignOutFromGoogleUseCase(this._repository);
 
-  Future<void> execute() {
-    return repository.signOut();
-  }
+  Future<void> execute() => _repository.signOut();
 }

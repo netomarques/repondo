@@ -2,24 +2,13 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:repondo/features/auth/data/repositories/firebase_google_auth_repository.dart';
 import 'package:repondo/features/auth/domain/entities/user.dart' as authDomain;
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 
-import 'firebase_google_auth_repository_test.mocks.dart';
+import '../../../../mocks/mocks.mocks.dart';
 
-@GenerateMocks([
-  fbAuth.FirebaseAuth,
-  fbAuth.UserCredential,
-  fbAuth.User,
-  fbAuth.UserInfo,
-  GoogleSignIn,
-  GoogleSignInAccount,
-  GoogleSignInAuthentication
-])
 late MockGoogleSignIn mockGoogleSignIn;
 late MockFirebaseAuth mockFirebaseAuth;
 late MockGoogleSignInAccount mockGoogleSignInAccount;

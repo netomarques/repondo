@@ -1,11 +1,9 @@
 import 'package:repondo/features/auth/domain/exports.dart';
 
-class SignInWithGoogle {
-  final GoogleAuthRepository repository;
+class SignInWithGoogleUseCase {
+  final GoogleAuthRepository _repository;
 
-  SignInWithGoogle(this.repository);
+  SignInWithGoogleUseCase(this._repository);
 
-  Future<User> execute() {
-    return repository.signIn();
-  }
+  Future<User> execute() => _repository.signIn();
 }
