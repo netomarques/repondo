@@ -23,7 +23,7 @@ void main() {
             User(id: '123', name: 'Test User', email: 'test@example.com');
         when(mockRepository.getCurrentUser()).thenAnswer((_) async => user);
 
-        final result = await usecase.execute();
+        final result = await usecase.fetch();
 
         expect(result, equals(user));
         verify(mockRepository.getCurrentUser()).called(1);

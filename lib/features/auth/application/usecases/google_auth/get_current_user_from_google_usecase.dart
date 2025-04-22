@@ -5,5 +5,5 @@ class GetCurrentUserFromGoogleUseCase {
 
   GetCurrentUserFromGoogleUseCase(this._repository);
 
-  Future<User> execute() => _repository.getCurrentUser();
+  Future<User> fetch() => _repository.getCurrentUser();
 }

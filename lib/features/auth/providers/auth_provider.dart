@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:repondo/features/auth/providers/exports.dart';
 import 'package:repondo/features/auth/presentation/notifiers/auth_notifier.dart';
+import 'package:repondo/features/auth/providers/exports.dart';
 
 final authNotifierProvider =
     StateNotifierProvider<AuthNotifier, AuthState>((ref) {
@@ -8,7 +8,7 @@ final authNotifierProvider =
   final signOutUseCase = ref.read(singOutUseCaseProvider);
   final signInWithEmailAndPasswortUseCase =
       ref.read(signInWithEmailAndPasswordProvider);
-  final signInWithGoogleUseCase = ref.read(signInWithGoogleUseCaseProvider);
+  final signInWithGoogleUseCase = ref.read(signInWithGoogleProvider);
   return AuthNotifier(
       signInUseCase: signInUseCase,
       signOutUseCase: signOutUseCase,
