@@ -6,7 +6,7 @@ part of 'google_auth_facade_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$googleAuthFacadeHash() => r'610db9140a8987dab60e81dd64784a967b842874';
+String _$googleAuthFacadeHash() => r'c6ca5312fb6a95b4b8cd5085966fe2c0185e780e';
 
 /// See also [googleAuthFacade].
 @ProviderFor(googleAuthFacade)

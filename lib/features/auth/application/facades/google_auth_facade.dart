@@ -2,31 +2,34 @@ import 'package:repondo/features/auth/application/usecases/google_auth/exports.d
 import 'package:repondo/features/auth/domain/entities/user.dart';
 
 class GoogleAuthFacade {
-  final SignInWithGoogleUseCase signInWithGoogleUseCase;
-  final SignOutFromGoogleUseCase signOutFromGoogleUseCase;
-  final GetCurrentUserFromGoogleUseCase getCurrentUserUseCase;
-  final GetUserStreamFromGoogleUseCase getUserStreamUseCase;
+  final SignInWithGoogleUseCase _signInWithGoogleUseCase;
+  final SignOutFromGoogleUseCase _signOutFromGoogleUseCase;
+  final GetCurrentUserFromGoogleUseCase _getCurrentUserUseCase;
+  final GetUserStreamFromGoogleUseCase _getUserStreamUseCase;
 
   GoogleAuthFacade({
-    required this.signInWithGoogleUseCase,
-    required this.signOutFromGoogleUseCase,
-    required this.getCurrentUserUseCase,
-    required this.getUserStreamUseCase,
-  });
+    required SignInWithGoogleUseCase signInWithGoogleUseCase,
+    required SignOutFromGoogleUseCase signOutFromGoogleUseCase,
+    required GetCurrentUserFromGoogleUseCase getCurrentUserUseCase,
+    required GetUserStreamFromGoogleUseCase getUserStreamUseCase,
+  })  : _signInWithGoogleUseCase = signInWithGoogleUseCase,
+        _signOutFromGoogleUseCase = signOutFromGoogleUseCase,
+        _getCurrentUserUseCase = getCurrentUserUseCase,
+        _getUserStreamUseCase = getUserStreamUseCase;
 
   Future<User> signInWithGoogle() {
-    return signInWithGoogleUseCase.execute();
+    return _signInWithGoogleUseCase.execute();
   }
 
   Future<void> signOut() async {
-    await signOutFromGoogleUseCase.execute();
+    await _signOutFromGoogleUseCase.execute();
   }
 
-  Future<User> getCurrentUser() async {
-    return getCurrentUserUseCase.fetch();
+  Future<User> getCurrentUser() {
+    return _getCurrentUserUseCase.fetch();
   }
 
   Stream<User> observeUserStream() {
-    return getUserStreamUseCase.fetch();
+    return _getUserStreamUseCase.fetch();
   }
 }

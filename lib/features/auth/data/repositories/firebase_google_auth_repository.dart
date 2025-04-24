@@ -67,6 +67,7 @@ class FirebaseGoogleAuthRepository implements authDomain.GoogleAuthRepository {
       id: authenticatedUser.uid,
       name: authenticatedUser.displayName ?? '',
       email: authenticatedUser.email ?? '',
+      photo: authenticatedUser.photoURL,
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:repondo/features/auth/presentation/notifiers/google_auth_notifier.dart';
 import 'package:repondo/features/auth/providers/exports.dart';
 import 'package:repondo/features/auth/presentation/notifiers/auth_notifier.dart';
 
@@ -75,7 +76,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 const SizedBox(height: 16),
                 ElevatedButton.icon(
                   onPressed: () {
-                    ref.read(authNotifierProvider.notifier).signInWithGoogle();
+                    ref
+                        .read(googleAuthNotifierProvider.notifier)
+                        .signInWithGoogle();
                   },
                   icon: const Icon(Icons.login),
                   label: const Text('Entrar com Google'),

@@ -7,12 +7,12 @@ part of 'google_auth_notifier.dart';
 // **************************************************************************
 
 String _$googleAuthNotifierHash() =>
-    r'4d0466bf5ef42fad66f1ced8a8c69167578294d0';
+    r'f3b9dcc2c6462c83420de288ec0bfcad01517c14';
 
 /// See also [GoogleAuthNotifier].
 @ProviderFor(GoogleAuthNotifier)
 final googleAuthNotifierProvider =
-    AutoDisposeNotifierProvider<GoogleAuthNotifier, AsyncValue<void>>.internal(
+    AutoDisposeAsyncNotifierProvider<GoogleAuthNotifier, User>.internal(
   GoogleAuthNotifier.new,
   name: r'googleAuthNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,6 @@ final googleAuthNotifierProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$GoogleAuthNotifier = AutoDisposeNotifier<AsyncValue<void>>;
+typedef _$GoogleAuthNotifier = AutoDisposeAsyncNotifier<User>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
