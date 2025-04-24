@@ -1,5 +1,5 @@
 import 'package:repondo/features/auth/application/usecases/google_auth/exports.dart';
-import 'package:repondo/features/auth/domain/entities/user.dart';
+import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 
 class GoogleAuthFacade {
   final SignInWithGoogleUseCase _signInWithGoogleUseCase;
@@ -17,7 +17,7 @@ class GoogleAuthFacade {
         _getCurrentUserUseCase = getCurrentUserUseCase,
         _getUserStreamUseCase = getUserStreamUseCase;
 
-  Future<User> signInWithGoogle() {
+  Future<UserAuth> signInWithGoogle() {
     return _signInWithGoogleUseCase.execute();
   }
 
@@ -25,11 +25,11 @@ class GoogleAuthFacade {
     await _signOutFromGoogleUseCase.execute();
   }
 
-  Future<User> getCurrentUser() {
+  Future<UserAuth> getCurrentUser() {
     return _getCurrentUserUseCase.fetch();
   }
 
-  Stream<User> observeUserStream() {
+  Stream<UserAuth> observeUserStream() {
     return _getUserStreamUseCase.fetch();
   }
 }

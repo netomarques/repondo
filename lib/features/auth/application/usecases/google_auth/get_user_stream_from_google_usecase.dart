@@ -5,5 +5,5 @@ class GetUserStreamFromGoogleUseCase {
 
   GetUserStreamFromGoogleUseCase(this._repository);
 
-  Stream<User> fetch() => _repository.userStream;
+  Stream<UserAuth> fetch() => _repository.userStream;
 }

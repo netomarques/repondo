@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repondo/features/auth/application/usecases/exports.dart';
-import 'package:repondo/features/auth/domain/entities/user.dart';
+import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 
 sealed class AuthState {}
 
@@ -9,7 +9,7 @@ class AuthInitial extends AuthState {}
 class AuthLoading extends AuthState {}
 
 class Authenticated extends AuthState {
-  final User user;
+  final UserAuth user;
   Authenticated(this.user);
 }
 

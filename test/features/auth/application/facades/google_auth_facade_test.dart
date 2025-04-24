@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:repondo/features/auth/application/facades/google_auth_facade.dart';
-import 'package:repondo/features/auth/domain/entities/user.dart';
+import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 
 import '../../../../mocks/mocks.mocks.dart';
 
@@ -30,8 +30,12 @@ void main() {
     test(
         'deve chamar execute() do SignInWithGoogleUseCase quando signInWithGoogle é chamado',
         () async {
-      final user =
-          User(id: '123', name: 'Test User', email: 'test@example.com');
+      final user = UserAuth(
+        id: '123',
+        name: 'Test User',
+        email: 'test@example.com',
+        photoUrl: 'http://example.com/photo.jpg',
+      );
       when(mockSignInWithGoogleUseCase.execute()).thenAnswer((_) async => user);
 
       final result = await googleAuthFacade.signInWithGoogle();
@@ -53,8 +57,12 @@ void main() {
     test(
         'deve chamar fetch() do GetCurrentUserFromGoogleUseCase quando getCurrentUser é chamado',
         () async {
-      final user =
-          User(id: '123', name: 'Test User', email: 'test@example.com');
+      final user = UserAuth(
+        id: '123',
+        name: 'Test User',
+        email: 'test@example.com',
+        photoUrl: 'http://example.com/photo.jpg',
+      );
       when(mockGetCurrentUserUseCase.fetch()).thenAnswer((_) async => user);
 
       final result = await googleAuthFacade.getCurrentUser();
@@ -67,8 +75,13 @@ void main() {
     test(
         'deve chamar fetch() do GetUserStreamFromGoogleUseCase quando getCurrentUser é chamado',
         () async {
-      final userStream = Stream<User>.fromIterable([
-        User(id: '123', name: 'Test User', email: 'test@example.com'),
+      final userStream = Stream<UserAuth>.fromIterable([
+        UserAuth(
+          id: '123',
+          name: 'Test User',
+          email: 'test@example.com',
+          photoUrl: 'http://example.com/photo.jpg',
+        ),
       ]);
       when(mockGetUserStreamUseCase.fetch()).thenAnswer((_) => userStream);
 
@@ -77,10 +90,12 @@ void main() {
       await expectLater(
           result,
           emitsInOrder([
-            isA<User>()
+            isA<UserAuth>()
                 .having((user) => user.id, 'id', '123')
                 .having((user) => user.name, 'name', 'Test User')
-                .having((user) => user.email, 'email', 'test@example.com'),
+                .having((user) => user.email, 'email', 'test@example.com')
+                .having((user) => user.photoUrl, 'photoUrl',
+                    'http://example.com/photo.jpg'),
           ]));
 
       verify(mockGetUserStreamUseCase.fetch()).called(1);

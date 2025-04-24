@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:repondo/features/auth/application/usecases/google_auth/sign_in_with_google_usecase.dart';
-import 'package:repondo/features/auth/domain/entities/user.dart';
+import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 
 import '../../../../../mocks/mocks.mocks.dart';
 
@@ -18,8 +18,12 @@ void main() {
     group('casos de sucesso', () {
       test('deve chamar signIn no GoogleAuthRepository e retornar um User',
           () async {
-        final expectedUser =
-            User(id: '123', name: 'João', email: 'joao@email.com');
+        final expectedUser = UserAuth(
+          id: '123',
+          name: 'João',
+          email: 'joao@email.com',
+          photoUrl: 'https://example.com/photo.jpg',
+        );
         when(mockRepository.signIn()).thenAnswer((_) async => expectedUser);
 
         final result = await usecase.execute();

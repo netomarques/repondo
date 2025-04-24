@@ -5,5 +5,5 @@ class SignInWithGoogleUseCase {
 
   SignInWithGoogleUseCase(this._repository);
 
-  Future<User> execute() => _repository.signIn();
+  Future<UserAuth> execute() => _repository.signIn();
 }

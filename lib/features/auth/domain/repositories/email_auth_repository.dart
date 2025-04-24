@@ -1,9 +1,9 @@
-import 'package:repondo/features/auth/domain/entities/user.dart';
+import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 
 abstract class EmailAuthRepository {
-  Future<User> signIn(String email, String password);
-  Future<User> signUp();
+  Future<UserAuth> signIn(String email, String password);
+  Future<UserAuth> signUp();
   Future<void> signOut();
-  Future<User?> getCurrentUser();
-  Stream<User?> get userStream;
+  Future<UserAuth?> getCurrentUser();
+  Stream<UserAuth?> get userStream;
 }

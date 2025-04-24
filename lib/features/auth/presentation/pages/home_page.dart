@@ -36,15 +36,17 @@ class HomePage extends ConsumerWidget {
                   radius: 40,
                 ),
               const SizedBox(height: 12),
-              Text(
-                user.name,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+              if (user.name != null)
+                Text(
+                  user.name!,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
               const SizedBox(height: 4),
-              Text(
-                user.email,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
+              if (user.email != null)
+                Text(
+                  user.email!,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
             ],
           ),
         ),

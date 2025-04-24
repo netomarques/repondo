@@ -22,7 +22,7 @@ import 'package:repondo/features/auth/application/usecases/google_auth/sign_in_w
     as _i11;
 import 'package:repondo/features/auth/application/usecases/google_auth/sign_out_from_google_usecase.dart'
     as _i12;
-import 'package:repondo/features/auth/domain/entities/user.dart' as _i6;
+import 'package:repondo/features/auth/domain/entities/user_auth.dart' as _i6;
 import 'package:repondo/features/auth/domain/exports.dart' as _i10;
 
 // ignore_for_file: type=lint
@@ -88,8 +88,8 @@ class _FakeGoogleSignInAuthentication_8 extends _i1.SmartFake
     : super(parent, parentInvocation);
 }
 
-class _FakeUser_9 extends _i1.SmartFake implements _i6.User {
-  _FakeUser_9(Object parent, Invocation parentInvocation)
+class _FakeUserAuth_9 extends _i1.SmartFake implements _i6.UserAuth {
+  _FakeUserAuth_9(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
@@ -1076,22 +1076,22 @@ class MockGoogleAuthRepository extends _i1.Mock
   }
 
   @override
-  _i7.Stream<_i6.User> get userStream =>
+  _i7.Stream<_i6.UserAuth> get userStream =>
       (super.noSuchMethod(
             Invocation.getter(#userStream),
-            returnValue: _i7.Stream<_i6.User>.empty(),
+            returnValue: _i7.Stream<_i6.UserAuth>.empty(),
           )
-          as _i7.Stream<_i6.User>);
+          as _i7.Stream<_i6.UserAuth>);
 
   @override
-  _i7.Future<_i6.User> signIn() =>
+  _i7.Future<_i6.UserAuth> signIn() =>
       (super.noSuchMethod(
             Invocation.method(#signIn, []),
-            returnValue: _i7.Future<_i6.User>.value(
-              _FakeUser_9(this, Invocation.method(#signIn, [])),
+            returnValue: _i7.Future<_i6.UserAuth>.value(
+              _FakeUserAuth_9(this, Invocation.method(#signIn, [])),
             ),
           )
-          as _i7.Future<_i6.User>);
+          as _i7.Future<_i6.UserAuth>);
 
   @override
   _i7.Future<void> signOut() =>
@@ -1103,14 +1103,14 @@ class MockGoogleAuthRepository extends _i1.Mock
           as _i7.Future<void>);
 
   @override
-  _i7.Future<_i6.User> getCurrentUser() =>
+  _i7.Future<_i6.UserAuth> getCurrentUser() =>
       (super.noSuchMethod(
             Invocation.method(#getCurrentUser, []),
-            returnValue: _i7.Future<_i6.User>.value(
-              _FakeUser_9(this, Invocation.method(#getCurrentUser, [])),
+            returnValue: _i7.Future<_i6.UserAuth>.value(
+              _FakeUserAuth_9(this, Invocation.method(#getCurrentUser, [])),
             ),
           )
-          as _i7.Future<_i6.User>);
+          as _i7.Future<_i6.UserAuth>);
 }
 
 /// A class which mocks [SignInWithGoogleUseCase].
@@ -1123,14 +1123,14 @@ class MockSignInWithGoogleUseCase extends _i1.Mock
   }
 
   @override
-  _i7.Future<_i6.User> execute() =>
+  _i7.Future<_i6.UserAuth> execute() =>
       (super.noSuchMethod(
             Invocation.method(#execute, []),
-            returnValue: _i7.Future<_i6.User>.value(
-              _FakeUser_9(this, Invocation.method(#execute, [])),
+            returnValue: _i7.Future<_i6.UserAuth>.value(
+              _FakeUserAuth_9(this, Invocation.method(#execute, [])),
             ),
           )
-          as _i7.Future<_i6.User>);
+          as _i7.Future<_i6.UserAuth>);
 }
 
 /// A class which mocks [SignOutFromGoogleUseCase].
@@ -1162,14 +1162,14 @@ class MockGetCurrentUserFromGoogleUseCase extends _i1.Mock
   }
 
   @override
-  _i7.Future<_i6.User> fetch() =>
+  _i7.Future<_i6.UserAuth> fetch() =>
       (super.noSuchMethod(
             Invocation.method(#fetch, []),
-            returnValue: _i7.Future<_i6.User>.value(
-              _FakeUser_9(this, Invocation.method(#fetch, [])),
+            returnValue: _i7.Future<_i6.UserAuth>.value(
+              _FakeUserAuth_9(this, Invocation.method(#fetch, [])),
             ),
           )
-          as _i7.Future<_i6.User>);
+          as _i7.Future<_i6.UserAuth>);
 }
 
 /// A class which mocks [GetUserStreamFromGoogleUseCase].
@@ -1182,10 +1182,10 @@ class MockGetUserStreamFromGoogleUseCase extends _i1.Mock
   }
 
   @override
-  _i7.Stream<_i6.User> fetch() =>
+  _i7.Stream<_i6.UserAuth> fetch() =>
       (super.noSuchMethod(
             Invocation.method(#fetch, []),
-            returnValue: _i7.Stream<_i6.User>.empty(),
+            returnValue: _i7.Stream<_i6.UserAuth>.empty(),
           )
-          as _i7.Stream<_i6.User>);
+          as _i7.Stream<_i6.UserAuth>);
 }

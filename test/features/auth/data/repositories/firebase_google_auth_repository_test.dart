@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:repondo/features/auth/data/repositories/firebase_google_auth_repository.dart';
-import 'package:repondo/features/auth/domain/entities/user.dart' as authDomain;
+import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 
 import '../../../../mocks/mocks.mocks.dart';
@@ -16,7 +16,7 @@ late MockGoogleSignInAuthentication mockGoogleSignInAuthentication;
 late MockUserCredential mockFirebaseAuthUserCredential;
 late MockUser mockFirebaseAuthUser;
 late FirebaseGoogleAuthRepository firebaseGoogleAuthRepository;
-late fbAuth.AuthCredential capturedCredential;
+late AuthCredential capturedCredential;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -56,7 +56,7 @@ void main() {
       when(mockFirebaseAuth.signInWithCredential(any))
           .thenAnswer((invocation) async {
         capturedCredential =
-            invocation.positionalArguments.first as fbAuth.AuthCredential;
+            invocation.positionalArguments.first as AuthCredential;
         return mockFirebaseAuthUserCredential;
       });
 
@@ -83,7 +83,7 @@ void main() {
 
         test('signIn deve retornar um domínio User', () async {
           final result = await firebaseGoogleAuthRepository.signIn();
-          expect(result, isA<authDomain.User>());
+          expect(result, isA<UserAuth>());
         });
 
         test('Deve autenticar com Google e retornar um User corretamente',
@@ -128,7 +128,7 @@ void main() {
         test('Deve lançar AuthException se signInWithCredential falhar',
             () async {
           when(mockFirebaseAuth.signInWithCredential(any))
-              .thenThrow(fbAuth.FirebaseAuthException(code: 'unknown'));
+              .thenThrow(FirebaseAuthException(code: 'unknown'));
 
           expect(
             () async => await firebaseGoogleAuthRepository.signIn(),
@@ -154,7 +154,7 @@ void main() {
       group('casos de sucesso', () {
         test('getCurrentUser deve retornar um domínio User', () async {
           final result = await firebaseGoogleAuthRepository.getCurrentUser();
-          expect(result, isA<authDomain.User>());
+          expect(result, isA<UserAuth>());
         });
 
         test('Deve retornar um User válido', () async {
@@ -261,7 +261,7 @@ void main() {
 
           expectLater(
             firebaseGoogleAuthRepository.userStream,
-            emits(isA<authDomain.User>()),
+            emits(isA<UserAuth>()),
           );
         });
 
@@ -280,8 +280,8 @@ void main() {
           expectLater(
             firebaseGoogleAuthRepository.userStream,
             emitsInOrder([
-              isA<authDomain.User>(),
-              isA<authDomain.User>(),
+              isA<UserAuth>(),
+              isA<UserAuth>(),
             ]),
           );
         });
