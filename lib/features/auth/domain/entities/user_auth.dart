@@ -1,13 +1,17 @@
-class UserAuth {
-  final String id;
-  final String? name;
-  final String? email;
-  final String? photoUrl;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  const UserAuth({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.photoUrl,
-  });
+part 'user_auth.freezed.dart';
+part 'user_auth.g.dart';
+
+@freezed
+abstract class UserAuth with _$UserAuth {
+  factory UserAuth({
+    required String id,
+    String? name,
+    String? email,
+    String? photoUrl,
+  }) = _UserAuth;
+
+  factory UserAuth.fromJson(Map<String, dynamic> json) =>
+      _$UserAuthFromJson(json);
 }

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:repondo/features/auth/data/mappers/firebase_user_extensions.dart';
 import 'package:repondo/features/auth/domain/exports.dart';
 
 class FirebaseGoogleAuthRepository implements GoogleAuthRepository {
@@ -14,8 +15,9 @@ class FirebaseGoogleAuthRepository implements GoogleAuthRepository {
   @override
   Future<UserAuth> getCurrentUser() async {
     final currentUser = _firebaseAuth.currentUser;
-    return _toUser(
-        currentUser ?? (throw AuthException('User do Firebase é nulo')));
+    return currentUser != null
+        ? currentUser.toUserAuth()
+        : throw AuthException('Usuário autenticado é null');
   }
 
   @override
@@ -36,8 +38,12 @@ class FirebaseGoogleAuthRepository implements GoogleAuthRepository {
       final userCredential =
           await _firebaseAuth.signInWithCredential(credential);
 
-      return _toUser(userCredential.user ??
-          (throw AuthException('Usuário Firebase é nulo após autenticação.')));
+      final user = userCredential.user;
+      if (user == null) {
+        throw AuthException('Usuário autenticado é null');
+      }
+
+      return user.toUserAuth();
     } on AuthException {
       rethrow;
     } catch (e) {
@@ -57,16 +63,8 @@ class FirebaseGoogleAuthRepository implements GoogleAuthRepository {
 
   @override
   Stream<UserAuth> get userStream {
-    return _firebaseAuth.authStateChanges().map((user) =>
-        _toUser(user ?? (throw AuthException('User do Firebase é nulo'))));
-  }
-
-  UserAuth _toUser(User authenticatedUser) {
-    return UserAuth(
-      id: authenticatedUser.uid,
-      name: authenticatedUser.displayName,
-      email: authenticatedUser.email,
-      photoUrl: authenticatedUser.photoURL,
-    );
+    return _firebaseAuth.authStateChanges().map((user) => user != null
+        ? user.toUserAuth()
+        : throw AuthException('Usuário autenticado é null'));
   }
 }

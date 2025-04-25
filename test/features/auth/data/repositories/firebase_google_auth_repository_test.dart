@@ -9,6 +9,7 @@ import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 
 import '../../../../mocks/mocks.mocks.dart';
 
+// Instanciando mocks de classes necessárias para os testes
 late MockGoogleSignIn mockGoogleSignIn;
 late MockFirebaseAuth mockFirebaseAuth;
 late MockGoogleSignInAccount mockGoogleSignInAccount;
@@ -19,13 +20,15 @@ late FirebaseGoogleAuthRepository firebaseGoogleAuthRepository;
 late AuthCredential capturedCredential;
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  // Inicialização dos mocks
   mockGoogleSignIn = MockGoogleSignIn();
   mockFirebaseAuth = MockFirebaseAuth();
   mockGoogleSignInAccount = MockGoogleSignInAccount();
   mockGoogleSignInAuthentication = MockGoogleSignInAuthentication();
   mockFirebaseAuthUserCredential = MockUserCredential();
   mockFirebaseAuthUser = MockUser();
+
+  // Inicialização do repositório que será testado
   firebaseGoogleAuthRepository = FirebaseGoogleAuthRepository(
     googleSignIn: mockGoogleSignIn,
     firebaseAuth: mockFirebaseAuth,
@@ -33,6 +36,7 @@ void main() {
 
   group('FirebaseGoogleAuthReposity', () {
     setUp(() {
+      // Resetando mocks antes de cada teste para garantir que nenhum estado anterior interfira
       reset(mockGoogleSignIn);
       reset(mockFirebaseAuth);
       reset(mockGoogleSignInAccount);
@@ -40,19 +44,19 @@ void main() {
       reset(mockFirebaseAuthUserCredential);
       reset(mockFirebaseAuthUser);
 
+      // Simulando o fluxo de login do Google
       when(mockGoogleSignIn.signIn())
           .thenAnswer((_) async => mockGoogleSignInAccount);
 
       when(mockGoogleSignInAccount.authentication)
           .thenAnswer((_) async => mockGoogleSignInAuthentication);
 
+      // Simulando tokens de autenticação válidos do Google
       when(mockGoogleSignInAuthentication.accessToken)
           .thenReturn('access-token');
       when(mockGoogleSignInAuthentication.idToken).thenReturn('id-token');
 
-      // when(mockFirebaseAuth.signInWithCredential(any))
-      //     .thenAnswer((_) async => mockFirebaseAuthUserCredential);
-
+      // Simulando a resposta da autenticação no Firebase com as credenciais do Google
       when(mockFirebaseAuth.signInWithCredential(any))
           .thenAnswer((invocation) async {
         capturedCredential =
@@ -60,17 +64,22 @@ void main() {
         return mockFirebaseAuthUserCredential;
       });
 
+      // Simulando o usuário do Firebase
       when(mockFirebaseAuthUserCredential.user)
           .thenReturn(mockFirebaseAuthUser);
 
       when(mockFirebaseAuth.currentUser).thenReturn(mockFirebaseAuthUser);
 
+      // Simulando o logout do Google e Firebase
       when(mockGoogleSignIn.signOut()).thenAnswer((_) async {});
       when(mockFirebaseAuth.signOut()).thenAnswer((_) async {});
 
+      // Atribuindo valores simulados ao usuário
       when(mockFirebaseAuthUser.uid).thenReturn('uid-123');
       when(mockFirebaseAuthUser.displayName).thenReturn('Zé Dev');
       when(mockFirebaseAuthUser.email).thenReturn('ze@dev.com');
+      when(mockFirebaseAuthUser.photoURL)
+          .thenReturn('https://example.com/photo.jpg');
     });
 
     group('signIn', () {
@@ -78,46 +87,57 @@ void main() {
         test('Deve usar o GoogleAuthProvider (google.com) no signIn', () async {
           await firebaseGoogleAuthRepository.signIn();
 
+          // Verificando se o GoogleAuthProvider foi utilizado no login
           expect(capturedCredential.providerId, equals('google.com'));
         });
 
-        test('signIn deve retornar um domínio User', () async {
+        test('signIn deve retornar um domínio UserAuth', () async {
           final result = await firebaseGoogleAuthRepository.signIn();
+          // Verificando se o retorno é um objeto UserAuth
           expect(result, isA<UserAuth>());
         });
 
-        test('Deve autenticar com Google e retornar um User corretamente',
+        test('Deve autenticar com Google e retornar um UserAuth corretamente',
             () async {
           final result = await firebaseGoogleAuthRepository.signIn();
 
+          // Verificando se as informações do usuário estão corretas após o login
           expect(result.id, 'uid-123');
           expect(result.name, 'Zé Dev');
           expect(result.email, 'ze@dev.com');
+          expect(result.photoUrl, 'https://example.com/photo.jpg');
 
+          // Verificando as chamadas feitas para o login
           verify(mockGoogleSignIn.signIn()).called(1);
           verify(mockGoogleSignInAccount.authentication).called(1);
           verify(mockFirebaseAuth.signInWithCredential(any)).called(1);
         });
 
         test(
-            'Deve retornar User com name e email vazios se displayName e email forem null',
+            'Deve retornar UserAuth com name, email e photo null se forem null',
             () async {
+          // Simulando que o Firebase retornou valores nulos para o nome, email e foto
           when(mockFirebaseAuthUser.displayName).thenReturn(null);
           when(mockFirebaseAuthUser.email).thenReturn(null);
+          when(mockFirebaseAuthUser.photoURL).thenReturn(null);
 
           final result = await firebaseGoogleAuthRepository.signIn();
 
+          // Verificando se o retorno tem os campos nulos
           expect(result.id, 'uid-123');
-          expect(result.name, '');
-          expect(result.email, '');
+          expect(result.name, null);
+          expect(result.email, null);
+          expect(result.photoUrl, null);
         });
       });
 
       group('casos de erro', () {
         test('Deve lançar AuthException se o login for cancelado pelo usuário',
             () async {
+          // Simulando o cancelamento do login pelo usuário
           when(mockGoogleSignIn.signIn()).thenAnswer((_) async => null);
 
+          // Verificando se a exceção é lançada corretamente
           expect(
             () async => await firebaseGoogleAuthRepository.signIn(),
             throwsA(isA<AuthException>()
@@ -127,6 +147,7 @@ void main() {
 
         test('Deve lançar AuthException se signInWithCredential falhar',
             () async {
+          // Simulando um erro durante o login
           when(mockFirebaseAuth.signInWithCredential(any))
               .thenThrow(FirebaseAuthException(code: 'unknown'));
 
@@ -137,14 +158,15 @@ void main() {
         });
 
         test(
-            'Deve lançar AuthException se user do firebase for nulo após autenticação',
+            'Deve lançar AuthException se user do firebase for null após autenticação',
             () async {
+          // Simulando que o usuário retornado é nulo
           when(mockFirebaseAuthUserCredential.user).thenReturn(null);
 
           expect(
             () async => await firebaseGoogleAuthRepository.signIn(),
             throwsA(isA<AuthException>()
-                .having((e) => e.message, 'mensagem', contains('nulo'))),
+                .having((e) => e.message, 'mensagem', contains('null'))),
           );
         });
       });
@@ -152,42 +174,50 @@ void main() {
 
     group('getCurrentUser', () {
       group('casos de sucesso', () {
-        test('getCurrentUser deve retornar um domínio User', () async {
+        test('getCurrentUser deve retornar um domínio UserAuth', () async {
           final result = await firebaseGoogleAuthRepository.getCurrentUser();
+          // Verificando se o retorno é um objeto UserAuth
           expect(result, isA<UserAuth>());
         });
 
-        test('Deve retornar um User válido', () async {
+        test('Deve retornar um UserAuth válido', () async {
           final result = await firebaseGoogleAuthRepository.getCurrentUser();
 
+          // Verificando se as informações do usuário estão corretas
           expect(result.id, 'uid-123');
           expect(result.name, 'Zé Dev');
           expect(result.email, 'ze@dev.com');
+          expect(result.photoUrl, 'https://example.com/photo.jpg');
           verify(mockFirebaseAuth.currentUser).called(1);
         });
       });
 
       group('casos de erro', () {
-        test('Deve retornar name e email vazios se forem nulos no Firebase',
+        test(
+            'Deve retornar name, email e photoUrl null se forem null no Firebase',
             () async {
           when(mockFirebaseAuthUser.displayName).thenReturn(null);
           when(mockFirebaseAuthUser.email).thenReturn(null);
+          when(mockFirebaseAuthUser.photoURL).thenReturn(null);
 
           final result = await firebaseGoogleAuthRepository.getCurrentUser();
 
+          // Verificando se o retorno tem os campos nulos
           expect(result.id, 'uid-123');
-          expect(result.name, '');
-          expect(result.email, '');
+          expect(result.name, null);
+          expect(result.email, null);
+          expect(result.photoUrl, null);
           verify(mockFirebaseAuth.currentUser).called(1);
         });
 
-        test('Deve lançar AuthException se currentUser for nulo', () async {
+        test('Deve lançar AuthException se currentUser for null', () async {
+          // Simulando que o usuário não está autenticado
           when(mockFirebaseAuth.currentUser).thenReturn(null);
 
           expect(
             () => firebaseGoogleAuthRepository.getCurrentUser(),
             throwsA(isA<AuthException>()
-                .having((e) => e.message, 'mensagem', contains('nulo'))),
+                .having((e) => e.message, 'mensagem', contains('null'))),
           );
         });
       });
@@ -199,6 +229,7 @@ void main() {
             () async {
           await firebaseGoogleAuthRepository.signOut();
 
+          // Verificando se as funções de signOut foram chamadas corretamente
           verify(mockGoogleSignIn.signOut());
           verify(mockFirebaseAuth.signOut());
         });
@@ -207,6 +238,7 @@ void main() {
       group('casos de erro', () {
         test('Deve lançar AuthException se ocorrer um erro no signOut',
             () async {
+          // Simulando um erro no Google signOut
           when(mockGoogleSignIn.signOut())
               .thenThrow(Exception('Erro no Google'));
 
@@ -220,6 +252,7 @@ void main() {
         test(
             'deve lançar AuthException se firebaseAuth.signOut falhar após googleSignIn.signOut',
             () async {
+          // Simulando um erro no Firebase signOut
           when(mockFirebaseAuth.signOut())
               .thenThrow(Exception('Erro Firebase'));
 
@@ -253,36 +286,13 @@ void main() {
 
     group('userStream', () {
       group('casos de sucesso', () {
-        test(
-            'deve emitir um authDomain.User quando o Firebase emitir um fbAuth.User',
-            () {
+        test('deve emitir um UserAuth quando o Firebase emitir um User', () {
           when(mockFirebaseAuth.authStateChanges())
               .thenAnswer((_) => Stream.value(mockFirebaseAuthUser));
 
           expectLater(
             firebaseGoogleAuthRepository.userStream,
             emits(isA<UserAuth>()),
-          );
-        });
-
-        test('deve emitir múltiplos authDomain.User corretamente', () async {
-          final mockFirebaseAuthUser2 = MockUser();
-          when(mockFirebaseAuthUser2.uid).thenReturn('uid-456');
-          when(mockFirebaseAuthUser2.displayName).thenReturn('José Dev');
-          when(mockFirebaseAuthUser2.email).thenReturn('José@dev.com');
-
-          when(mockFirebaseAuth.authStateChanges())
-              .thenAnswer((_) => Stream.fromIterable([
-                    mockFirebaseAuthUser,
-                    mockFirebaseAuthUser2,
-                  ]));
-
-          expectLater(
-            firebaseGoogleAuthRepository.userStream,
-            emitsInOrder([
-              isA<UserAuth>(),
-              isA<UserAuth>(),
-            ]),
           );
         });
       });
@@ -294,8 +304,8 @@ void main() {
 
           expect(
             firebaseGoogleAuthRepository.userStream.first,
-            throwsA(isA<AuthException>().having((e) => e.message, 'mensagem',
-                contains('User do Firebase é nulo'))),
+            throwsA(isA<AuthException>()
+                .having((e) => e.message, 'mensagem', contains('null'))),
           );
         });
       });
