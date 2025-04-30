@@ -1,5 +1,6 @@
 import 'package:repondo/features/auth/application/facades/google_auth_facade.dart';
 import 'package:repondo/features/auth/domain/entities/user_auth.dart';
+import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 import 'package:repondo/features/auth/providers/facades/google_auth_facade_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,7 +13,13 @@ class GoogleAuthNotifier extends _$GoogleAuthNotifier {
   @override
   Future<UserAuth> build() async {
     try {
-      return await _authFacade.getCurrentUser();
+      final userAuthenticated = await _authFacade.getCurrentUser();
+
+      if (userAuthenticated == null) {
+        throw AuthException('User not authenticated');
+      }
+
+      return userAuthenticated;
     } catch (e, st) {
       throw AsyncError(e, st);
     }

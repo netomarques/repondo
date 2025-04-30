@@ -184,15 +184,13 @@ void main() {
           final result = await firebaseGoogleAuthRepository.getCurrentUser();
 
           // Verificando se as informações do usuário estão corretas
-          expect(result.id, 'uid-123');
+          expect(result!.id, 'uid-123');
           expect(result.name, 'Zé Dev');
           expect(result.email, 'ze@dev.com');
           expect(result.photoUrl, 'https://example.com/photo.jpg');
           verify(mockFirebaseAuth.currentUser).called(1);
         });
-      });
 
-      group('casos de erro', () {
         test(
             'Deve retornar name, email e photoUrl null se forem null no Firebase',
             () async {
@@ -203,23 +201,49 @@ void main() {
           final result = await firebaseGoogleAuthRepository.getCurrentUser();
 
           // Verificando se o retorno tem os campos nulos
-          expect(result.id, 'uid-123');
+          expect(result!.id, 'uid-123');
           expect(result.name, null);
           expect(result.email, null);
           expect(result.photoUrl, null);
           verify(mockFirebaseAuth.currentUser).called(1);
         });
 
-        test('Deve lançar AuthException se currentUser for null', () async {
-          // Simulando que o usuário não está autenticado
+        test('deve retornar UserAuth null caso user do firebase seja null ',
+            () async {
           when(mockFirebaseAuth.currentUser).thenReturn(null);
+
+          final result = await firebaseGoogleAuthRepository.getCurrentUser();
+
+          // Verificando se o retorno é nulo
+          expect(result, null);
+          verify(mockFirebaseAuth.currentUser).called(1);
+        });
+      });
+
+      group('casos de erro', () {
+        test('Deve lançar AuthException caso ocorra Excpetion genérico',
+            () async {
+          // Simulando que erro genérico foi lançado
+          when(mockFirebaseAuth.currentUser).thenThrow(Exception('Erro'));
 
           expect(
             () => firebaseGoogleAuthRepository.getCurrentUser(),
-            throwsA(isA<AuthException>()
-                .having((e) => e.message, 'mensagem', contains('null'))),
+            throwsA(isA<AuthException>()),
           );
         });
+      });
+
+      test('Deve lançar AuthException caso o Firebase lance erro inesperado',
+          () async {
+        when(mockFirebaseAuth.currentUser).thenThrow(FirebaseAuthException(
+          code: 'internal-error',
+          message: 'Erro interno',
+        ));
+
+        expect(
+          () => firebaseGoogleAuthRepository.getCurrentUser(),
+          throwsA(isA<AuthException>()),
+        );
       });
     });
 

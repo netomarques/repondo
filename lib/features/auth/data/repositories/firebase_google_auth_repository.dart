@@ -13,11 +13,15 @@ class FirebaseGoogleAuthRepository implements GoogleAuthRepository {
         _googleSignIn = googleSignIn ?? GoogleSignIn();
 
   @override
-  Future<UserAuth> getCurrentUser() async {
-    final currentUser = _firebaseAuth.currentUser;
-    return currentUser != null
-        ? currentUser.toUserAuth()
-        : throw AuthException('Usuário autenticado é null');
+  Future<UserAuth?> getCurrentUser() async {
+    try {
+      final currentUser = _firebaseAuth.currentUser;
+      return currentUser?.toUserAuth();
+    } on FirebaseAuthException catch (e) {
+      throw AuthException('Erro ao obter usuário autenticado: ${e.message}');
+    } catch (e) {
+      throw AuthException('Erro inesperado ao obter usuário autenticado: $e');
+    }
   }
 
   @override

@@ -1103,14 +1103,12 @@ class MockGoogleAuthRepository extends _i1.Mock
           as _i7.Future<void>);
 
   @override
-  _i7.Future<_i6.UserAuth> getCurrentUser() =>
+  _i7.Future<_i6.UserAuth?> getCurrentUser() =>
       (super.noSuchMethod(
             Invocation.method(#getCurrentUser, []),
-            returnValue: _i7.Future<_i6.UserAuth>.value(
-              _FakeUserAuth_9(this, Invocation.method(#getCurrentUser, [])),
-            ),
+            returnValue: _i7.Future<_i6.UserAuth?>.value(),
           )
-          as _i7.Future<_i6.UserAuth>);
+          as _i7.Future<_i6.UserAuth?>);
 }
 
 /// A class which mocks [SignInWithGoogleUseCase].
@@ -1162,14 +1160,12 @@ class MockGetCurrentUserFromGoogleUseCase extends _i1.Mock
   }
 
   @override
-  _i7.Future<_i6.UserAuth> fetch() =>
+  _i7.Future<_i6.UserAuth?> fetch() =>
       (super.noSuchMethod(
             Invocation.method(#fetch, []),
-            returnValue: _i7.Future<_i6.UserAuth>.value(
-              _FakeUserAuth_9(this, Invocation.method(#fetch, [])),
-            ),
+            returnValue: _i7.Future<_i6.UserAuth?>.value(),
           )
-          as _i7.Future<_i6.UserAuth>);
+          as _i7.Future<_i6.UserAuth?>);
 }
 
 /// A class which mocks [GetUserStreamFromGoogleUseCase].
