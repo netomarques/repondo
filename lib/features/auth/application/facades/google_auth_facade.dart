@@ -25,7 +25,7 @@ class GoogleAuthFacade {
     await _signOutFromGoogleUseCase.execute();
   }
 
-  Future<UserAuth> getCurrentUser() {
+  Future<UserAuth?> getCurrentUser() {
     return _getCurrentUserUseCase.fetch();
   }
 

@@ -12,7 +12,13 @@ class GoogleAuthNotifier extends _$GoogleAuthNotifier {
 
   @override
   Future<UserAuth> build() async {
-    return await _authFacade.getCurrentUser();
+    final userAuthenticated = await _authFacade.getCurrentUser();
+
+    if (userAuthenticated == null) {
+      throw AuthException('Usuário não autenticado');
+    }
+
+    return userAuthenticated;
   }
 
   Future<void> signInWithGoogle() async {
@@ -20,13 +26,11 @@ class GoogleAuthNotifier extends _$GoogleAuthNotifier {
 
     try {
       final userAuth = await _authFacade.getCurrentUser();
-      state = AsyncData(userAuth);
+      state = userAuth != null
+          ? AsyncValue.data(userAuth)
+          : await AsyncValue.guard(() => _authFacade.signInWithGoogle());
     } on AuthException catch (e, st) {
-      if (e.message.contains('null')) {
-        state = await AsyncValue.guard(() => _authFacade.signInWithGoogle());
-      } else {
-        state = AsyncError(AuthException('Erro inesperado: $e'), st);
-      }
+      state = AsyncError(e, st);
     } catch (e, st) {
       state = AsyncError(AuthException('Erro inesperado: $e'), st);
     }
