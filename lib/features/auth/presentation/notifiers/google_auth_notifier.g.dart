@@ -7,7 +7,7 @@ part of 'google_auth_notifier.dart';
 // **************************************************************************
 
 String _$googleAuthNotifierHash() =>
-    r'c14fb9dd74985f76f986db572844cda0a9eb9656';
+    r'de3029126630ed1db7d7b7b29e2b9ca9a1f4b413';
 
 /// See also [GoogleAuthNotifier].
 @ProviderFor(GoogleAuthNotifier)

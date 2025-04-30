@@ -1,5 +1,6 @@
 import 'package:repondo/features/auth/application/facades/google_auth_facade.dart';
 import 'package:repondo/features/auth/domain/entities/user_auth.dart';
+import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 import 'package:repondo/features/auth/providers/facades/google_auth_facade_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,21 +12,34 @@ class GoogleAuthNotifier extends _$GoogleAuthNotifier {
 
   @override
   Future<UserAuth> build() async {
-    try {
-      return await _authFacade.getCurrentUser();
-    } catch (e, st) {
-      throw AsyncError(e, st);
-    }
+    return await _authFacade.getCurrentUser();
   }
 
   Future<void> signInWithGoogle() async {
     state = const AsyncLoading();
 
-    state = await AsyncValue.guard(() => _authFacade.signInWithGoogle());
+    try {
+      final userAuth = await _authFacade.getCurrentUser();
+      state = AsyncData(userAuth);
+    } on AuthException catch (e, st) {
+      if (e.message.contains('null')) {
+        state = await AsyncValue.guard(() => _authFacade.signInWithGoogle());
+      } else {
+        state = AsyncError(AuthException('Erro inesperado: $e'), st);
+      }
+    } catch (e, st) {
+      state = AsyncError(AuthException('Erro inesperado: $e'), st);
+    }
   }
 
   Future<void> signOut() async {
-    await _authFacade.signOut();
-    ref.invalidateSelf(); // força o rebuild e chama o build() de novo
+    state = const AsyncLoading();
+
+    try {
+      await _authFacade.signOut();
+      ref.invalidateSelf(); // força o rebuild e chama o build() de novo
+    } catch (e, st) {
+      state = AsyncError(e, st);
+    }
   }
 }

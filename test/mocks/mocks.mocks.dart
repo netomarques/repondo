@@ -14,14 +14,10 @@ import 'package:google_sign_in_platform_interface/google_sign_in_platform_interf
     as _i9;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i8;
-import 'package:repondo/features/auth/application/usecases/google_auth/get_current_user_from_google_usecase.dart'
-    as _i13;
-import 'package:repondo/features/auth/application/usecases/google_auth/get_user_stream_from_google_usecase.dart'
-    as _i14;
-import 'package:repondo/features/auth/application/usecases/google_auth/sign_in_with_google_usecase.dart'
-    as _i11;
-import 'package:repondo/features/auth/application/usecases/google_auth/sign_out_from_google_usecase.dart'
+import 'package:repondo/features/auth/application/facades/google_auth_facade.dart'
     as _i12;
+import 'package:repondo/features/auth/application/usecases/google_auth/exports.dart'
+    as _i11;
 import 'package:repondo/features/auth/domain/entities/user_auth.dart' as _i6;
 import 'package:repondo/features/auth/domain/exports.dart' as _i10;
 
@@ -1137,7 +1133,7 @@ class MockSignInWithGoogleUseCase extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockSignOutFromGoogleUseCase extends _i1.Mock
-    implements _i12.SignOutFromGoogleUseCase {
+    implements _i11.SignOutFromGoogleUseCase {
   MockSignOutFromGoogleUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -1156,7 +1152,7 @@ class MockSignOutFromGoogleUseCase extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGetCurrentUserFromGoogleUseCase extends _i1.Mock
-    implements _i13.GetCurrentUserFromGoogleUseCase {
+    implements _i11.GetCurrentUserFromGoogleUseCase {
   MockGetCurrentUserFromGoogleUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -1176,7 +1172,7 @@ class MockGetCurrentUserFromGoogleUseCase extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGetUserStreamFromGoogleUseCase extends _i1.Mock
-    implements _i14.GetUserStreamFromGoogleUseCase {
+    implements _i11.GetUserStreamFromGoogleUseCase {
   MockGetUserStreamFromGoogleUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -1185,6 +1181,52 @@ class MockGetUserStreamFromGoogleUseCase extends _i1.Mock
   _i7.Stream<_i6.UserAuth> fetch() =>
       (super.noSuchMethod(
             Invocation.method(#fetch, []),
+            returnValue: _i7.Stream<_i6.UserAuth>.empty(),
+          )
+          as _i7.Stream<_i6.UserAuth>);
+}
+
+/// A class which mocks [GoogleAuthFacade].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGoogleAuthFacade extends _i1.Mock implements _i12.GoogleAuthFacade {
+  MockGoogleAuthFacade() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i7.Future<_i6.UserAuth> signInWithGoogle() =>
+      (super.noSuchMethod(
+            Invocation.method(#signInWithGoogle, []),
+            returnValue: _i7.Future<_i6.UserAuth>.value(
+              _FakeUserAuth_9(this, Invocation.method(#signInWithGoogle, [])),
+            ),
+          )
+          as _i7.Future<_i6.UserAuth>);
+
+  @override
+  _i7.Future<void> signOut() =>
+      (super.noSuchMethod(
+            Invocation.method(#signOut, []),
+            returnValue: _i7.Future<void>.value(),
+            returnValueForMissingStub: _i7.Future<void>.value(),
+          )
+          as _i7.Future<void>);
+
+  @override
+  _i7.Future<_i6.UserAuth> getCurrentUser() =>
+      (super.noSuchMethod(
+            Invocation.method(#getCurrentUser, []),
+            returnValue: _i7.Future<_i6.UserAuth>.value(
+              _FakeUserAuth_9(this, Invocation.method(#getCurrentUser, [])),
+            ),
+          )
+          as _i7.Future<_i6.UserAuth>);
+
+  @override
+  _i7.Stream<_i6.UserAuth> observeUserStream() =>
+      (super.noSuchMethod(
+            Invocation.method(#observeUserStream, []),
             returnValue: _i7.Stream<_i6.UserAuth>.empty(),
           )
           as _i7.Stream<_i6.UserAuth>);
