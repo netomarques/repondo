@@ -231,19 +231,19 @@ void main() {
             throwsA(isA<AuthException>()),
           );
         });
-      });
 
-      test('Deve lançar AuthException caso o Firebase lance erro inesperado',
-          () async {
-        when(mockFirebaseAuth.currentUser).thenThrow(FirebaseAuthException(
-          code: 'internal-error',
-          message: 'Erro interno',
-        ));
+        test('Deve lançar AuthException caso o Firebase lance erro inesperado',
+            () async {
+          when(mockFirebaseAuth.currentUser).thenThrow(FirebaseAuthException(
+            code: 'internal-error',
+            message: 'Erro interno',
+          ));
 
-        expect(
-          () => firebaseGoogleAuthRepository.getCurrentUser(),
-          throwsA(isA<AuthException>()),
-        );
+          expect(
+            () => firebaseGoogleAuthRepository.getCurrentUser(),
+            throwsA(isA<AuthException>()),
+          );
+        });
       });
     });
 

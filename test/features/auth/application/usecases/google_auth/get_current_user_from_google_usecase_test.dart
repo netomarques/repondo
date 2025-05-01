@@ -33,6 +33,18 @@ void main() {
         verify(mockRepository.getCurrentUser()).called(1);
         verifyNoMoreInteractions(mockRepository);
       });
+
+      test(
+          'deve chamar getCurrentUser no GoogleAuthRepository e retornar null quando o usuário não estiver autenticado',
+          () async {
+        when(mockRepository.getCurrentUser()).thenAnswer((_) async => null);
+
+        final result = await usecase.fetch();
+
+        expect(result, isNull);
+        verify(mockRepository.getCurrentUser()).called(1);
+        verifyNoMoreInteractions(mockRepository);
+      });
     });
   });
 }

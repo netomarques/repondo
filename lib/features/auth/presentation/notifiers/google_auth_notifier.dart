@@ -14,32 +14,28 @@ class GoogleAuthNotifier extends _$GoogleAuthNotifier {
   Future<UserAuth> build() async {
     final userAuthenticated = await _authFacade.getCurrentUser();
 
-    if (userAuthenticated == null) {
-      throw AuthException('Usuário não autenticado');
-    }
-
-    return userAuthenticated;
+    return userAuthenticated ??
+        (throw AuthException('Usuário não autenticado'));
   }
 
   Future<void> signInWithGoogle() async {
     state = const AsyncLoading();
 
-    try {
+    state = await AsyncValue.guard(() async {
       final userAuth = await _authFacade.getCurrentUser();
-      state = userAuth != null
-          ? AsyncValue.data(userAuth)
-          : await AsyncValue.guard(() => _authFacade.signInWithGoogle());
-    } on AuthException catch (e, st) {
-      state = AsyncError(e, st);
-    } catch (e, st) {
-      state = AsyncError(AuthException('Erro inesperado: $e'), st);
-    }
+      return userAuth ?? await _authFacade.signInWithGoogle();
+    });
   }
 
   Future<void> signOut() async {
     state = const AsyncLoading();
 
     try {
+      final userAuth = await _authFacade.getCurrentUser();
+      if (userAuth == null) {
+        throw AuthException('Não existe mais usuário autenticado');
+      }
+
       await _authFacade.signOut();
       ref.invalidateSelf(); // força o rebuild e chama o build() de novo
     } catch (e, st) {
