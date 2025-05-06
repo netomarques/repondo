@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:repondo/features/auth/presentation/notifiers/google_auth_notifier.dart';
-import 'package:repondo/features/auth/presentation/pages/home_page.dart';
-import 'package:repondo/features/auth/presentation/pages/login_page.dart';
+import 'package:go_router/go_router.dart';
 
-class SplashPage extends ConsumerWidget {
+class SplashPage extends StatelessWidget {
+  static SplashPage builder(BuildContext context, GoRouterState state) =>
+      const SplashPage();
+
   const SplashPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final googleAuth = ref.watch(googleAuthNotifierProvider);
-
-    return googleAuth.when(
-      data: (_) => const HomePage(),
-      error: (_, __) => const LoginPage(),
-      loading: () => const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      ),
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(child: CircularProgressIndicator()),
     );
   }
 }

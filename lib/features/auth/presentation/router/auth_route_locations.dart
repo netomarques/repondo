@@ -8,4 +8,5 @@ class AuthRouteLocations {
   static const String home = '/home';
   static const String loading = '/loading';
   static const String conta_desativada = '/conta_desativada';
+  static const String splash = '/splash';
 }

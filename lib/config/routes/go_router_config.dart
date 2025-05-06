@@ -4,30 +4,44 @@ import 'package:repondo/config/navigator/navigator_key.dart';
 import 'package:repondo/config/routes/app_routes.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 import 'package:repondo/features/auth/presentation/exports.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final goRouterProvider = Provider<GoRouter>((ref) {
+part 'go_router_config.g.dart';
+
+@Riverpod(keepAlive: true)
+GoRouter goRouterConfig(Ref ref) {
   final googleAuthState = ref.watch(googleAuthNotifierProvider);
 
   return GoRouter(
     navigatorKey: navigatorKey,
-    initialLocation: AuthRouteLocations.login,
+    initialLocation: AuthRouteLocations.splash,
+    debugLogDiagnostics: true,
     routes: AppRoutes.routes,
     redirect: (context, state) {
+      final location = state.matchedLocation;
+
       return googleAuthState.when(
         data: (userAuth) {
-          return AuthRouteLocations.home;
+          return location == AuthRouteLocations.home
+              ? null
+              : AuthRouteLocations.home;
         },
-        error: (err, __) {
-          if (err is! AuthException &&
-              (err as AuthException).message == 'Conta desativada') {
-            return AuthRouteLocations.conta_desativada;
+        error: (error, _) {
+          if (error is AuthException && error.message == 'Conta desativada') {
+            return location == AuthRouteLocations.conta_desativada
+                ? null
+                : AuthRouteLocations.conta_desativada;
           }
-          return AuthRouteLocations.login;
+          return location == AuthRouteLocations.login
+              ? null
+              : AuthRouteLocations.login;
         },
         loading: () {
-          return AuthRouteLocations.loading;
+          return location == AuthRouteLocations.splash
+              ? null
+              : AuthRouteLocations.splash;
         },
       );
     },
   );
-});
+}

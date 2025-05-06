@@ -18,7 +18,7 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final routerConfig = ref.watch(goRouterProvider);
+    final routerConfig = ref.watch(goRouterConfigProvider);
     return MaterialApp.router(
       title: 'Repondo',
       theme: ThemeData(
