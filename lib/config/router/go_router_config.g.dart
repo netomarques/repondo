@@ -6,9 +6,12 @@ part of 'go_router_config.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$goRouterConfigHash() => r'321112c6fbf46d58d4ccd7f7a69398ef1beb325c';
+String _$goRouterConfigHash() => r'ccb5a84300f6d9a9123e2e0dad1e381d4ffd0134';
 
-/// See also [goRouterConfig].
+/// Provider que configura o GoRouter com navegação reativa e redirecionamento controlado.
+/// Mantém-se vivo (keepAlive) para não ser descartado da memória entre navegações.
+///
+/// Copied from [goRouterConfig].
 @ProviderFor(goRouterConfig)
 final goRouterConfigProvider = Provider<GoRouter>.internal(
   goRouterConfig,

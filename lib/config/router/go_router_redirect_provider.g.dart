@@ -1,27 +1,29 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'redirect_handler.dart';
+part of 'go_router_redirect_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$redirectHandlerHash() => r'c1caef82b34a926241ea60cc8294913da69df7a3';
+String _$goRouterRedirectHash() => r'af2b9b789a66eec925ffaba43b1ea1b6715f83e9';
 
-/// See also [redirectHandler].
-@ProviderFor(redirectHandler)
-final redirectHandlerProvider = AutoDisposeProvider<GoRouterRedirect>.internal(
-  redirectHandler,
-  name: r'redirectHandlerProvider',
+/// Provider que retorna uma função de redirecionamento para o GoRouter.
+///
+/// Copied from [goRouterRedirect].
+@ProviderFor(goRouterRedirect)
+final goRouterRedirectProvider = AutoDisposeProvider<GoRouterRedirect>.internal(
+  goRouterRedirect,
+  name: r'goRouterRedirectProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$redirectHandlerHash,
+      : _$goRouterRedirectHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef RedirectHandlerRef = AutoDisposeProviderRef<GoRouterRedirect>;
+typedef GoRouterRedirectRef = AutoDisposeProviderRef<GoRouterRedirect>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
