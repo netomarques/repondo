@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:repondo/core/result/exports.dart';
 import 'package:repondo/features/auth/data/exports.dart';
-import 'package:repondo/features/auth/domain/entities/user_auth.dart';
-import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
-import 'package:repondo/features/auth/domain/repositories/email_auth_repository.dart';
+import 'package:repondo/features/auth/domain/exports.dart';
 
 class FirebaseEmailAuthRepository implements EmailAuthRepository {
   final FirebaseAuth _firebaseAuth;
@@ -16,28 +14,19 @@ class FirebaseEmailAuthRepository implements EmailAuthRepository {
     String email,
     String password,
   ) async {
-    try {
+    return runCatching(() async {
       final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      return Success(userCredential.user!.toUserAuth());
-    } on FirebaseAuthException catch (e) {
-      switch (e.code) {
-        case 'wrong-password':
-        case 'invalid-email':
-          return Failure(AuthException('Credenciais inválidas', code: e.code));
-        case 'user-not-found':
-          return Failure(AuthException('Usuário não existe', code: e.code));
-        case 'user-disabled':
-          return Failure(AuthException('Conta desativada', code: e.code));
-        default:
-          return Failure(AuthException('Erro de autenticação: ${e.message}',
-              code: e.code));
+
+      return userCredential.user!.toUserAuth();
+    }, (error) {
+      if (error is FirebaseAuthException) {
+        return fromFirebaseAuthExceptionMapper(error);
       }
-    } catch (ex) {
-      return Failure(AuthException('Erro de autenticação: $ex'));
-    }
+      return AuthException('Erro de autenticação: $error');
+    });
   }
 
   @override
