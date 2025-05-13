@@ -13,6 +13,53 @@ late MockFirebaseAuth mockFirebaseAuth;
 late MockUserCredential mockUserCredential;
 late MockUser mockUser;
 
+void _expectSuccessUserAuthResult({
+  required Result<UserAuth, AuthException> result,
+  required String expectedId,
+  required String? expectedEmail,
+  required String? expectedName,
+  required String? expectedPhotoUrl,
+}) {
+  // Verifica se o resultado foi um sucesso contendo um UserAuth
+  expect(result, isA<Success<UserAuth, AuthException>>(),
+      reason:
+          'Esperado que o resultado seja um Success<UserAuth, AuthException>.');
+
+  final userAuth = result.data!;
+  // Verifica os campos do UserAuth
+  expect(userAuth.id, expectedId);
+  expect(userAuth.email, expectedEmail);
+  expect(userAuth.name, expectedName);
+  expect(userAuth.photoUrl, expectedPhotoUrl);
+
+  // Verifica se o método correto foi chamado no FirebaseAuth
+  verify(mockFirebaseAuth.signInWithEmailAndPassword(
+    email: anyNamed('email'),
+    password: anyNamed('password'),
+  )).called(1);
+  verifyNoMoreInteractions(mockFirebaseAuth);
+}
+
+void _expectFailureAuthExceptionResult({
+  required Result<UserAuth, AuthException> result,
+  required String errorCode,
+  required String message,
+}) {
+  expect(result, isA<Failure<UserAuth, AuthException>>());
+
+  final failure = result.error!;
+  expect(failure, isA<AuthException>());
+  expect(failure.message, contains(message));
+  expect(failure.code, errorCode);
+
+  verify(mockFirebaseAuth.signInWithEmailAndPassword(
+    email: anyNamed('email'),
+    password: anyNamed('password'),
+  )).called(1);
+
+  verifyNoMoreInteractions(mockFirebaseAuth);
+}
+
 void main() {
   group('FirebaseEmailAuthRepository', () {
     const email = 'email@example.com';
@@ -46,34 +93,23 @@ void main() {
       )).thenAnswer((_) async => mockUserCredential);
     });
 
-    group('signIn', () {
+    group('signInWithEmailAndPassword', () {
       group('casos de sucesso', () {
         test(
-            'deve retornar um UserAuth válido ao fazer login com email e senha válidos',
+            'deve retornar UserAuth válido ao fazer login com email e senha válidos',
             () async {
           // Act
           final result = await firebaseEmailAuthRepository
               .signInWithEmailAndPassword(email, password);
 
           // Assert
-          // Verifica se o resultado foi um sucesso contendo um UserAuth
-          expect(result, isA<Success<UserAuth, AuthException>>());
-
-          // Extrai o valor contido no Success
-          final userAuth = (result as Success<UserAuth, AuthException>).value;
-
-          // Verifica os campos do UserAuth
-          expect(userAuth.id, userId);
-          expect(userAuth.email, email);
-          expect(userAuth.name, userName);
-          expect(userAuth.photoUrl, photoUrl);
-
-          // Verifica se o método correto foi chamado no FirebaseAuth
-          verify(mockFirebaseAuth.signInWithEmailAndPassword(
-            email: anyNamed('email'),
-            password: anyNamed('password'),
-          )).called(1);
-          verifyNoMoreInteractions(mockFirebaseAuth);
+          _expectSuccessUserAuthResult(
+            result: result,
+            expectedId: userId,
+            expectedEmail: email,
+            expectedName: userName,
+            expectedPhotoUrl: photoUrl,
+          );
         });
 
         test('Deve retornar UserAuth válido com campos nulos', () async {
@@ -87,19 +123,13 @@ void main() {
               .signInWithEmailAndPassword(email, password);
 
           // Assert
-          expect(result, isA<Success<UserAuth, AuthException>>());
-
-          final userAuth = (result as Success<UserAuth, AuthException>).value;
-          expect(userAuth.id, userId);
-          expect(userAuth.email, isNull);
-          expect(userAuth.name, isNull);
-          expect(userAuth.photoUrl, isNull);
-
-          verify(mockFirebaseAuth.signInWithEmailAndPassword(
-            email: anyNamed('email'),
-            password: anyNamed('password'),
-          )).called(1);
-          verifyNoMoreInteractions(mockFirebaseAuth);
+          _expectSuccessUserAuthResult(
+            result: result,
+            expectedId: userId,
+            expectedEmail: null,
+            expectedName: null,
+            expectedPhotoUrl: null,
+          );
         });
 
         test('Deve retornar UserAuth válido com email nulo', () async {
@@ -111,19 +141,13 @@ void main() {
               .signInWithEmailAndPassword(email, password);
 
           // Assert
-          expect(result, isA<Success<UserAuth, AuthException>>());
-
-          final userAuth = (result as Success<UserAuth, AuthException>).value;
-          expect(userAuth.id, userId);
-          expect(userAuth.email, isNull);
-          expect(userAuth.name, userName);
-          expect(userAuth.photoUrl, photoUrl);
-
-          verify(mockFirebaseAuth.signInWithEmailAndPassword(
-            email: anyNamed('email'),
-            password: anyNamed('password'),
-          )).called(1);
-          verifyNoMoreInteractions(mockFirebaseAuth);
+          _expectSuccessUserAuthResult(
+            result: result,
+            expectedId: userId,
+            expectedEmail: null,
+            expectedName: userName,
+            expectedPhotoUrl: photoUrl,
+          );
         });
 
         test('Deve retornar UserAuth válido com name nulo', () async {
@@ -135,19 +159,13 @@ void main() {
               .signInWithEmailAndPassword(email, password);
 
           // Assert
-          expect(result, isA<Success<UserAuth, AuthException>>());
-
-          final userAuth = (result as Success<UserAuth, AuthException>).value;
-          expect(userAuth.id, userId);
-          expect(userAuth.email, email);
-          expect(userAuth.name, isNull);
-          expect(userAuth.photoUrl, photoUrl);
-
-          verify(mockFirebaseAuth.signInWithEmailAndPassword(
-            email: anyNamed('email'),
-            password: anyNamed('password'),
-          )).called(1);
-          verifyNoMoreInteractions(mockFirebaseAuth);
+          _expectSuccessUserAuthResult(
+            result: result,
+            expectedId: userId,
+            expectedEmail: email,
+            expectedName: null,
+            expectedPhotoUrl: photoUrl,
+          );
         });
 
         test('Deve retornar UserAuth válido com photoUrl nulo', () async {
@@ -159,25 +177,19 @@ void main() {
               .signInWithEmailAndPassword(email, password);
 
           // Assert
-          expect(result, isA<Success<UserAuth, AuthException>>());
-
-          final userAuth = (result as Success<UserAuth, AuthException>).value;
-          expect(userAuth.id, userId);
-          expect(userAuth.email, email);
-          expect(userAuth.name, userName);
-          expect(userAuth.photoUrl, isNull);
-
-          verify(mockFirebaseAuth.signInWithEmailAndPassword(
-            email: anyNamed('email'),
-            password: anyNamed('password'),
-          )).called(1);
-          verifyNoMoreInteractions(mockFirebaseAuth);
+          _expectSuccessUserAuthResult(
+            result: result,
+            expectedId: userId,
+            expectedEmail: email,
+            expectedName: userName,
+            expectedPhotoUrl: null,
+          );
         });
       });
 
       group('casos de erro', () {
         test(
-            'Deve lançar Failure com AuthException quando credenciais forem inválidas',
+            'Deve lançar Failure<AuthException> quando credenciais forem inválidas',
             () async {
           // Constants
           const wrongPassword = 'wrong-password';
@@ -194,19 +206,11 @@ void main() {
               .signInWithEmailAndPassword(email, wrongPassword);
 
           // Assert
-          expect(result, isA<Failure<UserAuth, AuthException>>());
-
-          final failure = result as Failure<UserAuth, AuthException>;
-          expect(failure.error, isA<AuthException>());
-          expect(failure.error.message, contains('Credenciais inválidas'));
-          expect(failure.error.code, errorCode);
-
-          verify(mockFirebaseAuth.signInWithEmailAndPassword(
-            email: anyNamed('email'),
-            password: anyNamed('password'),
-          )).called(1);
-
-          verifyNoMoreInteractions(mockFirebaseAuth);
+          _expectFailureAuthExceptionResult(
+            result: result,
+            errorCode: errorCode,
+            message: 'Credenciais inválidas',
+          );
         });
 
         test('Deve lançar Failure<AuthException> quando o email for inválido',
@@ -225,19 +229,11 @@ void main() {
               .signInWithEmailAndPassword(wrongEmail, password);
 
           // Assert
-          expect(result, isA<Failure<UserAuth, AuthException>>());
-
-          final failure = result as Failure<UserAuth, AuthException>;
-          expect(failure.error, isA<AuthException>());
-          expect(failure.error.message, contains('Credenciais inválidas'));
-          expect(failure.error.code, errorCode);
-
-          verify(mockFirebaseAuth.signInWithEmailAndPassword(
-            email: anyNamed('email'),
-            password: anyNamed('password'),
-          )).called(1);
-
-          verifyNoMoreInteractions(mockFirebaseAuth);
+          _expectFailureAuthExceptionResult(
+            result: result,
+            errorCode: errorCode,
+            message: 'Credenciais inválidas',
+          );
         });
 
         test('Deve lançar Failure<AuthException> quando o usuário não existir',
@@ -255,19 +251,11 @@ void main() {
               .signInWithEmailAndPassword(email, password);
 
           // Assert
-          expect(result, isA<Failure<UserAuth, AuthException>>());
-
-          final failure = result as Failure<UserAuth, AuthException>;
-          expect(failure.error, isA<AuthException>());
-          expect(failure.error.message, contains('Usuário não existe'));
-          expect(failure.error.code, errorCode);
-
-          verify(mockFirebaseAuth.signInWithEmailAndPassword(
-            email: anyNamed('email'),
-            password: anyNamed('password'),
-          )).called(1);
-
-          verifyNoMoreInteractions(mockFirebaseAuth);
+          _expectFailureAuthExceptionResult(
+            result: result,
+            errorCode: errorCode,
+            message: 'Usuário não existe',
+          );
         });
 
         test('Deve lançar Failure<AuthException> quando conta for desativada',
@@ -285,19 +273,11 @@ void main() {
               .signInWithEmailAndPassword(email, password);
 
           // Assert
-          expect(result, isA<Failure<UserAuth, AuthException>>());
-
-          final failure = result as Failure<UserAuth, AuthException>;
-          expect(failure.error, isA<AuthException>());
-          expect(failure.error.message, contains('Conta desativada'));
-          expect(failure.error.code, errorCode);
-
-          verify(mockFirebaseAuth.signInWithEmailAndPassword(
-            email: anyNamed('email'),
-            password: anyNamed('password'),
-          )).called(1);
-
-          verifyNoMoreInteractions(mockFirebaseAuth);
+          _expectFailureAuthExceptionResult(
+            result: result,
+            errorCode: errorCode,
+            message: 'Conta desativada',
+          );
         });
 
         test(
@@ -350,7 +330,6 @@ void main() {
           final failure = result as Failure<UserAuth, AuthException>;
           expect(failure.error, isA<AuthException>());
           expect(failure.error.message, contains('Erro de autenticação'));
-          // expect(failure.error.code, errorCode);
 
           verify(mockFirebaseAuth.signInWithEmailAndPassword(
             email: anyNamed('email'),
