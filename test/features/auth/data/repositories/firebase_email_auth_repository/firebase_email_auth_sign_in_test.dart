@@ -48,7 +48,6 @@ void _expectFailureAuthExceptionResult({
   expect(result, isA<Failure<UserAuth, AuthException>>());
 
   final failure = result.error!;
-  expect(failure, isA<AuthException>());
   expect(failure.message, contains(message));
   expect(failure.code, errorCode);
 
@@ -200,7 +199,6 @@ void main() {
 
             // Assert
             expect(result, isA<Failure<UserAuth, AuthException>>());
-            expect(result.error, isNotNull);
 
             final failure = result.error!;
             expect(failure.message,
@@ -327,7 +325,6 @@ void main() {
           expect(result, isA<Failure<UserAuth, AuthException>>());
 
           final failure = result as Failure<UserAuth, AuthException>;
-          expect(failure.error, isA<AuthException>());
           expect(failure.error.message, contains('Erro de autenticação'));
           expect(failure.error.code, isNotNull);
 
@@ -356,7 +353,6 @@ void main() {
           expect(result, isA<Failure<UserAuth, AuthException>>());
 
           final failure = result as Failure<UserAuth, AuthException>;
-          expect(failure.error, isA<AuthException>());
           expect(failure.error.message, contains('Erro de autenticação'));
 
           verify(mockFirebaseAuth.signInWithEmailAndPassword(

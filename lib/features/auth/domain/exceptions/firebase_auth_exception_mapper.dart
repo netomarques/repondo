@@ -18,6 +18,10 @@ AuthException fromFirebaseAuthExceptionMapper(FirebaseAuthException error) {
       return AuthException('Token de autenticação inválido', code: error.code);
     case 'internal-error':
       return AuthException('Firebase está indisponível', code: error.code);
+    case 'weak-password':
+      return AuthException(
+          'A senha é muito fraca. Escolha uma senha com pelo menos 6 caracteres',
+          code: error.code);
     default:
       return AuthException('Erro de autenticação: ${error.message}',
           code: error.code);

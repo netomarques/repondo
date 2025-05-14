@@ -45,9 +45,23 @@ class FirebaseEmailAuthRepository implements EmailAuthRepository {
   }
 
   @override
-  Future<UserAuth> signUp() {
-    // TODO: implement signUp
-    throw UnimplementedError();
+  Future<Result<UserAuth, AuthException>> signUpWithEmailAndPassword(
+      String email, String password) async {
+    return runCatching(() async {
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
+
+      if (userCredential.user == null) {
+        throw AuthException('Usuário é null após a criação');
+      }
+
+      return userCredential.user!.toUserAuth();
+    }, (error) {
+      if (error is FirebaseAuthException) {
+        return fromFirebaseAuthExceptionMapper(error);
+      }
+      return AuthException('Erro ao criar conta: $error');
+    });
   }
 
   @override

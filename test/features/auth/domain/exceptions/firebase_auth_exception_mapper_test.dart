@@ -84,7 +84,7 @@ void main() {
 
     // Testa o código 'network-request-failed'
     test(
-        'deve retornar AuthException com mensagem de email em uso quando code for network-request-failed',
+        'deve retornar AuthException com mensagem de falha na rede quando code for network-request-failed',
         () {
       const errorCode = 'network-request-failed';
       const message = 'Erro de falha na rede';
@@ -95,7 +95,7 @@ void main() {
 
     // Testa o código 'invalid-user-token'
     test(
-        'deve retornar AuthException com mensagem de email em uso quando code for invalid-user-token',
+        'deve retornar AuthException com mensagem de token inválido quando code for invalid-user-token',
         () {
       const errorCode = 'invalid-user-token';
       const message = 'Token de autenticação inválido';
@@ -104,11 +104,24 @@ void main() {
           errorCode: errorCode, expectedMessage: message);
     });
 
+    // Testa o código internal-error
     test(
-        'deve retornar AuthException com mensagem de email em uso quando code for internal-error',
+        'deve retornar AuthException com mensagem de serviço indisponível quando code for internal-error',
         () {
       const errorCode = 'internal-error';
       const message = 'Firebase está indisponível';
+
+      _expectFirebaseAuthExceptionMapping(
+          errorCode: errorCode, expectedMessage: message);
+    });
+
+    // Testa o código weak-password
+    test(
+        'deve retornar AuthException com mensagem de senha fraca quando code for weak-password',
+        () {
+      const errorCode = 'weak-password';
+      const message =
+          'A senha é muito fraca. Escolha uma senha com pelo menos 6 caracteres';
 
       _expectFirebaseAuthExceptionMapping(
           errorCode: errorCode, expectedMessage: message);
