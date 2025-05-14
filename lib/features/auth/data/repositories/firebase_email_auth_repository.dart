@@ -20,6 +20,10 @@ class FirebaseEmailAuthRepository implements EmailAuthRepository {
         password: password,
       );
 
+      if (userCredential.user == null) {
+        throw AuthException('Usuário retornado é null após autenticação');
+      }
+
       return userCredential.user!.toUserAuth();
     }, (error) {
       if (error is FirebaseAuthException) {
@@ -30,9 +34,8 @@ class FirebaseEmailAuthRepository implements EmailAuthRepository {
   }
 
   @override
-  Future<UserAuth?> getCurrentUser() {
-    // TODO: implement getCurrentUser
-    throw UnimplementedError();
+  Future<Result<UserAuth?, AuthException>> getCurrentUser() async {
+    return Success(_firebaseAuth.currentUser?.toUserAuth());
   }
 
   @override

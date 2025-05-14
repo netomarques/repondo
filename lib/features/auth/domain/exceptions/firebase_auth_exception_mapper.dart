@@ -12,6 +12,12 @@ AuthException fromFirebaseAuthExceptionMapper(FirebaseAuthException error) {
       return AuthException('Conta desativada', code: error.code);
     case 'email-already-in-use':
       return AuthException('E-mail já está em uso', code: error.code);
+    case 'network-request-failed':
+      return AuthException('Erro de falha na rede', code: error.code);
+    case 'invalid-user-token':
+      return AuthException('Token de autenticação inválido', code: error.code);
+    case 'internal-error':
+      return AuthException('Firebase está indisponível', code: error.code);
     default:
       return AuthException('Erro de autenticação: ${error.message}',
           code: error.code);

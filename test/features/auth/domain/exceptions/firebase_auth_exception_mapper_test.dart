@@ -82,6 +82,38 @@ void main() {
           errorCode: errorCode, expectedMessage: message);
     });
 
+    // Testa o código 'network-request-failed'
+    test(
+        'deve retornar AuthException com mensagem de email em uso quando code for network-request-failed',
+        () {
+      const errorCode = 'network-request-failed';
+      const message = 'Erro de falha na rede';
+
+      _expectFirebaseAuthExceptionMapping(
+          errorCode: errorCode, expectedMessage: message);
+    });
+
+    // Testa o código 'invalid-user-token'
+    test(
+        'deve retornar AuthException com mensagem de email em uso quando code for invalid-user-token',
+        () {
+      const errorCode = 'invalid-user-token';
+      const message = 'Token de autenticação inválido';
+
+      _expectFirebaseAuthExceptionMapping(
+          errorCode: errorCode, expectedMessage: message);
+    });
+
+    test(
+        'deve retornar AuthException com mensagem de email em uso quando code for internal-error',
+        () {
+      const errorCode = 'internal-error';
+      const message = 'Firebase está indisponível';
+
+      _expectFirebaseAuthExceptionMapping(
+          errorCode: errorCode, expectedMessage: message);
+    });
+
     // Testa o caso padrão quando o código não é tratado explicitamente
     test('deve retornar AuthException genérica no caso default', () {
       const errorCode = 'unknown-error';

@@ -6,7 +6,7 @@ import 'package:repondo/features/auth/data/repositories/firebase_email_auth_repo
 import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 
-import '../../../../mocks/mocks.mocks.dart';
+import '../../../../../mocks/mocks.mocks.dart';
 
 late FirebaseEmailAuthRepository firebaseEmailAuthRepository;
 late MockFirebaseAuth mockFirebaseAuth;
@@ -188,6 +188,34 @@ void main() {
       });
 
       group('casos de erro', () {
+        test(
+          'deve retornar Failure<AuthException> quando userCredential.user for null',
+          () async {
+            // Arrange
+            when(mockUserCredential.user).thenReturn(null);
+
+            // Act
+            final result = await firebaseEmailAuthRepository
+                .signInWithEmailAndPassword(email, password);
+
+            // Assert
+            expect(result, isA<Failure<UserAuth, AuthException>>());
+            expect(result.error, isNotNull);
+
+            final failure = result.error!;
+            expect(failure.message,
+                contains('Usuário retornado é null após autenticação'));
+
+            verify(mockFirebaseAuth.signInWithEmailAndPassword(
+              email: anyNamed('email'),
+              password: anyNamed('password'),
+            )).called(1);
+
+            verify(mockUserCredential.user).called(1);
+            verifyNoMoreInteractions(mockFirebaseAuth);
+          },
+        );
+
         test(
             'Deve lançar Failure<AuthException> quando credenciais forem inválidas',
             () async {
