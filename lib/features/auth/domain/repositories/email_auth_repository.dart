@@ -7,7 +7,7 @@ abstract class EmailAuthRepository {
       String email, String password);
   Future<Result<UserAuth, AuthException>> signUpWithEmailAndPassword(
       String email, String password);
-  Future<void> signOut();
+  Future<Result<void, AuthException>> signOut();
   Future<Result<UserAuth?, AuthException>> getCurrentUser();
   Stream<UserAuth?> get userStream;
 }

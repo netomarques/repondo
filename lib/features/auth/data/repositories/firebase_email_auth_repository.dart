@@ -39,9 +39,16 @@ class FirebaseEmailAuthRepository implements EmailAuthRepository {
   }
 
   @override
-  Future<void> signOut() {
-    // TODO: implement signOut
-    throw UnimplementedError();
+  Future<Result<void, AuthException>> signOut() {
+    return runCatching(
+      () async => await _firebaseAuth.signOut(),
+      (error) {
+        if (error is FirebaseAuthException) {
+          return fromFirebaseAuthExceptionMapper(error);
+        }
+        return AuthException('Erro no logout: $error');
+      },
+    );
   }
 
   @override
