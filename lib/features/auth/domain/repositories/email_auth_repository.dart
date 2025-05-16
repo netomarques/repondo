@@ -9,5 +9,5 @@ abstract class EmailAuthRepository {
       String email, String password);
   Future<Result<void, AuthException>> signOut();
   Future<Result<UserAuth?, AuthException>> getCurrentUser();
-  Stream<UserAuth?> get userStream;
+  Stream<Result<UserAuth?, AuthException>> get userStream;
 }

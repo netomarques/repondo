@@ -72,6 +72,7 @@ class FirebaseEmailAuthRepository implements EmailAuthRepository {
   }
 
   @override
-  // TODO: implement userStream
-  Stream<UserAuth?> get userStream => throw UnimplementedError();
+  Stream<Result<UserAuth?, AuthException>> get userStream => _firebaseAuth
+      .authStateChanges()
+      .map((user) => Success(user?.toUserAuth()));
 }
