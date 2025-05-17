@@ -51,7 +51,7 @@ class FirebaseAnonymousAuthRepository implements AnonymousAuthRepository {
   }
 
   @override
-  // TODO: implement userStream
-  Stream<Result<UserAuth?, AuthException>> get userStream =>
-      throw UnimplementedError();
+  Stream<Result<UserAuth?, AuthException>> get userStream => _firebaseAuth
+      .authStateChanges()
+      .map((user) => Success(user?.toUserAuth()));
 }
