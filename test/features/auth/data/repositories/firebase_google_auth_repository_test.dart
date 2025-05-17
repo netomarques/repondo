@@ -80,6 +80,7 @@ void main() {
       when(mockFirebaseAuthUser.email).thenReturn('ze@dev.com');
       when(mockFirebaseAuthUser.photoURL)
           .thenReturn('https://example.com/photo.jpg');
+      when(mockFirebaseAuthUser.isAnonymous).thenReturn(false);
     });
 
     group('signIn', () {

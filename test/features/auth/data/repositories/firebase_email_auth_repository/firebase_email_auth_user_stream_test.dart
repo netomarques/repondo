@@ -23,6 +23,7 @@ void main() {
     const userId = 'userId';
     const userName = 'User Name';
     const photoUrl = 'https://example.com/photo.jpg';
+    const isAnonymous = false;
 
     setUp(() {
       // Inicialização dos mocks
@@ -46,6 +47,7 @@ void main() {
       when(mockUser.email).thenReturn(email);
       when(mockUser.displayName).thenReturn(userName);
       when(mockUser.photoURL).thenReturn(photoUrl);
+      when(mockUser.isAnonymous).thenReturn(isAnonymous);
 
       // Faz o mockFirebaseAuth retornar a stream controlada pelo StreamController
       when(mockFirebaseAuth.authStateChanges())

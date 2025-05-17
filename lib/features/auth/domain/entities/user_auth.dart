@@ -10,6 +10,7 @@ abstract class UserAuth with _$UserAuth {
     String? name,
     String? email,
     String? photoUrl,
+    @Default(false) bool isAnonymous,
   }) = _UserAuth;
 
   factory UserAuth.fromJson(Map<String, dynamic> json) =>

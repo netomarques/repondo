@@ -7,5 +7,6 @@ extension FirebaseUserExtensions on User {
         name: displayName,
         email: email,
         photoUrl: photoURL,
+        isAnonymous: isAnonymous,
       );
 }

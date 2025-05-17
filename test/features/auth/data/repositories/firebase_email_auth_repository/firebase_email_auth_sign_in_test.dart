@@ -66,6 +66,7 @@ void main() {
     const userName = 'User Name';
     const photoUrl = 'https://example.com/photo.jpg';
     const password = 'password';
+    const isAnonymous = false;
 
     setUp(() {
       mockFirebaseAuth = MockFirebaseAuth();
@@ -84,6 +85,7 @@ void main() {
       when(mockUser.email).thenReturn(email);
       when(mockUser.displayName).thenReturn(userName);
       when(mockUser.photoURL).thenReturn(photoUrl);
+      when(mockUser.isAnonymous).thenReturn(isAnonymous);
       when(mockUserCredential.user).thenReturn(mockUser);
 
       when(mockFirebaseAuth.signInWithEmailAndPassword(

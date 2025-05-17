@@ -11,6 +11,7 @@ _UserAuth _$UserAuthFromJson(Map<String, dynamic> json) => _UserAuth(
       name: json['name'] as String?,
       email: json['email'] as String?,
       photoUrl: json['photoUrl'] as String?,
+      isAnonymous: json['isAnonymous'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$UserAuthToJson(_UserAuth instance) => <String, dynamic>{
@@ -18,4 +19,5 @@ Map<String, dynamic> _$UserAuthToJson(_UserAuth instance) => <String, dynamic>{
       'name': instance.name,
       'email': instance.email,
       'photoUrl': instance.photoUrl,
+      'isAnonymous': instance.isAnonymous,
     };

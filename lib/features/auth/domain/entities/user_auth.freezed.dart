@@ -19,6 +19,7 @@ mixin _$UserAuth {
   String? get name;
   String? get email;
   String? get photoUrl;
+  bool get isAnonymous;
 
   /// Create a copy of UserAuth
   /// with the given fields replaced by the non-null parameter values.
@@ -39,16 +40,19 @@ mixin _$UserAuth {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.photoUrl, photoUrl) ||
-                other.photoUrl == photoUrl));
+                other.photoUrl == photoUrl) &&
+            (identical(other.isAnonymous, isAnonymous) ||
+                other.isAnonymous == isAnonymous));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, email, photoUrl);
+  int get hashCode =>
+      Object.hash(runtimeType, id, name, email, photoUrl, isAnonymous);
 
   @override
   String toString() {
-    return 'UserAuth(id: $id, name: $name, email: $email, photoUrl: $photoUrl)';
+    return 'UserAuth(id: $id, name: $name, email: $email, photoUrl: $photoUrl, isAnonymous: $isAnonymous)';
   }
 }
 
@@ -57,7 +61,12 @@ abstract mixin class $UserAuthCopyWith<$Res> {
   factory $UserAuthCopyWith(UserAuth value, $Res Function(UserAuth) _then) =
       _$UserAuthCopyWithImpl;
   @useResult
-  $Res call({String id, String? name, String? email, String? photoUrl});
+  $Res call(
+      {String id,
+      String? name,
+      String? email,
+      String? photoUrl,
+      bool isAnonymous});
 }
 
 /// @nodoc
@@ -76,6 +85,7 @@ class _$UserAuthCopyWithImpl<$Res> implements $UserAuthCopyWith<$Res> {
     Object? name = freezed,
     Object? email = freezed,
     Object? photoUrl = freezed,
+    Object? isAnonymous = null,
   }) {
     return _then(_self.copyWith(
       id: null == id
@@ -94,6 +104,10 @@ class _$UserAuthCopyWithImpl<$Res> implements $UserAuthCopyWith<$Res> {
           ? _self.photoUrl
           : photoUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      isAnonymous: null == isAnonymous
+          ? _self.isAnonymous
+          : isAnonymous // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -101,7 +115,12 @@ class _$UserAuthCopyWithImpl<$Res> implements $UserAuthCopyWith<$Res> {
 /// @nodoc
 @JsonSerializable()
 class _UserAuth implements UserAuth {
-  _UserAuth({required this.id, this.name, this.email, this.photoUrl});
+  _UserAuth(
+      {required this.id,
+      this.name,
+      this.email,
+      this.photoUrl,
+      this.isAnonymous = false});
   factory _UserAuth.fromJson(Map<String, dynamic> json) =>
       _$UserAuthFromJson(json);
 
@@ -113,6 +132,9 @@ class _UserAuth implements UserAuth {
   final String? email;
   @override
   final String? photoUrl;
+  @override
+  @JsonKey()
+  final bool isAnonymous;
 
   /// Create a copy of UserAuth
   /// with the given fields replaced by the non-null parameter values.
@@ -138,16 +160,19 @@ class _UserAuth implements UserAuth {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.photoUrl, photoUrl) ||
-                other.photoUrl == photoUrl));
+                other.photoUrl == photoUrl) &&
+            (identical(other.isAnonymous, isAnonymous) ||
+                other.isAnonymous == isAnonymous));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, email, photoUrl);
+  int get hashCode =>
+      Object.hash(runtimeType, id, name, email, photoUrl, isAnonymous);
 
   @override
   String toString() {
-    return 'UserAuth(id: $id, name: $name, email: $email, photoUrl: $photoUrl)';
+    return 'UserAuth(id: $id, name: $name, email: $email, photoUrl: $photoUrl, isAnonymous: $isAnonymous)';
   }
 }
 
@@ -158,7 +183,12 @@ abstract mixin class _$UserAuthCopyWith<$Res>
       __$UserAuthCopyWithImpl;
   @override
   @useResult
-  $Res call({String id, String? name, String? email, String? photoUrl});
+  $Res call(
+      {String id,
+      String? name,
+      String? email,
+      String? photoUrl,
+      bool isAnonymous});
 }
 
 /// @nodoc
@@ -177,6 +207,7 @@ class __$UserAuthCopyWithImpl<$Res> implements _$UserAuthCopyWith<$Res> {
     Object? name = freezed,
     Object? email = freezed,
     Object? photoUrl = freezed,
+    Object? isAnonymous = null,
   }) {
     return _then(_UserAuth(
       id: null == id
@@ -195,6 +226,10 @@ class __$UserAuthCopyWithImpl<$Res> implements _$UserAuthCopyWith<$Res> {
           ? _self.photoUrl
           : photoUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      isAnonymous: null == isAnonymous
+          ? _self.isAnonymous
+          : isAnonymous // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
