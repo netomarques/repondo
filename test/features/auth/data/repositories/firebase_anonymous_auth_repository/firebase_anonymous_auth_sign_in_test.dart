@@ -6,7 +6,7 @@ import 'package:repondo/features/auth/data/repositories/firebase_anonymous_auth_
 import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 
-import '../../../../mocks/mocks.mocks.dart';
+import '../../../../../mocks/mocks.mocks.dart';
 
 late FirebaseAnonymousAuthRepository firebaseAnonymousAuthRepository;
 late MockFirebaseAuth mockFirebaseAuth;

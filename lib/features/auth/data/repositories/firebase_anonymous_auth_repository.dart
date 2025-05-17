@@ -14,9 +14,8 @@ class FirebaseAnonymousAuthRepository implements AnonymousAuthRepository {
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
   @override
-  Future<Result<UserAuth?, AuthException>> getCurrentUser() {
-    // TODO: implement getCurrentUser
-    throw UnimplementedError();
+  Future<Result<UserAuth?, AuthException>> getCurrentUser() async {
+    return Success(_firebaseAuth.currentUser?.toUserAuth());
   }
 
   @override
