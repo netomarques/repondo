@@ -39,8 +39,15 @@ class FirebaseAnonymousAuthRepository implements AnonymousAuthRepository {
 
   @override
   Future<Result<void, AuthException>> signOut() {
-    // TODO: implement signOut
-    throw UnimplementedError();
+    return runCatching(
+      () async => await _firebaseAuth.signOut(),
+      (error) {
+        if (error is FirebaseAuthException) {
+          return fromFirebaseAuthExceptionMapper(error);
+        }
+        return AuthException('Erro no logout: $error');
+      },
+    );
   }
 
   @override
