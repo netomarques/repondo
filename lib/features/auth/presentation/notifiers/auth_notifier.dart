@@ -37,9 +37,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     state = AuthLoading();
     try {
-      final user =
-          await signInWithEmailAndPasswordUseCase.execute(email, password);
-      state = Authenticated(user);
+      final user = await signInUseCase.execute();
+      state = Authenticated(user!);
     } catch (e) {
       state = Unauthenticated();
     }

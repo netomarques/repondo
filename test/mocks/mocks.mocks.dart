@@ -18,6 +18,7 @@ import 'package:google_sign_in_platform_interface/google_sign_in_platform_interf
     as _i11;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i10;
+import 'package:repondo/core/result/exports.dart' as _i17;
 import 'package:repondo/features/auth/application/facades/google_auth_facade.dart'
     as _i14;
 import 'package:repondo/features/auth/application/usecases/google_auth/exports.dart'
@@ -1472,4 +1473,92 @@ class MockGoRouterState extends _i1.Mock implements _i16.GoRouterState {
             ),
           )
           as String);
+}
+
+/// A class which mocks [EmailAuthRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockEmailAuthRepository extends _i1.Mock
+    implements _i12.EmailAuthRepository {
+  MockEmailAuthRepository() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i9.Stream<_i17.Result<_i6.UserAuth?, _i12.AuthException>> get userStream =>
+      (super.noSuchMethod(
+            Invocation.getter(#userStream),
+            returnValue:
+                _i9.Stream<
+                  _i17.Result<_i6.UserAuth?, _i12.AuthException>
+                >.empty(),
+          )
+          as _i9.Stream<_i17.Result<_i6.UserAuth?, _i12.AuthException>>);
+
+  @override
+  _i9.Future<_i17.Result<_i6.UserAuth, _i12.AuthException>>
+  signInWithEmailAndPassword(String? email, String? password) =>
+      (super.noSuchMethod(
+            Invocation.method(#signInWithEmailAndPassword, [email, password]),
+            returnValue: _i9.Future<
+              _i17.Result<_i6.UserAuth, _i12.AuthException>
+            >.value(
+              _i10.dummyValue<_i17.Result<_i6.UserAuth, _i12.AuthException>>(
+                this,
+                Invocation.method(#signInWithEmailAndPassword, [
+                  email,
+                  password,
+                ]),
+              ),
+            ),
+          )
+          as _i9.Future<_i17.Result<_i6.UserAuth, _i12.AuthException>>);
+
+  @override
+  _i9.Future<_i17.Result<_i6.UserAuth, _i12.AuthException>>
+  signUpWithEmailAndPassword(String? email, String? password) =>
+      (super.noSuchMethod(
+            Invocation.method(#signUpWithEmailAndPassword, [email, password]),
+            returnValue: _i9.Future<
+              _i17.Result<_i6.UserAuth, _i12.AuthException>
+            >.value(
+              _i10.dummyValue<_i17.Result<_i6.UserAuth, _i12.AuthException>>(
+                this,
+                Invocation.method(#signUpWithEmailAndPassword, [
+                  email,
+                  password,
+                ]),
+              ),
+            ),
+          )
+          as _i9.Future<_i17.Result<_i6.UserAuth, _i12.AuthException>>);
+
+  @override
+  _i9.Future<_i17.Result<void, _i12.AuthException>> signOut() =>
+      (super.noSuchMethod(
+            Invocation.method(#signOut, []),
+            returnValue:
+                _i9.Future<_i17.Result<void, _i12.AuthException>>.value(
+                  _i10.dummyValue<_i17.Result<void, _i12.AuthException>>(
+                    this,
+                    Invocation.method(#signOut, []),
+                  ),
+                ),
+          )
+          as _i9.Future<_i17.Result<void, _i12.AuthException>>);
+
+  @override
+  _i9.Future<_i17.Result<_i6.UserAuth?, _i12.AuthException>> getCurrentUser() =>
+      (super.noSuchMethod(
+            Invocation.method(#getCurrentUser, []),
+            returnValue: _i9.Future<
+              _i17.Result<_i6.UserAuth?, _i12.AuthException>
+            >.value(
+              _i10.dummyValue<_i17.Result<_i6.UserAuth?, _i12.AuthException>>(
+                this,
+                Invocation.method(#getCurrentUser, []),
+              ),
+            ),
+          )
+          as _i9.Future<_i17.Result<_i6.UserAuth?, _i12.AuthException>>);
 }

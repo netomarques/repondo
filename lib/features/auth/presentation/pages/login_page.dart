@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:repondo/features/auth/presentation/notifiers/google_auth_notifier.dart';
-import 'package:repondo/features/auth/providers/exports.dart';
-import 'package:repondo/features/auth/presentation/notifiers/auth_notifier.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   static LoginPage builder(BuildContext context, GoRouterState state) =>
@@ -27,14 +25,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    final notifier = ref.read(authNotifierProvider.notifier);
-    await notifier.signInWithEmailAndPassword(email, password);
+    // final notifier = ref.read(authNotifierProvider.notifier);
+    // await notifier.signInWithEmailAndPassword(email, password);
   }
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authNotifierProvider);
-    final isLoading = authState is AuthLoading;
+    // final authState = ref.watch(authNotifierProvider);
+    // final isLoading = authState is AuthLoading;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),
@@ -71,12 +69,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       value == null || value.isEmpty ? 'Informe a senha' : null,
                 ),
                 const SizedBox(height: 24),
-                isLoading
-                    ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: _submit,
-                        child: const Text('Entrar'),
-                      ),
+                // isLoading
+                //     ? const CircularProgressIndicator()
+                //     : ElevatedButton(
+                //         onPressed: _submit,
+                //         child: const Text('Entrar'),
+                //       ),
                 const SizedBox(height: 16),
                 ElevatedButton.icon(
                   onPressed: () {
@@ -88,11 +86,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   label: const Text('Entrar com Google'),
                 ),
                 const SizedBox(height: 16),
-                TextButton(
-                    onPressed: () {
-                      ref.read(authNotifierProvider.notifier).login();
-                    },
-                    child: const Text('Entrar como Anônimo'))
+                // TextButton(
+                //     onPressed: () {
+                //       ref.read(authNotifierProvider.notifier).login();
+                //     },
+                //     child: const Text('Entrar como Anônimo'))
               ],
             ),
           ),
