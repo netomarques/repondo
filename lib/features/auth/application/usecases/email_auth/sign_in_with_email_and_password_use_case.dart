@@ -4,13 +4,13 @@ import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 import 'package:repondo/features/auth/domain/repositories/email_auth_repository.dart';
 
 class SignInWithEmailAndPasswordUseCase {
-  final EmailAuthRepository repository;
+  final EmailAuthRepository _repository;
 
-  SignInWithEmailAndPasswordUseCase(this.repository);
+  SignInWithEmailAndPasswordUseCase(this._repository);
 
   Future<Result<UserAuth, AuthException>> execute({
     required String email,
     required String password,
   }) =>
-      repository.signInWithEmailAndPassword(email, password);
+      _repository.signInWithEmailAndPassword(email, password);
 }
