@@ -24,5 +24,6 @@ import 'package:repondo/features/auth/domain/repositories/exports.dart';
   BuildContext,
   GoRouterState,
   EmailAuthRepository,
+  SignInWithEmailAndPasswordUseCase
 ])
 void main() {}
