@@ -8,9 +8,9 @@ class SignUpWithEmailUseCase {
 
   SignUpWithEmailUseCase(this._repository);
 
-  Future<Result<UserAuth, AuthException>> execute(
-    String email,
-    String password,
-  ) async =>
+  Future<Result<UserAuth, AuthException>> execute({
+    required String email,
+    required String password,
+  }) async =>
       _repository.signUpWithEmailAndPassword(email, password);
 }

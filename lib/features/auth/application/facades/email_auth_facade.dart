@@ -5,14 +5,23 @@ import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 
 class EmailAuthFacade {
   final SignInWithEmailAndPasswordUseCase _signInWithEmailUseCase;
+  final SignUpWithEmailUseCase _signUpWithEmailUseCase;
 
   EmailAuthFacade({
     required SignInWithEmailAndPasswordUseCase signInWithEmailUseCase,
-  }) : _signInWithEmailUseCase = signInWithEmailUseCase;
+    required SignUpWithEmailUseCase signUpWithEmailUseCase,
+  })  : _signInWithEmailUseCase = signInWithEmailUseCase,
+        _signUpWithEmailUseCase = signUpWithEmailUseCase;
 
   Future<Result<UserAuth, AuthException>> signInWithEmail(
     String email,
     String password,
   ) =>
       _signInWithEmailUseCase.execute(email: email, password: password);
+
+  Future<Result<UserAuth, AuthException>> signUpWithEmail(
+    String email,
+    String password,
+  ) =>
+      _signUpWithEmailUseCase.execute(email: email, password: password);
 }

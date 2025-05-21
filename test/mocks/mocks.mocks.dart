@@ -23,6 +23,8 @@ import 'package:repondo/features/auth/application/facades/google_auth_facade.dar
     as _i14;
 import 'package:repondo/features/auth/application/usecases/email_auth/sign_in_with_email_and_password_use_case.dart'
     as _i18;
+import 'package:repondo/features/auth/application/usecases/email_auth/sign_up_with_email_use_case.dart'
+    as _i19;
 import 'package:repondo/features/auth/application/usecases/google_auth/exports.dart'
     as _i13;
 import 'package:repondo/features/auth/domain/entities/user_auth.dart' as _i6;
@@ -1571,6 +1573,40 @@ class MockEmailAuthRepository extends _i1.Mock
 class MockSignInWithEmailAndPasswordUseCase extends _i1.Mock
     implements _i18.SignInWithEmailAndPasswordUseCase {
   MockSignInWithEmailAndPasswordUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i9.Future<_i17.Result<_i6.UserAuth, _i12.AuthException>> execute({
+    required String? email,
+    required String? password,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#execute, [], {
+              #email: email,
+              #password: password,
+            }),
+            returnValue: _i9.Future<
+              _i17.Result<_i6.UserAuth, _i12.AuthException>
+            >.value(
+              _i10.dummyValue<_i17.Result<_i6.UserAuth, _i12.AuthException>>(
+                this,
+                Invocation.method(#execute, [], {
+                  #email: email,
+                  #password: password,
+                }),
+              ),
+            ),
+          )
+          as _i9.Future<_i17.Result<_i6.UserAuth, _i12.AuthException>>);
+}
+
+/// A class which mocks [SignUpWithEmailUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSignUpWithEmailUseCase extends _i1.Mock
+    implements _i19.SignUpWithEmailUseCase {
+  MockSignUpWithEmailUseCase() {
     _i1.throwOnMissingStub(this);
   }
 

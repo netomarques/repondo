@@ -6,6 +6,7 @@ import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 
 import '../../../../../mocks/mocks.mocks.dart';
+import '../../../mocks/user_auth_test_factory.dart';
 
 void main() {
   group('SignUpWithEmailUseCase', () {
@@ -18,12 +19,7 @@ void main() {
     const photoUrl = 'https://example.com/photo.jpg';
     const password = 'password';
 
-    final expectedUser = UserAuth(
-      id: userId,
-      email: email,
-      name: userName,
-      photoUrl: photoUrl,
-    );
+    final expectedUser = UserAuthTestFactory.create();
 
     // Constante usada como retorno de sucesso
     final successWithUser = Success<UserAuth, AuthException>(expectedUser);
@@ -45,7 +41,7 @@ void main() {
             .thenAnswer((_) async => successWithUser);
 
         // Act
-        final result = await useCase.execute(email, password);
+        final result = await useCase.execute(email: email, password: password);
 
         // Assert
         expect(result, isA<Success<UserAuth, AuthException>>());
@@ -62,6 +58,31 @@ void main() {
           password,
         )).called(1);
         verifyNoMoreInteractions(mockEmailAuthRepository);
+      });
+
+      group('casos de erro', () {
+        test(
+            'deve chamar signUp com email e senha e retornar um Failure<UserAuth, AuthException>',
+            () async {
+          final authFailureResult =
+              Failure<UserAuth, AuthException>(AuthException('Error'));
+
+          // Arrange
+          when(mockEmailAuthRepository.signUpWithEmailAndPassword(any, any))
+              .thenAnswer((_) async => authFailureResult);
+
+          // Act
+          final result =
+              await useCase.execute(email: email, password: password);
+
+          // Assert
+          expect(result, isA<Failure<UserAuth, AuthException>>());
+          verify(mockEmailAuthRepository.signUpWithEmailAndPassword(
+            email,
+            password,
+          )).called(1);
+          verifyNoMoreInteractions(mockEmailAuthRepository);
+        });
       });
     });
   });
