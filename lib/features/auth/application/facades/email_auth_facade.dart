@@ -6,12 +6,21 @@ import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 class EmailAuthFacade {
   final SignInWithEmailAndPasswordUseCase _signInWithEmailUseCase;
   final SignUpWithEmailUseCase _signUpWithEmailUseCase;
+  final SignOutFromEmailAndPasswordUseCase _signOutFromEmaildUseCase;
+  final GetCurrentUserFromEmailUseCase _getCurrentUserFromEmailUseCase;
+  final GetUserStreamFromEmailUseCase _getUserStreamFromEmailUseCase;
 
   EmailAuthFacade({
     required SignInWithEmailAndPasswordUseCase signInWithEmailUseCase,
     required SignUpWithEmailUseCase signUpWithEmailUseCase,
+    required SignOutFromEmailAndPasswordUseCase signOutFromEmaildUseCase,
+    required GetCurrentUserFromEmailUseCase getCurrentUserFromEmailUseCase,
+    required GetUserStreamFromEmailUseCase getUserStreamFromEmailUseCase,
   })  : _signInWithEmailUseCase = signInWithEmailUseCase,
-        _signUpWithEmailUseCase = signUpWithEmailUseCase;
+        _signUpWithEmailUseCase = signUpWithEmailUseCase,
+        _signOutFromEmaildUseCase = signOutFromEmaildUseCase,
+        _getCurrentUserFromEmailUseCase = getCurrentUserFromEmailUseCase,
+        _getUserStreamFromEmailUseCase = getUserStreamFromEmailUseCase;
 
   Future<Result<UserAuth, AuthException>> signInWithEmail(
     String email,
@@ -24,4 +33,13 @@ class EmailAuthFacade {
     String password,
   ) =>
       _signUpWithEmailUseCase.execute(email: email, password: password);
+
+  Future<Result<void, AuthException>> signOut() =>
+      _signOutFromEmaildUseCase.execute();
+
+  Future<Result<UserAuth?, AuthException>> getCurrentUser() =>
+      _getCurrentUserFromEmailUseCase.fetch();
+
+  Stream<Result<UserAuth?, AuthException>> get observeUserAuth =>
+      _getUserStreamFromEmailUseCase.stream;
 }

@@ -21,8 +21,14 @@ import 'package:mockito/src/dummies.dart' as _i10;
 import 'package:repondo/core/result/exports.dart' as _i17;
 import 'package:repondo/features/auth/application/facades/google_auth_facade.dart'
     as _i14;
+import 'package:repondo/features/auth/application/usecases/email_auth/get_current_user_from_email_use_case.dart'
+    as _i21;
+import 'package:repondo/features/auth/application/usecases/email_auth/get_user_stream_from_email_use_case.dart'
+    as _i22;
 import 'package:repondo/features/auth/application/usecases/email_auth/sign_in_with_email_and_password_use_case.dart'
     as _i18;
+import 'package:repondo/features/auth/application/usecases/email_auth/sign_out_from_email_and_password_use_case.dart'
+    as _i20;
 import 'package:repondo/features/auth/application/usecases/email_auth/sign_up_with_email_use_case.dart'
     as _i19;
 import 'package:repondo/features/auth/application/usecases/google_auth/exports.dart'
@@ -1633,4 +1639,74 @@ class MockSignUpWithEmailUseCase extends _i1.Mock
             ),
           )
           as _i9.Future<_i17.Result<_i6.UserAuth, _i12.AuthException>>);
+}
+
+/// A class which mocks [SignOutFromEmailAndPasswordUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSignOutFromEmailAndPasswordUseCase extends _i1.Mock
+    implements _i20.SignOutFromEmailAndPasswordUseCase {
+  MockSignOutFromEmailAndPasswordUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i9.Future<_i17.Result<void, _i12.AuthException>> execute() =>
+      (super.noSuchMethod(
+            Invocation.method(#execute, []),
+            returnValue:
+                _i9.Future<_i17.Result<void, _i12.AuthException>>.value(
+                  _i10.dummyValue<_i17.Result<void, _i12.AuthException>>(
+                    this,
+                    Invocation.method(#execute, []),
+                  ),
+                ),
+          )
+          as _i9.Future<_i17.Result<void, _i12.AuthException>>);
+}
+
+/// A class which mocks [GetCurrentUserFromEmailUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetCurrentUserFromEmailUseCase extends _i1.Mock
+    implements _i21.GetCurrentUserFromEmailUseCase {
+  MockGetCurrentUserFromEmailUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i9.Future<_i17.Result<_i6.UserAuth?, _i12.AuthException>> fetch() =>
+      (super.noSuchMethod(
+            Invocation.method(#fetch, []),
+            returnValue: _i9.Future<
+              _i17.Result<_i6.UserAuth?, _i12.AuthException>
+            >.value(
+              _i10.dummyValue<_i17.Result<_i6.UserAuth?, _i12.AuthException>>(
+                this,
+                Invocation.method(#fetch, []),
+              ),
+            ),
+          )
+          as _i9.Future<_i17.Result<_i6.UserAuth?, _i12.AuthException>>);
+}
+
+/// A class which mocks [GetUserStreamFromEmailUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetUserStreamFromEmailUseCase extends _i1.Mock
+    implements _i22.GetUserStreamFromEmailUseCase {
+  MockGetUserStreamFromEmailUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i9.Stream<_i17.Result<_i6.UserAuth?, _i12.AuthException>> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue:
+                _i9.Stream<
+                  _i17.Result<_i6.UserAuth?, _i12.AuthException>
+                >.empty(),
+          )
+          as _i9.Stream<_i17.Result<_i6.UserAuth?, _i12.AuthException>>);
 }
