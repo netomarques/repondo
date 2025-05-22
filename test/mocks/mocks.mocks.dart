@@ -1690,19 +1690,19 @@ class MockGetCurrentUserFromEmailUseCase extends _i1.Mock
           as _i9.Future<_i17.Result<_i6.UserAuth?, _i12.AuthException>>);
 }
 
-/// A class which mocks [GetUserStreamFromEmailUseCase].
+/// A class which mocks [ObserveUserFromEmailUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGetUserStreamFromEmailUseCase extends _i1.Mock
-    implements _i22.GetUserStreamFromEmailUseCase {
-  MockGetUserStreamFromEmailUseCase() {
+class MockObserveUserFromEmailUseCase extends _i1.Mock
+    implements _i22.ObserveUserFromEmailUseCase {
+  MockObserveUserFromEmailUseCase() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i9.Stream<_i17.Result<_i6.UserAuth?, _i12.AuthException>> get stream =>
+  _i9.Stream<_i17.Result<_i6.UserAuth?, _i12.AuthException>> observe() =>
       (super.noSuchMethod(
-            Invocation.getter(#stream),
+            Invocation.method(#observe, []),
             returnValue:
                 _i9.Stream<
                   _i17.Result<_i6.UserAuth?, _i12.AuthException>

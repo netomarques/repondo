@@ -5,9 +5,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'observe_user_from_email_provider.g.dart';
 
-// Esse use case retorna uma Stream do usuário autenticado via e-mail
 @riverpod
-GetUserStreamFromEmailUseCase observeUserFromEmail(Ref ref) {
+ObserveUserFromEmailUseCase observeUserFromEmail(Ref ref) {
   final emailAuthRepository = ref.read(emailAuthRepositoryProvider);
-  return GetUserStreamFromEmailUseCase(emailAuthRepository);
+  return ObserveUserFromEmailUseCase(emailAuthRepository);
 }

@@ -7,12 +7,12 @@ part of 'observe_user_from_email_provider.dart';
 // **************************************************************************
 
 String _$observeUserFromEmailHash() =>
-    r'6613e1ad70547b6ebb96857952c902e541c38c87';
+    r'd9821161ff34f018f4529d0975f2e7fbf3da4d56';
 
 /// See also [observeUserFromEmail].
 @ProviderFor(observeUserFromEmail)
 final observeUserFromEmailProvider =
-    AutoDisposeProvider<GetUserStreamFromEmailUseCase>.internal(
+    AutoDisposeProvider<ObserveUserFromEmailUseCase>.internal(
   observeUserFromEmail,
   name: r'observeUserFromEmailProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -25,6 +25,6 @@ final observeUserFromEmailProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ObserveUserFromEmailRef
-    = AutoDisposeProviderRef<GetUserStreamFromEmailUseCase>;
+    = AutoDisposeProviderRef<ObserveUserFromEmailUseCase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

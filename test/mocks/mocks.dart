@@ -28,6 +28,6 @@ import 'package:repondo/features/auth/domain/repositories/exports.dart';
   SignUpWithEmailUseCase,
   SignOutFromEmailAndPasswordUseCase,
   GetCurrentUserFromEmailUseCase,
-  GetUserStreamFromEmailUseCase
+  ObserveUserFromEmailUseCase
 ])
 void main() {}

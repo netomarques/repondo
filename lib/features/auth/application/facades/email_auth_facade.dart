@@ -8,19 +8,19 @@ class EmailAuthFacade {
   final SignUpWithEmailUseCase _signUpWithEmailUseCase;
   final SignOutFromEmailAndPasswordUseCase _signOutFromEmaildUseCase;
   final GetCurrentUserFromEmailUseCase _getCurrentUserFromEmailUseCase;
-  final GetUserStreamFromEmailUseCase _getUserStreamFromEmailUseCase;
+  final ObserveUserFromEmailUseCase _observeUserFromEmailUseCase;
 
   EmailAuthFacade({
     required SignInWithEmailAndPasswordUseCase signInWithEmailUseCase,
     required SignUpWithEmailUseCase signUpWithEmailUseCase,
     required SignOutFromEmailAndPasswordUseCase signOutFromEmaildUseCase,
     required GetCurrentUserFromEmailUseCase getCurrentUserFromEmailUseCase,
-    required GetUserStreamFromEmailUseCase getUserStreamFromEmailUseCase,
+    required ObserveUserFromEmailUseCase observeUserFromEmailUseCase,
   })  : _signInWithEmailUseCase = signInWithEmailUseCase,
         _signUpWithEmailUseCase = signUpWithEmailUseCase,
         _signOutFromEmaildUseCase = signOutFromEmaildUseCase,
         _getCurrentUserFromEmailUseCase = getCurrentUserFromEmailUseCase,
-        _getUserStreamFromEmailUseCase = getUserStreamFromEmailUseCase;
+        _observeUserFromEmailUseCase = observeUserFromEmailUseCase;
 
   Future<Result<UserAuth, AuthException>> signInWithEmail(
     String email,
@@ -41,5 +41,5 @@ class EmailAuthFacade {
       _getCurrentUserFromEmailUseCase.fetch();
 
   Stream<Result<UserAuth?, AuthException>> get observeUserAuth =>
-      _getUserStreamFromEmailUseCase.stream;
+      _observeUserFromEmailUseCase.observe();
 }

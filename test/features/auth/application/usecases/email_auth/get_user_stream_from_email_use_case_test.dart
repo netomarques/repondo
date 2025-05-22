@@ -10,8 +10,8 @@ import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 import '../../../../../mocks/mocks.mocks.dart';
 
 void main() {
-  group('GetUserStreamFromEmailUseCase', () {
-    late GetUserStreamFromEmailUseCase useCase;
+  group('ObserveUserFromEmailUseCase', () {
+    late ObserveUserFromEmailUseCase useCase;
     late MockEmailAuthRepository mockEmailAuthRepository;
     late StreamController<Result<UserAuth?, AuthException>> userController;
 
@@ -32,7 +32,7 @@ void main() {
 
     setUp(() {
       mockEmailAuthRepository = MockEmailAuthRepository();
-      useCase = GetUserStreamFromEmailUseCase(mockEmailAuthRepository);
+      useCase = ObserveUserFromEmailUseCase(mockEmailAuthRepository);
       userController = StreamController<Result<UserAuth?, AuthException>>();
 
       // Fecha o StreamController após cada teste para evitar vazamentos
@@ -48,7 +48,7 @@ void main() {
         userController.add(successWithUser);
 
         // Act
-        final result = await useCase.stream.first;
+        final result = await useCase.observe().first;
 
         // Assert
         expect(result, isA<Success<UserAuth?, AuthException>>());

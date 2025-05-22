@@ -18,7 +18,7 @@ void main() {
     late MockSignUpWithEmailUseCase mockSignUpWithEmailUseCase;
     late MockSignOutFromEmailAndPasswordUseCase mockSignOutFromEmailUseCase;
     late MockGetCurrentUserFromEmailUseCase mockGetCurrentUserFromEmailUseCase;
-    late MockGetUserStreamFromEmailUseCase mockGetUserStreamFromEmailUseCase;
+    late MockObserveUserFromEmailUseCase mockObserveUserFromEmailUseCase;
 
     const email = 'email@example.com';
     const password = 'password';
@@ -36,7 +36,7 @@ void main() {
       mockSignUpWithEmailUseCase = MockSignUpWithEmailUseCase();
       mockSignOutFromEmailUseCase = MockSignOutFromEmailAndPasswordUseCase();
       mockGetCurrentUserFromEmailUseCase = MockGetCurrentUserFromEmailUseCase();
-      mockGetUserStreamFromEmailUseCase = MockGetUserStreamFromEmailUseCase();
+      mockObserveUserFromEmailUseCase = MockObserveUserFromEmailUseCase();
 
       // Cria uma instância da facade usando os mocks
       emailAuthFacade = EmailAuthFacade(
@@ -44,7 +44,7 @@ void main() {
         signUpWithEmailUseCase: mockSignUpWithEmailUseCase,
         signOutFromEmaildUseCase: mockSignOutFromEmailUseCase,
         getCurrentUserFromEmailUseCase: mockGetCurrentUserFromEmailUseCase,
-        getUserStreamFromEmailUseCase: mockGetUserStreamFromEmailUseCase,
+        observeUserFromEmailUseCase: mockObserveUserFromEmailUseCase,
       );
 
       // Configuração do valor dummy para evitar MissingDummyValueError
@@ -256,7 +256,7 @@ void main() {
       });
     });
 
-    group('GetUserStreamFromEmailUseCase', () {
+    group('ObserveUserFromEmailUseCase', () {
       late StreamController<Result<UserAuth?, AuthException>> userController;
 
       setUp(() {
@@ -265,7 +265,7 @@ void main() {
         // Fecha o StreamController após cada teste para evitar vazamentos
         addTearDown(userController.close);
 
-        when(mockGetUserStreamFromEmailUseCase.stream)
+        when(mockObserveUserFromEmailUseCase.observe())
             .thenAnswer((_) => userController.stream);
 
         // Configuração do valor dummy para evitar MissingDummyValueError
@@ -274,7 +274,7 @@ void main() {
       });
 
       test(
-          'caso de sucesso - deve chamar stream do GetUserStreamFromEmailUseCase e retornar Success<UserAuth?, AuthException> com UserAuth quando observeUserAuth é chamado',
+          'caso de sucesso - deve chamar stream do ObserveUserFromEmailUseCase e retornar Success<UserAuth?, AuthException> com UserAuth quando observeUserAuth é chamado',
           () async {
         // Arrange
         final successWithUser = Success<UserAuth?, AuthException>(expectedUser);
@@ -287,8 +287,8 @@ void main() {
         expect(result, isA<Success<UserAuth?, AuthException>>());
         expect(result.data, isNotNull);
 
-        verify(mockGetUserStreamFromEmailUseCase.stream).called(1);
-        verifyNoMoreInteractions(mockGetUserStreamFromEmailUseCase);
+        verify(mockObserveUserFromEmailUseCase.observe()).called(1);
+        verifyNoMoreInteractions(mockObserveUserFromEmailUseCase);
       });
 
       test(
@@ -305,12 +305,12 @@ void main() {
         expect(result, isA<Success<UserAuth?, AuthException>>());
         expect(result.data, isNull);
 
-        verify(mockGetUserStreamFromEmailUseCase.stream).called(1);
-        verifyNoMoreInteractions(mockGetUserStreamFromEmailUseCase);
+        verify(mockObserveUserFromEmailUseCase.observe()).called(1);
+        verifyNoMoreInteractions(mockObserveUserFromEmailUseCase);
       });
 
       test(
-          'caso de erro - deve chamar stream do GetUserStreamFromEmailUseCase e retornar Failure<UserAuth?, AuthException> quando observeUserAuth é chamado',
+          'caso de erro - deve chamar stream do ObserveUserFromEmailUseCase e retornar Failure<UserAuth?, AuthException> quando observeUserAuth é chamado',
           () async {
         // Arrange
         final authFailureResult =
@@ -323,8 +323,8 @@ void main() {
         // Assert
         expect(result, isA<Failure<UserAuth?, AuthException>>());
 
-        verify(mockGetUserStreamFromEmailUseCase.stream).called(1);
-        verifyNoMoreInteractions(mockGetUserStreamFromEmailUseCase);
+        verify(mockObserveUserFromEmailUseCase.observe()).called(1);
+        verifyNoMoreInteractions(mockObserveUserFromEmailUseCase);
       });
     });
   });
