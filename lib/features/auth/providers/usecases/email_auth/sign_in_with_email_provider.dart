@@ -7,7 +7,7 @@ part 'sign_in_with_email_provider.g.dart';
 
 /// Provider do usecase para login com email e senha.
 @riverpod
-SignInWithEmailAndPasswordUseCase signInwithEmail(Ref ref) {
+SignInWithEmailAndPasswordUseCase signInWithEmail(Ref ref) {
   final emailAuthRepository = ref.read(emailAuthRepositoryProvider);
   return SignInWithEmailAndPasswordUseCase(emailAuthRepository);
 }
