@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:repondo/features/auth/presentation/notifiers/google_auth_notifier.dart';
+import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
+import 'package:repondo/features/auth/presentation/notifiers/email_auth_notifier.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   static LoginPage builder(BuildContext context, GoRouterState state) =>
@@ -25,14 +26,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    // final notifier = ref.read(authNotifierProvider.notifier);
-    // await notifier.signInWithEmailAndPassword(email, password);
+    final notifier = ref.read(emailAuthNotifierProvider.notifier);
+    await notifier.signInWithEmail(email: email, password: password);
   }
 
   @override
   Widget build(BuildContext context) {
-    // final authState = ref.watch(authNotifierProvider);
-    // final isLoading = authState is AuthLoading;
+    final authState = ref.watch(emailAuthNotifierProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),
@@ -69,33 +69,36 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       value == null || value.isEmpty ? 'Informe a senha' : null,
                 ),
                 const SizedBox(height: 24),
-                // isLoading
-                //     ? const CircularProgressIndicator()
-                //     : ElevatedButton(
-                //         onPressed: _submit,
-                //         child: const Text('Entrar'),
-                //       ),
+                authState.hasError
+                    ? _textFailureAuthException(
+                        authState.error! as AuthException)
+                    : const SizedBox.shrink(),
+                authState.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : ElevatedButton(
+                        onPressed: _submit,
+                        child: const Text('Entrar'),
+                      ),
                 const SizedBox(height: 16),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    ref
-                        .read(googleAuthNotifierProvider.notifier)
-                        .signInWithGoogle();
-                  },
-                  icon: const Icon(Icons.login),
-                  label: const Text('Entrar com Google'),
-                ),
-                const SizedBox(height: 16),
-                // TextButton(
-                //     onPressed: () {
-                //       ref.read(authNotifierProvider.notifier).login();
-                //     },
-                //     child: const Text('Entrar como Anônimo'))
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  _textFailureAuthException(AuthException e) {
+    return Text(
+      'Erro ao fazer login: ${e.message}',
+      style: const TextStyle(color: Colors.red),
+    );
+  }
+
+  @override
+  dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }

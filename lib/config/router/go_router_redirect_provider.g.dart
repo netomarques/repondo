@@ -6,7 +6,7 @@ part of 'go_router_redirect_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$goRouterRedirectHash() => r'af2b9b789a66eec925ffaba43b1ea1b6715f83e9';
+String _$goRouterRedirectHash() => r'00e893d689ae9d9f24fd279b377721a933af57b7';
 
 /// Provider que retorna uma função de redirecionamento para o GoRouter.
 ///

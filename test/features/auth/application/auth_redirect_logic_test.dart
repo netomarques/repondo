@@ -5,24 +5,24 @@ import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 import 'package:repondo/features/auth/presentation/router/auth_route_locations.dart';
 
+import '../mocks/user_auth_test_factory.dart';
+
 void main() {
   group('authRedirectLogic', () {
+    late UserAuth testUser;
+
+    setUp(() {
+      // Cria um usuário de teste
+      testUser = UserAuthTestFactory.create();
+    });
+
     group('casos de sucesso', () {
       test(
           'deve redirecionar para ${AuthRouteLocations.home} quando usuário estiver autenticado e rota atual for diferente de ${AuthRouteLocations.home}',
           () async {
-        // Arrange
-        // Cria um usuário de teste
-        final testUser = UserAuth(
-          id: '123',
-          name: 'Test User',
-          email: 'test@example.com',
-          photoUrl: 'http://example.com/photo.jpg',
-        );
-
         // Act
         final result = authRedirectLogic(
-          googleAuthState: AsyncData(testUser),
+          authState: AsyncData(testUser),
           currentLocation: '/rota_diferente',
         );
 
@@ -31,20 +31,11 @@ void main() {
       });
 
       test(
-          'deve retornar null se já estiver na rota AuthRouteLocations.home e usuário estiver autenticado',
+          'deve retornar null se já estiver na rota ${AuthRouteLocations.home} e usuário estiver autenticado',
           () {
-        // Arrange
-        // Cria um usuário de teste
-        final testUser = UserAuth(
-          id: '123',
-          name: 'Test User',
-          email: 'test@example.com',
-          photoUrl: 'http://example.com/photo.jpg',
-        );
-
         // Act
         final result = authRedirectLogic(
-          googleAuthState: AsyncData(testUser),
+          authState: AsyncData(testUser),
           currentLocation: AuthRouteLocations.home,
         );
 
@@ -59,7 +50,7 @@ void main() {
           () {
         // Act
         final result = authRedirectLogic(
-          googleAuthState:
+          authState:
               AsyncError(AuthException('Conta desativada'), StackTrace.empty),
           currentLocation: '/rota_diferente',
         );
@@ -72,7 +63,7 @@ void main() {
           () {
         // Act
         final result = authRedirectLogic(
-          googleAuthState:
+          authState:
               AsyncError(AuthException('Conta desativada'), StackTrace.empty),
           currentLocation: AuthRouteLocations.conta_desativada,
         );
@@ -85,8 +76,7 @@ void main() {
           () {
         // Act
         final result = authRedirectLogic(
-          googleAuthState:
-              AsyncError(Exception('Erro genérico'), StackTrace.empty),
+          authState: AsyncError(Exception('Erro genérico'), StackTrace.empty),
           currentLocation: '/rota_diferente',
         );
 
@@ -98,8 +88,7 @@ void main() {
           () {
         // Act
         final result = authRedirectLogic(
-          googleAuthState:
-              AsyncError(Exception('Erro genérico'), StackTrace.empty),
+          authState: AsyncError(Exception('Erro genérico'), StackTrace.empty),
           currentLocation: AuthRouteLocations.login,
         );
 
@@ -114,7 +103,7 @@ void main() {
           () {
         // Act
         final result = authRedirectLogic(
-          googleAuthState: const AsyncLoading(),
+          authState: const AsyncLoading(),
           currentLocation: '/rota_diferente',
         );
 
@@ -126,7 +115,7 @@ void main() {
           () {
         // Act
         final result = authRedirectLogic(
-          googleAuthState: const AsyncLoading(),
+          authState: const AsyncLoading(),
           currentLocation: AuthRouteLocations.splash,
         );
 

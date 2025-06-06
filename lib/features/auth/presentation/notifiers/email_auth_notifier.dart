@@ -12,18 +12,10 @@ class EmailAuthNotifier extends _$EmailAuthNotifier {
   EmailAuthFacade get _emailAuthFacade => ref.read(emailAuthFacadeProvider);
 
   @override
-  Future<UserAuth> build() async {
+  Future<UserAuth?> build() async {
     final result = await _emailAuthFacade.getCurrentUser();
 
-    return result.fold(
-      (error) => throw error,
-      (userAuth) {
-        if (userAuth == null) {
-          throw AuthException('Usuário não autenticado');
-        }
-        return userAuth;
-      },
-    );
+    return result.fold((error) => throw error, (userAuth) => userAuth);
   }
 
   Future<void> getCurrentUser() async {
