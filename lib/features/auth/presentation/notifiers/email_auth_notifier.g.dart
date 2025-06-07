@@ -6,7 +6,7 @@ part of 'email_auth_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$emailAuthNotifierHash() => r'ea5e3c30ff7034b8d99c974abfd8cbf15938ef6c';
+String _$emailAuthNotifierHash() => r'a38f94824a46981cac19b6175b600588d78455c1';
 
 /// See also [EmailAuthNotifier].
 @ProviderFor(EmailAuthNotifier)

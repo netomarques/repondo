@@ -1,7 +1,6 @@
 import 'package:repondo/core/result/exports.dart';
 import 'package:repondo/features/auth/application/facades/email_auth_facade.dart';
 import 'package:repondo/features/auth/domain/entities/user_auth.dart';
-import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 import 'package:repondo/features/auth/providers/facades/email_auth_facade_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -23,15 +22,7 @@ class EmailAuthNotifier extends _$EmailAuthNotifier {
 
     state = await AsyncValue.guard(() async {
       final result = await _emailAuthFacade.getCurrentUser();
-      return result.fold(
-        (error) => throw error,
-        (userAuth) {
-          if (userAuth == null) {
-            throw AuthException('Usuário não autenticado');
-          }
-          return userAuth;
-        },
-      );
+      return result.fold((error) => throw error, (userAuth) => userAuth);
     });
   }
 

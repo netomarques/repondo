@@ -16,7 +16,7 @@ void main() {
     late UserAuth expectedUser;
     late Success<UserAuth?, AuthException> successWithUser;
     late EmailAuthNotifier notifier;
-    late List<AsyncValue<UserAuth>> states;
+    late List<AsyncValue<UserAuth?>> states;
 
     setUp(() async {
       // Criação de um usuário de teste
@@ -35,7 +35,9 @@ void main() {
 
     group('getCurrentUser', () {
       group('casos de sucesso', () {
-        test('deve retornar UserAuth válido chamando getCurrentUser', () async {
+        test(
+            'deve retornar UserAuth válido chamando getCurrentUser quando UserAuth nao for null',
+            () async {
           // Simula usuário autenticado
           when(mockEmailAuthFacade.getCurrentUser())
               .thenAnswer((_) async => successWithUser);
@@ -52,8 +54,37 @@ void main() {
 
           // Verifica que o estado final contém o usuário esperado
           final result = notifier.state;
-          expect(result, isA<AsyncData<UserAuth>>());
+          expect(result, isA<AsyncData<UserAuth?>>());
+          expect(result.value, isNotNull);
           expect(result.value, equals(expectedUser));
+
+          verify(mockEmailAuthFacade.getCurrentUser()).called(1);
+          verifyNoMoreInteractions(mockEmailAuthFacade);
+        });
+
+        test(
+            'deve retornar UserAuth null chamando getCurrentUser quando UserAuth for null',
+            () async {
+          final successWithNull = Success<UserAuth?, AuthException>(null);
+
+          // Arrange: simula retorno de usuário nulo
+          when(mockEmailAuthFacade.getCurrentUser())
+              .thenAnswer((_) async => successWithNull);
+
+          // Act: chama o método que deve ser testado
+          await notifier.getCurrentUser();
+
+          // Assert - verifica que dois estados foram emitidos: carregando e sucesso
+          expect(states.length, 2); // 2 estados: AsyncLoading e AsyncData
+          expect(states, [
+            isA<AsyncLoading>(), // Estado DURANTE getCurrentUser
+            isA<AsyncData>(), // Estado APÓS getCurrentUser
+          ]);
+
+          // Verifica que o estado final contém o usuário esperado
+          final result = notifier.state;
+          expect(result, isA<AsyncData<UserAuth?>>());
+          expect(result.value, isNull);
 
           verify(mockEmailAuthFacade.getCurrentUser()).called(1);
           verifyNoMoreInteractions(mockEmailAuthFacade);
@@ -62,37 +93,11 @@ void main() {
 
       group('casos de erro', () {
         test(
-            'deve lançar AuthException chamando getCurrentUser do EmailAuthFacade quando UserAuth for null',
-            () async {
-          // Arrange: simula sucesso com valor nulo
-          final successWithNull = Success<UserAuth?, AuthException>(null);
-          when(mockEmailAuthFacade.getCurrentUser())
-              .thenAnswer((_) async => successWithNull);
-
-          // Act: chama o método que deve ser testado
-          await notifier.getCurrentUser();
-
-          // Assert - verifica que dois estados foram emitidos: carregando e AsyncError
-          expect(states.length, 2); // 2 estados: AsyncLoading e AsyncError
-          expect(states, [
-            isA<AsyncLoading>(), // Estado DURANTE getCurrentUser
-            isA<AsyncError>(), // Estado APÓS getCurrentUser
-          ]);
-
-          // Verifica que o estado do provider está em erro com AuthException
-          final state = notifier.state;
-          expect(state, isA<AsyncError>());
-          expect(state.error, isA<AuthException>());
-
-          verify(mockEmailAuthFacade.getCurrentUser()).called(1);
-          verifyNoMoreInteractions(mockEmailAuthFacade);
-        });
-
-        test(
             'deve lançar AuthException ao chamar getCurrentUser do EmailAuthFacade e receber Failure',
             () async {
           final error = AuthException('Erro ao obter usuário');
           final failureAuth = Failure<UserAuth?, AuthException>(error);
+
           // Arrange: simula falha com mensagem específica
           when(mockEmailAuthFacade.getCurrentUser())
               .thenAnswer((_) async => failureAuth);

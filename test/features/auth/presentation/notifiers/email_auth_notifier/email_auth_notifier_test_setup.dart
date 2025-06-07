@@ -10,7 +10,7 @@ import 'package:repondo/features/auth/providers/facades/email_auth_facade_provid
 import '../../../mocks/email_auth_mocks.mocks.dart';
 import '../../../mocks/user_auth_test_factory.dart';
 
-Future<(EmailAuthNotifier notifier, List<AsyncValue<UserAuth>> states)>
+Future<(EmailAuthNotifier notifier, List<AsyncValue<UserAuth?>> states)>
     buildEmailAuthNotifierTestContext(
   MockEmailAuthFacade facade,
 ) async {
@@ -40,9 +40,9 @@ Future<(EmailAuthNotifier notifier, List<AsyncValue<UserAuth>> states)>
   // Obtém o Notifier responsável por chamar o método a ser testado
   final notifier = container.read(emailAuthNotifierProvider.notifier);
   // Lista para armazenar os estados emitidos pelo provider durante a chamada
-  final states = <AsyncValue<UserAuth>>[];
+  final states = <AsyncValue<UserAuth?>>[];
   // Observa o provider e registra cada mudança de estado
-  final subscription = container.listen<AsyncValue<UserAuth>>(
+  final subscription = container.listen<AsyncValue<UserAuth?>>(
     emailAuthNotifierProvider,
     (_, state) => states.add(state),
   );

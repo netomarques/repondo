@@ -15,7 +15,7 @@ void main() {
     late MockEmailAuthFacade mockEmailAuthFacade;
     late UserAuth expectedUser;
     late EmailAuthNotifier notifier;
-    late List<AsyncValue<UserAuth>> states;
+    late List<AsyncValue<UserAuth?>> states;
 
     setUp(() async {
       // Criação de um usuário de teste
@@ -57,13 +57,13 @@ void main() {
             // Assert - verifica que dois estados foram emitidos: carregando e sucesso
             expect(states.length, 2); // 2 estados: AsyncLoading e AsyncData
             expect(states, [
-              isA<AsyncLoading<UserAuth>>(), // Estado DURANTE o signIn
-              isA<AsyncData<UserAuth>>(), // Estado APÓS o signIn
+              isA<AsyncLoading<UserAuth?>>(), // Estado DURANTE o signIn
+              isA<AsyncData<UserAuth?>>(), // Estado APÓS o signIn
             ]);
 
             // Verifica que o estado final contém o usuário esperado
             final result = notifier.state;
-            expect(result, isA<AsyncData<UserAuth>>());
+            expect(result, isA<AsyncData<UserAuth?>>());
             expect(result.value, equals(expectedUser));
 
             // Confirma que os métodos corretos foram chamados no mock
@@ -94,13 +94,13 @@ void main() {
           // Assert - verifica que dois estados foram emitidos: carregando e AsyncError
           expect(states.length, 2); // 2 estados: AsyncLoading e AsyncError
           expect(states, [
-            isA<AsyncLoading<UserAuth>>(), // Estado DURANTE o signIn
-            isA<AsyncError<UserAuth>>(), // Estado APÓS o signIn
+            isA<AsyncLoading<UserAuth?>>(), // Estado DURANTE o signIn
+            isA<AsyncError<UserAuth?>>(), // Estado APÓS o signIn
           ]);
 
           // Verifica que o estado final contém o usuário esperado
           final result = notifier.state;
-          expect(result, isA<AsyncError<UserAuth>>());
+          expect(result, isA<AsyncError<UserAuth?>>());
           expect(result.error, isA<AuthException>());
 
           // Confirma que os métodos corretos foram chamados no mock

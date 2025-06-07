@@ -43,14 +43,34 @@ void main() {
     group('build', () {
       group('casos de sucesso', () {
         test(
-            'deve retornar UserAuth válido chamando getCurrentUser do EmailAuthFacade',
+            'deve retornar UserAuth válido chamando getCurrentUser do EmailAuthFacade quando UserAuth não for null',
             () async {
           // Act
           final result = await container.read(emailAuthNotifierProvider.future);
 
           // Assert
-          expect(result, isA<UserAuth>());
+          expect(result, isA<UserAuth?>());
+          expect(result, isNotNull);
           expect(result, expectedUser);
+          verify(mockEmailAuthFacade.getCurrentUser()).called(1);
+          verifyNoMoreInteractions(mockEmailAuthFacade);
+        });
+
+        test(
+            'deve retornar UserAuth null chamando getCurrentUser do EmailAuthFacade quando UserAuth for null',
+            () async {
+          final successWithNull = Success<UserAuth?, AuthException>(null);
+
+          // Arrange: simula retorno de usuário nulo
+          when(mockEmailAuthFacade.getCurrentUser())
+              .thenAnswer((_) async => successWithNull);
+
+          // Act
+          final result = await container.read(emailAuthNotifierProvider.future);
+
+          // Assert
+          expect(result, isA<UserAuth?>());
+          expect(result, isNull);
           verify(mockEmailAuthFacade.getCurrentUser()).called(1);
           verifyNoMoreInteractions(mockEmailAuthFacade);
         });
@@ -58,32 +78,11 @@ void main() {
 
       group('casos de erro', () {
         test(
-            'deve lançar AuthException chamando getCurrentUser do EmailAuthFacade quando UserAuth for null',
-            () async {
-          // Arrange: simula sucesso com valor nulo
-          final successWithNull = Success<UserAuth?, AuthException>(null);
-          when(mockEmailAuthFacade.getCurrentUser())
-              .thenAnswer((_) async => successWithNull);
-
-          // Act + Assert: espera que o erro seja lançado
-          await expectLater(
-            container.read(emailAuthNotifierProvider.future),
-            throwsA(isA<AuthException>()),
-          );
-
-          // Verifica que o estado do provider está em erro com AuthException
-          final state = container.read(emailAuthNotifierProvider);
-          expect(state, isA<AsyncError>());
-          expect(state.error, isA<AuthException>());
-
-          verify(mockEmailAuthFacade.getCurrentUser()).called(1);
-          verifyNoMoreInteractions(mockEmailAuthFacade);
-        });
-        test(
             'deve lançar AuthException chamando getCurrentUser do EmailAuthFacade retornar erro',
             () async {
           final error = AuthException('Erro ao obter usuário');
           final failureAuth = Failure<UserAuth?, AuthException>(error);
+
           // Arrange: simula falha com mensagem específica
           when(mockEmailAuthFacade.getCurrentUser())
               .thenAnswer((_) async => failureAuth);

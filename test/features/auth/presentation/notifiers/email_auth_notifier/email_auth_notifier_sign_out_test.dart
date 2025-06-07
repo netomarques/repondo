@@ -14,7 +14,7 @@ class _CounterBuildEmailAuthNotifier extends EmailAuthNotifier {
   int buildCount = 0;
 
   @override
-  Future<UserAuth> build() async {
+  Future<UserAuth?> build() async {
     buildCount++;
     return super.build();
   }
@@ -23,7 +23,7 @@ class _CounterBuildEmailAuthNotifier extends EmailAuthNotifier {
 Future<
     (
       EmailAuthNotifier notifier,
-      List<AsyncValue<UserAuth>> states,
+      List<AsyncValue<UserAuth?>> states,
       ProviderContainer container,
       _CounterBuildEmailAuthNotifier counterBuildNotifier,
     )> _buildEmailAuthNotifierTest(MockEmailAuthFacade facade) async {
@@ -59,10 +59,10 @@ Future<
   final notifier = container.read(emailAuthNotifierProvider.notifier);
 
   // Lista para armazenar os estados emitidos pelo provider durante a chamada
-  final states = <AsyncValue<UserAuth>>[];
+  final states = <AsyncValue<UserAuth?>>[];
 
   // Observa o provider e registra cada mudança de estado
-  final subscription = container.listen<AsyncValue<UserAuth>>(
+  final subscription = container.listen<AsyncValue<UserAuth?>>(
     emailAuthNotifierProvider,
     (_, state) => states.add(state),
   );
@@ -79,7 +79,7 @@ void main() {
   group('EmailAuthNotifier', () {
     late MockEmailAuthFacade mockEmailAuthFacade;
     late EmailAuthNotifier notifier;
-    late List<AsyncValue<UserAuth>> states;
+    late List<AsyncValue<UserAuth?>> states;
     late ProviderContainer container;
     late _CounterBuildEmailAuthNotifier counterBuildNotifier;
 
@@ -108,7 +108,7 @@ void main() {
 
       group('casos de sucesso', () {
         test(
-            'signOut deve emitir AsyncLoading, chamar build novamente e lançar AuthException',
+            'signOut deve emitir AsyncLoading, chamar build novamente e retorna UserAuth null',
             () async {
           final successWithNull = Success<UserAuth?, AuthException>(null);
 
@@ -128,28 +128,27 @@ void main() {
           when(mockEmailAuthFacade.getCurrentUser())
               .thenAnswer((_) async => successWithNull);
 
-          // Aguarda rebuild e espera que ocorra uma exceção de autenticação
+          // Aguarda rebuild e retorna UserAuth null
           await expectLater(
             container.read(emailAuthNotifierProvider.future),
-            throwsA(isA<AuthException>()),
+            isA<Future<UserAuth?>>(),
           );
 
           // Assert
-
           // Deve ter ocorrido um novo build após o signOut
           expect(counterBuildNotifier.buildCount, 2);
 
-          // Verifica os estados emitidos: AsyncLoading seguido de AsyncError
-          expect(states.length, 2); // AsyncLoading + AsyncError
+          // Verifica os estados emitidos: AsyncLoading seguido de AsyncData
+          expect(states.length, 2);
           expect(states, [
-            isA<AsyncLoading<void>>(), // Estado DURANTE o signOut
-            isA<AsyncError<void>>(), // Estado APÓS o signOut
+            isA<AsyncLoading<UserAuth?>>(), // Estado DURANTE o signOut
+            isA<AsyncData<UserAuth?>>(), // Estado APÓS o signOut
           ]);
 
-          // Confirma que o estado final é AsyncError com AuthException
+          // Confirma que o estado final é AsyncData com UserAuth null
           final state = notifier.state;
-          expect(state, isA<AsyncError>());
-          expect(state.error, isA<AuthException>());
+          expect(state, isA<AsyncData<UserAuth?>>());
+          expect(state.value, isNull);
 
           // Verifica chamadas no mock
           verify(mockEmailAuthFacade.signOut()).called(1);
@@ -182,13 +181,13 @@ void main() {
           // Verifica estados emitidos: AsyncLoading seguido de AsyncError
           expect(states.length, 2);
           expect(states, [
-            isA<AsyncLoading<void>>(), // Estado DURANTE o signOut
-            isA<AsyncError<void>>(), // Estado APÓS o signOut
+            isA<AsyncLoading<UserAuth?>>(), // Estado DURANTE o signOut
+            isA<AsyncError<UserAuth?>>(), // Estado APÓS o signOut
           ]);
 
           // Estado final deve ser erro com AuthException
           final state = notifier.state;
-          expect(state, isA<AsyncError>());
+          expect(state, isA<AsyncError<UserAuth?>>());
           expect(state.error, isA<AuthException>());
 
           // Verifica chamadas no mock

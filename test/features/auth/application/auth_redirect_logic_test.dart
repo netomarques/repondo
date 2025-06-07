@@ -42,6 +42,31 @@ void main() {
         //Assert
         expect(result, isNull);
       });
+      test(
+          'deve redirecionar para ${AuthRouteLocations.login} quando usuário for null e rota atual for diferente de ${AuthRouteLocations.login}',
+          () async {
+        // Act
+        final result = authRedirectLogic(
+          authState: AsyncData(null),
+          currentLocation: '/rota_diferente',
+        );
+
+        // Assert
+        expect(result, equals(AuthRouteLocations.login));
+      });
+
+      test(
+          'deve retornar null se já estiver na rota ${AuthRouteLocations.login} e usuário for null',
+          () {
+        // Act
+        final result = authRedirectLogic(
+          authState: AsyncData(null),
+          currentLocation: AuthRouteLocations.login,
+        );
+
+        //Assert
+        expect(result, isNull);
+      });
     });
 
     group('casos de erro', () {
