@@ -7,6 +7,7 @@ import 'package:repondo/features/auth/domain/exports.dart';
 ///
 /// Reduz duplicação nos testes e melhora legibilidade.
 void _expectFirebaseAuthExceptionMapping({
+  required Type exceptionType,
   required String errorCode,
   required String expectedMessage,
 }) {
@@ -16,9 +17,9 @@ void _expectFirebaseAuthExceptionMapping({
   // Act: realiza o mapeamento com a função testada.
   final result = fromFirebaseAuthExceptionMapper(error);
 
-  // Assert: verifica se o mapeamento retornou corretamente o AuthException.
-  expect(result, isA<AuthException>(),
-      reason: 'Deveria retornar um AuthException');
+  // Assert: verifica se o mapeamento retornou corretamente o tipo da exceção.
+  expect(result.runtimeType, exceptionType,
+      reason: 'Deveria retornar uma exceção do tipo "$exceptionType"');
   expect(result.message, expectedMessage,
       reason: 'Mensagem deveria ser "$expectedMessage"');
   expect(result.code, errorCode, reason: 'Código deveria ser "$errorCode"');
@@ -27,26 +28,36 @@ void _expectFirebaseAuthExceptionMapping({
 void main() {
   group('fromFirebaseAuthExceptionMapper', () {
     // Testa o código 'wrong-password'
-
     test(
         'deve retornar AuthException com mensagem de credenciais inválidas quando code for wrong-password',
         () {
-      const errorCode = 'wrong-password';
-      const message = 'Credenciais inválidas';
-
       _expectFirebaseAuthExceptionMapping(
-          errorCode: errorCode, expectedMessage: message);
+        exceptionType: InvalidCredentialsException,
+        errorCode: FirebaseAuthErrorCodes.wrongPassword,
+        expectedMessage: AuthErrorMessages.invalidCredentials,
+      );
     });
 
     // Testa o código 'invalid-email'
     test(
         'deve retornar AuthException com mensagem de credenciais inválidas quando code for invalid-email',
         () {
-      const errorCode = 'invalid-email';
-      const message = 'Credenciais inválidas';
-
       _expectFirebaseAuthExceptionMapping(
-          errorCode: errorCode, expectedMessage: message);
+        exceptionType: InvalidCredentialsException,
+        errorCode: FirebaseAuthErrorCodes.invalidEmail,
+        expectedMessage: AuthErrorMessages.invalidCredentials,
+      );
+    });
+
+    // Testa o código 'invalid-credential'
+    test(
+        'deve retornar AuthException com mensagem de credenciais inválidas quando code for invalid-credential',
+        () {
+      _expectFirebaseAuthExceptionMapping(
+        exceptionType: InvalidCredentialsException,
+        errorCode: FirebaseAuthErrorCodes.invalidCredential,
+        expectedMessage: AuthErrorMessages.invalidCredentials,
+      );
     });
 
     // Testa o código 'user-not-found'
@@ -57,7 +68,10 @@ void main() {
       const message = 'Usuário não existe';
 
       _expectFirebaseAuthExceptionMapping(
-          errorCode: errorCode, expectedMessage: message);
+        exceptionType: AuthException,
+        errorCode: errorCode,
+        expectedMessage: message,
+      );
     });
 
     // Testa o código 'user-disabled'
@@ -68,7 +82,10 @@ void main() {
       const message = 'Conta desativada';
 
       _expectFirebaseAuthExceptionMapping(
-          errorCode: errorCode, expectedMessage: message);
+        exceptionType: AuthException,
+        errorCode: errorCode,
+        expectedMessage: message,
+      );
     });
 
     // Testa o código 'email-already-in-use'
@@ -79,7 +96,10 @@ void main() {
       const message = 'E-mail já está em uso';
 
       _expectFirebaseAuthExceptionMapping(
-          errorCode: errorCode, expectedMessage: message);
+        exceptionType: AuthException,
+        errorCode: errorCode,
+        expectedMessage: message,
+      );
     });
 
     // Testa o código 'network-request-failed'
@@ -90,7 +110,10 @@ void main() {
       const message = 'Erro de falha na rede';
 
       _expectFirebaseAuthExceptionMapping(
-          errorCode: errorCode, expectedMessage: message);
+        exceptionType: AuthException,
+        errorCode: errorCode,
+        expectedMessage: message,
+      );
     });
 
     // Testa o código 'invalid-user-token'
@@ -101,7 +124,10 @@ void main() {
       const message = 'Token de autenticação inválido';
 
       _expectFirebaseAuthExceptionMapping(
-          errorCode: errorCode, expectedMessage: message);
+        exceptionType: AuthException,
+        errorCode: errorCode,
+        expectedMessage: message,
+      );
     });
 
     // Testa o código internal-error
@@ -112,7 +138,10 @@ void main() {
       const message = 'Firebase está indisponível';
 
       _expectFirebaseAuthExceptionMapping(
-          errorCode: errorCode, expectedMessage: message);
+        exceptionType: AuthException,
+        errorCode: errorCode,
+        expectedMessage: message,
+      );
     });
 
     // Testa o código weak-password
@@ -124,7 +153,10 @@ void main() {
           'A senha é muito fraca. Escolha uma senha com pelo menos 6 caracteres';
 
       _expectFirebaseAuthExceptionMapping(
-          errorCode: errorCode, expectedMessage: message);
+        exceptionType: AuthException,
+        errorCode: errorCode,
+        expectedMessage: message,
+      );
     });
 
     // Testa o caso padrão quando o código não é tratado explicitamente

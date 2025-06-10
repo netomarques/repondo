@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:repondo/features/auth/domain/constants/firebase_auth_error_codes.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
+import 'package:repondo/features/auth/domain/exceptions/invalid_credentials_exception.dart';
 
 AuthException fromFirebaseAuthExceptionMapper(FirebaseAuthException error) {
   switch (error.code) {
-    case 'wrong-password':
-    case 'invalid-email':
-      return AuthException('Credenciais inválidas', code: error.code);
+    case FirebaseAuthErrorCodes.wrongPassword:
+    case FirebaseAuthErrorCodes.invalidEmail:
+    case FirebaseAuthErrorCodes.invalidCredential:
+      return InvalidCredentialsException(code: error.code);
     case 'user-not-found':
       return AuthException('Usuário não existe', code: error.code);
     case 'user-disabled':
