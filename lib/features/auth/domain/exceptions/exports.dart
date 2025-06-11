@@ -1,3 +1,11 @@
 export 'auth_exception.dart';
+export 'auth_unknown_exception.dart';
+export 'email_already_in_use_exception.dart';
 export 'firebase_auth_exception_mapper.dart';
+export 'internal_error_exception.dart';
 export 'invalid_credentials_exception.dart';
+export 'invalid_user_token_exception.dart';
+export 'network_request_failed_exception.dart';
+export 'user_disabled_exception.dart';
+export 'user_not_found_exception.dart';
+export 'weak_password_exception.dart';

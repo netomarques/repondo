@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:repondo/core/exports.dart';
 import 'package:repondo/features/auth/data/repositories/firebase_email_auth_repository.dart';
+import 'package:repondo/features/auth/domain/constants/auth_error_messages.dart';
 import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 
@@ -327,7 +328,8 @@ void main() {
           expect(result, isA<Failure<UserAuth, AuthException>>());
 
           final failure = result as Failure<UserAuth, AuthException>;
-          expect(failure.error.message, contains('Erro de autenticação'));
+          expect(failure.error.message,
+              contains(AuthErrorMessages.authUnknownError));
           expect(failure.error.code, isNotNull);
 
           verify(mockFirebaseAuth.signInWithEmailAndPassword(
