@@ -1,7 +1,7 @@
 import 'package:repondo/core/result/exports.dart';
+import 'package:repondo/features/auth/application/providers/facades/email_auth_facade_provider.dart';
 import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
-import 'package:repondo/features/auth/providers/facades/email_auth_facade_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'redirect_observe_user_auth_notifier.g.dart';

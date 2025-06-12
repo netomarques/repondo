@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repondo/features/auth/application/facades/email_auth_facade.dart';
-import 'package:repondo/features/auth/providers/usecases/email_auth/exports.dart';
+import 'package:repondo/features/auth/application/providers/usecases/email_auth/exports.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'email_auth_facade_provider.g.dart';

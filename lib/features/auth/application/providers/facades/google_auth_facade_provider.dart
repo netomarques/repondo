@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repondo/features/auth/application/facades/exports.dart';
-import 'package:repondo/features/auth/providers/usecases/google_auth/exports.dart';
+import 'package:repondo/features/auth/application/providers/usecases/google_auth/exports.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'google_auth_facade_provider.g.dart';

@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:repondo/features/auth/application/providers/facades/google_auth_facade_provider.dart';
 import 'package:repondo/features/auth/domain/entities/exports.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 import 'package:repondo/features/auth/presentation/notifiers/google_auth_notifier.dart';
-import 'package:repondo/features/auth/providers/facades/google_auth_facade_provider.dart';
 
 import '../../../../mocks/mocks.mocks.dart';
 

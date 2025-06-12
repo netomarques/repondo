@@ -1,7 +1,7 @@
 import 'package:repondo/features/auth/application/facades/google_auth_facade.dart';
+import 'package:repondo/features/auth/application/providers/facades/google_auth_facade_provider.dart';
 import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
-import 'package:repondo/features/auth/providers/facades/google_auth_facade_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'google_auth_notifier.g.dart';
