@@ -1,57 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:repondo/features/auth/presentation/notifiers/email_auth_notifier/sign_in_email_notifier.dart';
-import 'package:repondo/features/auth/presentation/router/auth_route_locations.dart';
+import 'package:repondo/features/auth/presentation/notifiers/email_auth_notifier/sign_up_email_notifier.dart';
 import 'package:repondo/features/auth/presentation/widgets/exports.dart';
 
-class LoginPage extends ConsumerStatefulWidget {
-  static LoginPage builder(BuildContext context, GoRouterState state) =>
-      const LoginPage();
+class SignUpPage extends ConsumerStatefulWidget {
+  static SignUpPage builder(BuildContext context, GoRouterState state) =>
+      const SignUpPage();
 
-  const LoginPage({super.key});
+  const SignUpPage({super.key});
 
   @override
-  ConsumerState<LoginPage> createState() => _LoginPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class _SignUpPageState extends ConsumerState<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  late final SignInEmailNotifier notifier;
+  final _confirmPasswordController = TextEditingController();
+  late final SignUpEmailNotifier notifier;
 
   @override
   void initState() {
     super.initState();
-    notifier = ref.read(signInEmailNotifierProvider.notifier);
+    notifier = ref.read(signUpEmailNotifierProvider.notifier);
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(signInEmailNotifierProvider);
+    final state = ref.watch(signUpEmailNotifierProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(title: const Text('Cadastro')),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Column(
             children: [
-              LoginForm(
+              SignUpForm(
                 formKey: _formKey,
                 emailController: _emailController,
                 passwordController: _passwordController,
+                confirmPasswordController: _confirmPasswordController,
                 state: state,
-                button: ButtonForm(onSubmit: _submit, textAction: 'Login'),
+                onSubmit: _submit,
               ),
               const SizedBox(height: 16),
-              TextButton(
-                onPressed: () => state.isLoading == false
-                    ? context.push(AuthRouteLocations.signUp)
-                    : null,
-                child: const Text("Ainda não tem uma conta? Cadastre-se"),
-              ),
             ],
           ),
         ),
@@ -65,11 +60,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    await notifier.signInWithEmail(email: email, password: password);
+    await notifier.signUpWithEmail(email: email, password: password);
   }
 
   @override
-  dispose() {
+  void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();

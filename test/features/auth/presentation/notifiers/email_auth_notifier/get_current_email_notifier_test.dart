@@ -1,30 +1,30 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:repondo/core/result/result.dart';
+import 'package:repondo/core/result/exports.dart';
 import 'package:repondo/features/auth/application/providers/facades/email_auth_facade_provider.dart';
-import 'package:repondo/features/auth/domain/entities/exports.dart';
+import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
-import 'package:repondo/features/auth/presentation/notifiers/email_auth_notifier.dart';
+import 'package:repondo/features/auth/presentation/notifiers/email_auth_notifier/get_current_email_notifier.dart';
 
 import '../../../mocks/email_auth_mocks.mocks.dart';
 import '../../../mocks/user_auth_test_factory.dart';
 
 void main() {
-  group('EmailAuthNotifier', () {
+  group('GetCurrentEmailNotifier', () {
     late MockEmailAuthFacade mockEmailAuthFacade;
     late ProviderContainer container;
     late UserAuth expectedUser;
 
-    setUp(() {
+    setUp(() async {
       // Criação de um usuário de teste
       expectedUser = UserAuthTestFactory.create();
-      final successWithUser = Success<UserAuth?, AuthException>(expectedUser);
 
       // Instancia o mock da facade
       mockEmailAuthFacade = MockEmailAuthFacade();
 
       // Configuração do valor dummy para evitar MissingDummyValueError
+      final successWithUser = Success<UserAuth?, AuthException>(expectedUser);
       provideDummy<Result<UserAuth?, AuthException>>(successWithUser);
 
       // Configura o mock para retornar sucesso com usuário
@@ -46,7 +46,8 @@ void main() {
             'deve retornar UserAuth válido chamando getCurrentUser do EmailAuthFacade quando UserAuth não for null',
             () async {
           // Act
-          final result = await container.read(emailAuthNotifierProvider.future);
+          final result =
+              await container.read(getCurrentEmailNotifierProvider.future);
 
           // Assert
           expect(result, isA<UserAuth?>());
@@ -66,7 +67,8 @@ void main() {
               .thenAnswer((_) async => successWithNull);
 
           // Act
-          final result = await container.read(emailAuthNotifierProvider.future);
+          final result =
+              await container.read(getCurrentEmailNotifierProvider.future);
 
           // Assert
           expect(result, isA<UserAuth?>());
@@ -89,13 +91,13 @@ void main() {
 
           // Act + Assert: espera que a exceção seja lançada com a mensagem correta
           await expectLater(
-            container.read(emailAuthNotifierProvider.future),
+            container.read(getCurrentEmailNotifierProvider.future),
             throwsA(isA<AuthException>().having((e) => e.message, 'mensagem',
                 contains('Erro ao obter usuário'))),
           );
 
           // Verifica estado de erro após falha
-          final state = container.read(emailAuthNotifierProvider);
+          final state = container.read(getCurrentEmailNotifierProvider);
           expect(state, isA<AsyncError>());
           expect(state.error, isA<AuthException>());
 

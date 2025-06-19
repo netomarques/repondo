@@ -11,4 +11,5 @@ class AuthErrorMessages {
   static const internalError = 'Serviço está indisponível';
   static const weakPassword =
       'A senha é muito fraca. Escolha uma senha com pelo menos 6 caracteres';
+  static const invalidEmail = 'O e-mail é inválido. Verifique o formato.';
 }

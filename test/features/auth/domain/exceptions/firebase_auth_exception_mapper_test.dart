@@ -42,12 +42,12 @@ void main() {
 
     // Testa o código 'invalid-email'
     test(
-        'deve retornar AuthException com mensagem de credenciais inválidas quando code for invalid-email',
+        'deve retornar AuthException com mensagem de email inválido quando code for invalid-email',
         () {
       _expectFirebaseAuthExceptionMapping(
-        exceptionType: InvalidCredentialsException,
+        exceptionType: InvalidEmailException,
         errorCode: FirebaseAuthErrorCodes.invalidEmail,
-        expectedMessage: AuthErrorMessages.invalidCredentials,
+        expectedMessage: AuthErrorMessages.invalidEmail,
       );
     });
 

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:repondo/features/auth/application/auth_redirect_logic.dart';
+import 'package:repondo/features/auth/application/redirect/auth_redirect_logic.dart';
 import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 import 'package:repondo/features/auth/presentation/router/auth_route_locations.dart';
@@ -67,11 +67,23 @@ void main() {
         //Assert
         expect(result, isNull);
       });
+
+      test(
+        'deve retornar null se já estiver na rota ${AuthRouteLocations.signUp} e usuário for null',
+        () {
+          final result = authRedirectLogic(
+            authState: AsyncData(null),
+            currentLocation: AuthRouteLocations.signUp,
+          );
+
+          expect(result, isNull);
+        },
+      );
     });
 
     group('casos de erro', () {
       test(
-          'deve redirecionar para ${AuthRouteLocations.conta_desativada} se erro for conta desativada e rota atual for diferente de ${AuthRouteLocations.conta_desativada}',
+          'deve redirecionar para ${AuthRouteLocations.contaDesativada} se erro for conta desativada e rota atual for diferente de ${AuthRouteLocations.contaDesativada}',
           () {
         // Act
         final result = authRedirectLogic(
@@ -81,21 +93,23 @@ void main() {
         );
 
         // Assert
-        expect(result, AuthRouteLocations.conta_desativada);
+        expect(result, AuthRouteLocations.contaDesativada);
       });
+
       test(
-          'deve retornar null se erro for conta desativada e rota atual for ${AuthRouteLocations.conta_desativada}',
+          'deve retornar null se erro for conta desativada e rota atual for ${AuthRouteLocations.contaDesativada}',
           () {
         // Act
         final result = authRedirectLogic(
           authState:
               AsyncError(AuthException('Conta desativada'), StackTrace.empty),
-          currentLocation: AuthRouteLocations.conta_desativada,
+          currentLocation: AuthRouteLocations.contaDesativada,
         );
 
         // Assert
         expect(result, isNull);
       });
+
       test(
           'deve redirecionar para ${AuthRouteLocations.login} se erro for genérico e rota atual for diferente de ${AuthRouteLocations.login}',
           () {
@@ -108,6 +122,7 @@ void main() {
         // Assert
         expect(result, AuthRouteLocations.login);
       });
+
       test(
           'deve retornar null se erro for genérico e rota atual for ${AuthRouteLocations.login}',
           () {
@@ -115,6 +130,19 @@ void main() {
         final result = authRedirectLogic(
           authState: AsyncError(Exception('Erro genérico'), StackTrace.empty),
           currentLocation: AuthRouteLocations.login,
+        );
+
+        // Assert
+        expect(result, isNull);
+      });
+
+      test(
+          'deve retornar null se erro for genérico e rota atual for ${AuthRouteLocations.signUp}',
+          () {
+        // Act
+        final result = authRedirectLogic(
+          authState: AsyncError(Exception('Erro genérico'), StackTrace.empty),
+          currentLocation: AuthRouteLocations.signUp,
         );
 
         // Assert
@@ -135,6 +163,7 @@ void main() {
         // Assert
         expect(result, AuthRouteLocations.splash);
       });
+
       test(
           'deve retornar null se estado for loading e rota atual for ${AuthRouteLocations.splash}',
           () {

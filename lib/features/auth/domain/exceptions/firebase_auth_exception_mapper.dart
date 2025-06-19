@@ -5,9 +5,10 @@ import 'package:repondo/features/auth/domain/exceptions/exports.dart';
 AuthException fromFirebaseAuthExceptionMapper(FirebaseAuthException error) {
   switch (error.code) {
     case FirebaseAuthErrorCodes.wrongPassword:
-    case FirebaseAuthErrorCodes.invalidEmail:
     case FirebaseAuthErrorCodes.invalidCredential:
       return InvalidCredentialsException(code: error.code);
+    case FirebaseAuthErrorCodes.invalidEmail:
+      return InvalidEmailException(code: error.code);
     case FirebaseAuthErrorCodes.userNotFound:
       return UserNotFoundException(code: error.code);
     case FirebaseAuthErrorCodes.userDisabled:

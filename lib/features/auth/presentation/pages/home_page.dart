@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:repondo/features/auth/presentation/notifiers/email_auth_notifier.dart';
+import 'package:repondo/features/auth/presentation/notifiers/email_auth_notifier/get_current_email_notifier.dart';
+import 'package:repondo/features/auth/presentation/notifiers/email_auth_notifier/sign_out_email_notifier.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userAsync = ref.watch(emailAuthNotifierProvider);
+    final userAsync = ref.watch(getCurrentEmailNotifierProvider);
+    final notifier = ref.read(signOutEmailNotifierProvider.notifier);
 
     return userAsync.when(
       loading: () =>
@@ -21,9 +23,7 @@ class HomePage extends ConsumerWidget {
                 title: const Text('Repondo'),
                 actions: [
                   IconButton(
-                    onPressed: () async => await ref
-                        .read(emailAuthNotifierProvider.notifier)
-                        .signOut(),
+                    onPressed: () async => await notifier.signOut(),
                     icon: const Icon(Icons.logout),
                     tooltip: 'Sair',
                   ),

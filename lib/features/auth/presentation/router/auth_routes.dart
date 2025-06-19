@@ -19,6 +19,12 @@ class AuthRoutes {
       builder: LoginPage.builder,
     ),
     GoRoute(
+      path: AuthRouteLocations.signUp,
+      parentNavigatorKey: navigatorKey,
+      name: 'signUp',
+      builder: SignUpPage.builder,
+    ),
+    GoRoute(
       path: AuthRouteLocations.home,
       parentNavigatorKey: navigatorKey,
       name: 'home',

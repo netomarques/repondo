@@ -4,43 +4,44 @@ import 'package:mockito/mockito.dart';
 import 'package:repondo/core/result/exports.dart';
 import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
-import 'package:repondo/features/auth/presentation/notifiers/email_auth_notifier.dart';
+import 'package:repondo/features/auth/presentation/notifiers/email_auth_notifier/sign_in_email_notifier.dart';
 
 import '../../../mocks/email_auth_mocks.mocks.dart';
 import '../../../mocks/user_auth_test_factory.dart';
-import 'email_auth_notifier_test_setup.dart';
+import 'build_notifier_test_setup.dart';
 
 void main() {
-  group('EmailAuthNotifier', () {
+  group('SignInEmailNotifier', () {
     late MockEmailAuthFacade mockEmailAuthFacade;
     late UserAuth expectedUser;
-    late EmailAuthNotifier notifier;
+    late SignInEmailNotifier notifier;
     late List<AsyncValue<UserAuth?>> states;
+    late Success<UserAuth, AuthException> successWithUser;
 
     setUp(() async {
-      // Criação de um usuário de teste
       expectedUser = UserAuthTestFactory.create();
+
+      // Configuração do valor dummy para evitar MissingDummyValueError
+      successWithUser = Success<UserAuth, AuthException>(expectedUser);
+      provideDummy<Result<UserAuth, AuthException>>(successWithUser);
 
       // Instancia o mock da facade
       mockEmailAuthFacade = MockEmailAuthFacade();
 
-      final (tempNotifier, tempStates) =
-          await buildEmailAuthNotifierTestContext(mockEmailAuthFacade);
+      // Obtém o Notifier responsável por chamar o método a ser testado
+      final buildContext = await buildNotifierTestContext(
+        facade: mockEmailAuthFacade,
+        notifierProvider: signInEmailNotifierProvider,
+        dummyResult: Success<UserAuth?, AuthException>(null),
+      );
 
-      notifier = tempNotifier;
-      states = tempStates;
+      notifier = buildContext.notifier;
+      states = buildContext.states;
     });
 
     group('signInWithEmail', () {
       const email = 'example@email.com';
       const password = 'password';
-      late Success<UserAuth, AuthException> success;
-
-      setUp(() {
-        success = Success<UserAuth, AuthException>(expectedUser);
-        // Configuração do valor dummy para evitar MissingDummyValueError
-        provideDummy<Result<UserAuth, AuthException>>(success);
-      });
 
       group('casos de sucesso', () {
         test(
@@ -49,7 +50,7 @@ void main() {
             // Arrange
             // Configura o mock para retornar sucesso com usuário
             when(mockEmailAuthFacade.signInWithEmail(any, any))
-                .thenAnswer((_) async => success);
+                .thenAnswer((_) async => successWithUser);
 
             // Act - Executa o método que realiza o login com email e senha
             await notifier.signInWithEmail(email: email, password: password);

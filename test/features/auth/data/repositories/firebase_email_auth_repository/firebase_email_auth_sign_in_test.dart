@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:repondo/core/exports.dart';
 import 'package:repondo/features/auth/data/repositories/firebase_email_auth_repository.dart';
-import 'package:repondo/features/auth/domain/constants/auth_error_messages.dart';
+import 'package:repondo/features/auth/domain/constants/exports.dart';
 import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 
@@ -244,14 +244,14 @@ void main() {
 
         test('Deve lançar Failure<AuthException> quando o email for inválido',
             () async {
-          const wrongEmail = 'invalid-email';
-          const errorCode = 'invalid-email';
+          const wrongEmail = 'wrong-email';
 
           // Arrange
           when(mockFirebaseAuth.signInWithEmailAndPassword(
             email: wrongEmail,
             password: password,
-          )).thenThrow(FirebaseAuthException(code: errorCode));
+          )).thenThrow(
+              FirebaseAuthException(code: FirebaseAuthErrorCodes.invalidEmail));
 
           // Act
           final result = await firebaseEmailAuthRepository
@@ -260,20 +260,19 @@ void main() {
           // Assert
           _expectFailureAuthExceptionResult(
             result: result,
-            errorCode: errorCode,
-            message: 'Credenciais inválidas',
+            errorCode: FirebaseAuthErrorCodes.invalidEmail,
+            message: AuthErrorMessages.invalidEmail,
           );
         });
 
         test('Deve lançar Failure<AuthException> quando o usuário não existir',
             () async {
-          const errorCode = 'user-not-found';
-
           // Arrange
           when(mockFirebaseAuth.signInWithEmailAndPassword(
             email: email,
             password: password,
-          )).thenThrow(FirebaseAuthException(code: errorCode));
+          )).thenThrow(
+              FirebaseAuthException(code: FirebaseAuthErrorCodes.userNotFound));
 
           // Act
           final result = await firebaseEmailAuthRepository
@@ -282,20 +281,19 @@ void main() {
           // Assert
           _expectFailureAuthExceptionResult(
             result: result,
-            errorCode: errorCode,
-            message: 'Usuário não existe',
+            errorCode: FirebaseAuthErrorCodes.userNotFound,
+            message: AuthErrorMessages.userNotFound,
           );
         });
 
         test('Deve lançar Failure<AuthException> quando conta for desativada',
             () async {
-          const errorCode = 'user-disabled';
-
           // Arrange
           when(mockFirebaseAuth.signInWithEmailAndPassword(
             email: email,
             password: password,
-          )).thenThrow(FirebaseAuthException(code: errorCode));
+          )).thenThrow(
+              FirebaseAuthException(code: FirebaseAuthErrorCodes.userDisabled));
 
           // Act
           final result = await firebaseEmailAuthRepository
@@ -304,40 +302,30 @@ void main() {
           // Assert
           _expectFailureAuthExceptionResult(
             result: result,
-            errorCode: errorCode,
-            message: 'Conta desativada',
+            errorCode: FirebaseAuthErrorCodes.userDisabled,
+            message: AuthErrorMessages.userDisabled,
           );
         });
 
         test(
             'Deve lançar Failure<AuthException> quando for um erro de FirebaseAuthException não rastreado',
             () async {
-          const errorCode = 'erro-nao-identificado';
-
           // Arrange
           when(mockFirebaseAuth.signInWithEmailAndPassword(
             email: email,
             password: password,
-          )).thenThrow(FirebaseAuthException(code: errorCode));
+          )).thenThrow(FirebaseAuthException(
+              code: FirebaseAuthErrorCodes.authUnknownError));
 
           // Act
           final result = await firebaseEmailAuthRepository
               .signInWithEmailAndPassword(email, password);
 
-          // Assert
-          expect(result, isA<Failure<UserAuth, AuthException>>());
-
-          final failure = result as Failure<UserAuth, AuthException>;
-          expect(failure.error.message,
-              contains(AuthErrorMessages.authUnknownError));
-          expect(failure.error.code, isNotNull);
-
-          verify(mockFirebaseAuth.signInWithEmailAndPassword(
-            email: anyNamed('email'),
-            password: anyNamed('password'),
-          )).called(1);
-
-          verifyNoMoreInteractions(mockFirebaseAuth);
+          _expectFailureAuthExceptionResult(
+            result: result,
+            errorCode: FirebaseAuthErrorCodes.authUnknownError,
+            message: AuthErrorMessages.authUnknownError,
+          );
         });
 
         test(

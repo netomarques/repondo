@@ -5,7 +5,7 @@ import 'package:repondo/features/auth/domain/constants/auth_error_messages.dart'
 import 'package:repondo/features/auth/domain/constants/firebase_auth_error_codes.dart';
 import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 import 'package:repondo/features/auth/domain/exceptions/invalid_credentials_exception.dart';
-import 'package:repondo/features/auth/presentation/widgets/auth_form.dart';
+import 'package:repondo/features/auth/presentation/widgets/exports.dart';
 
 void main() {
   testWidgets('exibe mensagem de erro quando credenciais são inválidas',
@@ -19,7 +19,7 @@ void main() {
       ProviderScope(
         child: MaterialApp(
           home: Scaffold(
-            body: AuthForm(
+            body: LoginForm(
               formKey: formKey,
               emailController: emailController,
               passwordController: passwordController,
@@ -27,7 +27,7 @@ void main() {
                   InvalidCredentialsException(
                       code: FirebaseAuthErrorCodes.wrongPassword),
                   StackTrace.empty),
-              onSubmit: () {},
+              button: ButtonForm(onSubmit: () {}, textAction: 'Login'),
             ),
           ),
         ),

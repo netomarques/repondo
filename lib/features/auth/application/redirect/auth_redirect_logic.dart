@@ -12,18 +12,27 @@ String? authRedirectLogic({
     return currentLocation == location ? null : location;
   }
 
+  String? redirectToLoginIfNotOnAuthRoutes() {
+    final isLogin = currentLocation == AuthRouteLocations.login;
+    final isSignUp = currentLocation == AuthRouteLocations.signUp;
+
+    // se já estiver na login ou signup, permanece
+    if (isLogin || isSignUp) return null;
+    return AuthRouteLocations.login;
+  }
+
   return authState.when(
     // Usuário autenticado com sucesso
-    data: (userAuth) => maybeRedirectTo(
-        userAuth != null ? AuthRouteLocations.home : AuthRouteLocations.login),
+    data: (userAuth) => userAuth != null
+        ? maybeRedirectTo(AuthRouteLocations.home)
+        : redirectToLoginIfNotOnAuthRoutes(),
     // Erro ao obter estado de autenticação
     error: (error, _) {
       // Caso específico: conta desativada
       if (error is AuthException && error.message == 'Conta desativada') {
-        return maybeRedirectTo(AuthRouteLocations.conta_desativada);
+        return maybeRedirectTo(AuthRouteLocations.contaDesativada);
       }
-      // Redireciona para login em qualquer outro erro
-      return maybeRedirectTo(AuthRouteLocations.login);
+      return redirectToLoginIfNotOnAuthRoutes();
     },
     // Estado de carregamento: redireciona para splash
     loading: () => maybeRedirectTo(AuthRouteLocations.splash),

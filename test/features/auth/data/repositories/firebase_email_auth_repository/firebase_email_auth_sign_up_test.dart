@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:repondo/core/result/result.dart';
 import 'package:repondo/features/auth/data/repositories/firebase_email_auth_repository.dart';
+import 'package:repondo/features/auth/domain/constants/exports.dart';
 import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 
@@ -165,78 +166,80 @@ void main() {
         test(
             'Deve retornar Failure<AuthException> quando email já foi cadastrado',
             () async {
-          const errorCode = 'email-already-in-use';
-          const message = 'E-mail já está em uso';
-
           // Arrange
           when(mockFirebaseAuth.createUserWithEmailAndPassword(
             email: email,
             password: password,
-          )).thenThrow(FirebaseAuthException(code: errorCode));
+          )).thenThrow(FirebaseAuthException(
+              code: FirebaseAuthErrorCodes.emailAlreadyInUse));
 
           // Act
           final result = await firebaseEmailAuthRepository
               .signUpWithEmailAndPassword(email, password);
 
           _expectFailureAuthExceptionResult(
-              result: result, errorCode: errorCode, message: message);
+            result: result,
+            errorCode: FirebaseAuthErrorCodes.emailAlreadyInUse,
+            message: AuthErrorMessages.emailAlreadyInUse,
+          );
         });
+
         test('Deve retornar Failure<AuthException> quando a senha for fraca',
             () async {
-          const errorCode = 'weak-password';
-          const message =
-              'A senha é muito fraca. Escolha uma senha com pelo menos 6 caracteres';
-
-          // Arrange
-          when(mockFirebaseAuth.createUserWithEmailAndPassword(
-            email: email,
-            password: password,
-          )).thenThrow(FirebaseAuthException(code: errorCode));
-
-          final result = await firebaseEmailAuthRepository
-              .signUpWithEmailAndPassword(email, password);
-
-          _expectFailureAuthExceptionResult(
-              result: result, errorCode: errorCode, message: message);
-        });
-        test('Deve retornar Failure<AuthException> quando o email é inválido',
-            () async {
-          const errorCode = 'invalid-email';
-          const message = 'Credenciais inválidas';
-
-          // Arrange
-          when(mockFirebaseAuth.createUserWithEmailAndPassword(
-            email: email,
-            password: password,
-          )).thenThrow(FirebaseAuthException(code: errorCode));
-
-          // Act
-          final result = await firebaseEmailAuthRepository
-              .signUpWithEmailAndPassword(email, password);
-
-          _expectFailureAuthExceptionResult(
-              result: result, errorCode: errorCode, message: message);
-        });
-
-        test(
-            'Deve retornar Failure<AuthException> quando o erro foi desconhecido',
-            () async {
-          const errorCode = 'unknown-error';
-          const message = 'Erro desconhecido';
-
           // Arrange
           when(mockFirebaseAuth.createUserWithEmailAndPassword(
             email: email,
             password: password,
           )).thenThrow(
-              FirebaseAuthException(code: errorCode, message: message));
+              FirebaseAuthException(code: FirebaseAuthErrorCodes.weakPassword));
+
+          final result = await firebaseEmailAuthRepository
+              .signUpWithEmailAndPassword(email, password);
+
+          _expectFailureAuthExceptionResult(
+              result: result,
+              errorCode: FirebaseAuthErrorCodes.weakPassword,
+              message: AuthErrorMessages.weakPassword);
+        });
+
+        test('Deve retornar Failure<AuthException> quando o email é inválido',
+            () async {
+          // Arrange
+          when(mockFirebaseAuth.createUserWithEmailAndPassword(
+            email: email,
+            password: password,
+          )).thenThrow(
+              FirebaseAuthException(code: FirebaseAuthErrorCodes.invalidEmail));
 
           // Act
           final result = await firebaseEmailAuthRepository
               .signUpWithEmailAndPassword(email, password);
 
           _expectFailureAuthExceptionResult(
-              result: result, errorCode: errorCode, message: message);
+            result: result,
+            errorCode: FirebaseAuthErrorCodes.invalidEmail,
+            message: AuthErrorMessages.invalidEmail,
+          );
+        });
+
+        test(
+            'Deve retornar Failure<AuthException> quando o erro foi desconhecido',
+            () async {
+          // Arrange
+          when(mockFirebaseAuth.createUserWithEmailAndPassword(
+            email: email,
+            password: password,
+          )).thenThrow(FirebaseAuthException(
+              code: FirebaseAuthErrorCodes.authUnknownError));
+
+          // Act
+          final result = await firebaseEmailAuthRepository
+              .signUpWithEmailAndPassword(email, password);
+
+          _expectFailureAuthExceptionResult(
+              result: result,
+              errorCode: FirebaseAuthErrorCodes.authUnknownError,
+              message: AuthErrorMessages.authUnknownError);
         });
 
         test(
