@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:repondo/features/auth/presentation/notifiers/email_auth_notifier/get_current_email_notifier.dart';
 import 'package:repondo/features/auth/presentation/notifiers/email_auth_notifier/sign_out_email_notifier.dart';
 
 class HomePage extends ConsumerWidget {
+  static HomePage builder(BuildContext context, GoRouterState state) =>
+      const HomePage();
+
   const HomePage({super.key});
 
   @override

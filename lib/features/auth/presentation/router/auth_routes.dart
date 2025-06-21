@@ -28,13 +28,13 @@ class AuthRoutes {
       path: AuthRouteLocations.home,
       parentNavigatorKey: navigatorKey,
       name: 'home',
-      builder: (context, state) => const HomePage(),
+      builder: HomePage.builder,
     ),
     GoRoute(
       path: AuthRouteLocations.loading,
       parentNavigatorKey: navigatorKey,
       name: 'loading',
-      builder: (context, state) => const LoadingPage(),
+      builder: LoadingPage.builder,
     ),
   ];
 }
