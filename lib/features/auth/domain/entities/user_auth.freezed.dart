@@ -28,9 +28,6 @@ mixin _$UserAuth {
   $UserAuthCopyWith<UserAuth> get copyWith =>
       _$UserAuthCopyWithImpl<UserAuth>(this as UserAuth, _$identity);
 
-  /// Serializes this UserAuth to a JSON map.
-  Map<String, dynamic> toJson();
-
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
@@ -45,7 +42,6 @@ mixin _$UserAuth {
                 other.isAnonymous == isAnonymous));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, id, name, email, photoUrl, isAnonymous);
@@ -113,7 +109,7 @@ class _$UserAuthCopyWithImpl<$Res> implements $UserAuthCopyWith<$Res> {
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _UserAuth implements UserAuth {
   _UserAuth(
       {required this.id,
@@ -121,8 +117,6 @@ class _UserAuth implements UserAuth {
       this.email,
       this.photoUrl,
       this.isAnonymous = false});
-  factory _UserAuth.fromJson(Map<String, dynamic> json) =>
-      _$UserAuthFromJson(json);
 
   @override
   final String id;
@@ -145,13 +139,6 @@ class _UserAuth implements UserAuth {
       __$UserAuthCopyWithImpl<_UserAuth>(this, _$identity);
 
   @override
-  Map<String, dynamic> toJson() {
-    return _$UserAuthToJson(
-      this,
-    );
-  }
-
-  @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
@@ -165,7 +152,6 @@ class _UserAuth implements UserAuth {
                 other.isAnonymous == isAnonymous));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, id, name, email, photoUrl, isAnonymous);

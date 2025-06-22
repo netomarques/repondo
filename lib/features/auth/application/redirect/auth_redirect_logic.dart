@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 import 'package:repondo/features/auth/presentation/router/auth_route_locations.dart';
+import 'package:repondo/features/home/presentation/router/home_route_locations.dart';
 
 /// Essa função é reativa e responde às mudanças no estado de autenticação.
 String? authRedirectLogic({
@@ -24,7 +25,7 @@ String? authRedirectLogic({
   return authState.when(
     // Usuário autenticado com sucesso
     data: (userAuth) => userAuth != null
-        ? maybeRedirectTo(AuthRouteLocations.home)
+        ? maybeRedirectTo(HomeRouteLocations.home)
         : redirectToLoginIfNotOnAuthRoutes(),
     // Erro ao obter estado de autenticação
     error: (error, _) {

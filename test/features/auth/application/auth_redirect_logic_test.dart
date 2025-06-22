@@ -4,6 +4,7 @@ import 'package:repondo/features/auth/application/redirect/auth_redirect_logic.d
 import 'package:repondo/features/auth/domain/entities/user_auth.dart';
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
 import 'package:repondo/features/auth/presentation/router/auth_route_locations.dart';
+import 'package:repondo/features/home/presentation/router/home_route_locations.dart';
 
 import '../mocks/user_auth_test_factory.dart';
 
@@ -18,7 +19,7 @@ void main() {
 
     group('casos de sucesso', () {
       test(
-          'deve redirecionar para ${AuthRouteLocations.home} quando usuário estiver autenticado e rota atual for diferente de ${AuthRouteLocations.home}',
+          'deve redirecionar para ${HomeRouteLocations.home} quando usuário estiver autenticado e rota atual for diferente de ${HomeRouteLocations.home}',
           () async {
         // Act
         final result = authRedirectLogic(
@@ -27,16 +28,16 @@ void main() {
         );
 
         // Assert
-        expect(result, equals(AuthRouteLocations.home));
+        expect(result, equals(HomeRouteLocations.home));
       });
 
       test(
-          'deve retornar null se já estiver na rota ${AuthRouteLocations.home} e usuário estiver autenticado',
+          'deve retornar null se já estiver na rota ${HomeRouteLocations.home} e usuário estiver autenticado',
           () {
         // Act
         final result = authRedirectLogic(
           authState: AsyncData(testUser),
-          currentLocation: AuthRouteLocations.home,
+          currentLocation: HomeRouteLocations.home,
         );
 
         //Assert
