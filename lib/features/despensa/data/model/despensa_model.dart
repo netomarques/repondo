@@ -1,0 +1,75 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:repondo/core/mappers/firestore_mapper.dart';
+import 'package:repondo/features/despensa/data/constants/despensa_firestore_keys.dart';
+import 'package:repondo/features/despensa/domain/entities/despensa.dart';
+
+part 'despensa_model.freezed.dart';
+
+@freezed
+abstract class DespensaModel with _$DespensaModel {
+  const DespensaModel._();
+
+  const factory DespensaModel({
+    required String id,
+    required String name,
+    required String inviteCode,
+    required List<String> adminIds,
+    required List<String> memberIds,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _DespensaModel;
+
+  factory DespensaModel.fromMap(Map<String, dynamic> map, String documentId) {
+    return DespensaModel(
+      id: documentId,
+      name:
+          FirestoreMapper.getRequired<String>(map, DespensaFirestoreKeys.name),
+      inviteCode: FirestoreMapper.getRequired<String>(
+          map, DespensaFirestoreKeys.inviteCode),
+      adminIds: FirestoreMapper.getRequiredList<String>(
+          map, DespensaFirestoreKeys.adminIds),
+      memberIds: FirestoreMapper.getRequiredList<String>(
+          map, DespensaFirestoreKeys.memberIds),
+      createdAt: FirestoreMapper.getRequiredDateTime(
+          map, DespensaFirestoreKeys.createdAt),
+      updatedAt: FirestoreMapper.getRequiredDateTime(
+          map, DespensaFirestoreKeys.updatedAt),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      DespensaFirestoreKeys.name: name,
+      DespensaFirestoreKeys.inviteCode: inviteCode,
+      DespensaFirestoreKeys.adminIds: adminIds,
+      DespensaFirestoreKeys.memberIds: memberIds,
+      DespensaFirestoreKeys.createdAt: Timestamp.fromDate(createdAt),
+      DespensaFirestoreKeys.updatedAt: Timestamp.fromDate(updatedAt),
+    };
+  }
+
+  Despensa toEntity() {
+    return Despensa(
+      id: id,
+      name: name,
+      inviteCode: inviteCode,
+      adminIds: adminIds,
+      memberIds: memberIds,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
+
+  factory DespensaModel.fromEntity(Despensa despensa) {
+    return DespensaModel(
+      id: despensa.id,
+      name: despensa.name,
+      inviteCode: despensa.inviteCode,
+      adminIds: despensa.adminIds,
+      memberIds: despensa.memberIds,
+      createdAt: despensa.createdAt,
+      updatedAt: despensa.updatedAt,
+    );
+  }
+}
