@@ -65,4 +65,35 @@ final class FirestoreMapper {
 
     return value.toDate();
   }
+
+  /// Retorna o valor do campo [key] no [map] com o tipo esperado [T], ou `null`
+  /// se o campo estiver ausente ou nulo.
+  ///
+  /// Lança [FirestoreMapperException] apenas se o valor existir e não for do tipo [T].
+  static T? getOptional<T>(Map<String, dynamic> map, String key) {
+    final value = map[key];
+
+    if (value == null) return null;
+
+    if (value is! T) {
+      throw FirestoreMapperException('Campo "$key" possui tipo inválido');
+    }
+
+    return value;
+  }
+
+  /// Retorna um [DateTime] convertido de um [Timestamp], ou `null` se ausente ou nulo.
+  ///
+  /// Lança [FirestoreMapperException] se o valor existir e não for um [Timestamp].
+  static DateTime? getOptionalDateTime(Map<String, dynamic> map, String key) {
+    final value = map[key];
+
+    if (value == null) return null;
+
+    if (value is! Timestamp) {
+      throw FirestoreMapperException('Campo "$key" não é um Timestamp');
+    }
+
+    return value.toDate();
+  }
 }
