@@ -18,6 +18,7 @@ import 'package:google_sign_in_platform_interface/google_sign_in_platform_interf
     as _i11;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i10;
+import 'package:repondo/core/log/app_logger.dart' as _i23;
 import 'package:repondo/core/result/exports.dart' as _i17;
 import 'package:repondo/features/auth/application/facades/google_auth_facade.dart'
     as _i14;
@@ -1709,4 +1710,32 @@ class MockObserveUserFromEmailUseCase extends _i1.Mock
                 >.empty(),
           )
           as _i9.Stream<_i17.Result<_i6.UserAuth?, _i12.AuthException>>);
+}
+
+/// A class which mocks [AppLogger].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockAppLogger extends _i1.Mock implements _i23.AppLogger {
+  MockAppLogger() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  void info(String? message) => super.noSuchMethod(
+    Invocation.method(#info, [message]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void warning(String? message) => super.noSuchMethod(
+    Invocation.method(#warning, [message]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void error(String? message, [Object? error, StackTrace? stackTrace]) =>
+      super.noSuchMethod(
+        Invocation.method(#error, [message, error, stackTrace]),
+        returnValueForMissingStub: null,
+      );
 }

@@ -9,15 +9,23 @@ import 'package:repondo/features/despensa/domain/entities/despensa.dart';
 import 'package:repondo/features/despensa/domain/exceptions/despensa_exception.dart';
 import 'package:repondo/features/despensa/domain/params/create_despensa_params.dart';
 
+import '../../../../../mocks/mocks.mocks.dart';
 import '../../../mocks/despensa_test_factory.dart';
 import '../../../mocks/firebase_despensa_repository_mocks.mocks.dart';
 
 void main() {
   const plugin = 'firestore';
   const despensaId = 'despensaId';
+  const logStart = 'Iniciando criação da despensa';
+  const logSuccess = 'Despensa criada com sucesso';
+  const logSaved = 'Despensa salva com sucesso';
+  const logFetchAfterCreateWarning =
+      'Dados da despensa não encontrados após criação.';
+  const logError = 'Erro ao criar despensa';
 
   group('FirebaseDespensaRepository.createDespensa', () {
     late MockFirebaseFirestore mockFirestore;
+    late MockAppLogger mockLogger;
     late MockCollectionReference<Map<String, dynamic>> mockCollectionDespensas;
     late MockDocumentReference<Map<String, dynamic>> mockDocReferenceDespensa;
     late MockDocumentSnapshot<Map<String, dynamic>> mockSnapshotDespensa;
@@ -39,11 +47,13 @@ void main() {
       savedMap = DespensaModel.fromEntity(DespensaTestFactory.create()).toMap();
 
       mockFirestore = MockFirebaseFirestore();
+      mockLogger = MockAppLogger();
       mockCollectionDespensas = MockCollectionReference();
       mockDocReferenceDespensa = MockDocumentReference();
       mockSnapshotDespensa = MockDocumentSnapshot();
 
-      repository = FirebaseDespensaRepository(firestore: mockFirestore);
+      repository = FirebaseDespensaRepository(
+          firestore: mockFirestore, logger: mockLogger);
 
       when(mockFirestore.collection(DespensaFirestoreKeys.collectionName))
           .thenReturn(mockCollectionDespensas);
@@ -83,13 +93,23 @@ void main() {
         ))).called(1);
 
         verify(mockDocReferenceDespensa.get()).called(1);
-        verify(mockDocReferenceDespensa.id).called(1);
+        verify(mockDocReferenceDespensa.id).called(2);
         verify(mockSnapshotDespensa.data()).called(1);
+
+        verifyInOrder([
+          mockLogger.info(argThat(contains(logStart))),
+          mockLogger.info(argThat(contains(logSuccess))),
+          mockLogger.info(argThat(contains(logSaved))),
+        ]);
+
+        verifyNever(mockLogger.warning(any));
+        verifyNever(mockLogger.error(any, any, any));
 
         verifyNoMoreInteractions(mockFirestore);
         verifyNoMoreInteractions(mockCollectionDespensas);
         verifyNoMoreInteractions(mockDocReferenceDespensa);
         verifyNoMoreInteractions(mockSnapshotDespensa);
+        verifyNoMoreInteractions(mockLogger);
       });
 
       test(
@@ -126,12 +146,21 @@ void main() {
         ))).called(1);
         verify(mockDocReferenceDespensa.get()).called(4);
         verify(mockSnapshotDespensa.data()).called(4);
-        verify(mockDocReferenceDespensa.id).called(1);
+        verify(mockDocReferenceDespensa.id).called(2);
+
+        verifyInOrder([
+          mockLogger.info(argThat(contains(logStart))),
+          mockLogger.info(argThat(contains(logSuccess))),
+          mockLogger.info(argThat(contains(logSaved))),
+        ]);
+        verifyNever(mockLogger.warning(any));
+        verifyNever(mockLogger.error(any, any, any));
 
         verifyNoMoreInteractions(mockFirestore);
         verifyNoMoreInteractions(mockCollectionDespensas);
         verifyNoMoreInteractions(mockDocReferenceDespensa);
         verifyNoMoreInteractions(mockSnapshotDespensa);
+        verifyNoMoreInteractions(mockLogger);
       });
     });
 
@@ -170,13 +199,22 @@ void main() {
                 params.memberIds,
               ),
         ))).called(1);
+        verify(mockDocReferenceDespensa.id).called(1);
         verify(mockDocReferenceDespensa.get()).called(5);
         verify(mockSnapshotDespensa.data()).called(5);
+
+        verifyInOrder([
+          mockLogger.info(argThat(contains(logStart))),
+          mockLogger.info(argThat(contains(logSuccess))),
+          mockLogger.warning(argThat(contains(logFetchAfterCreateWarning))),
+          mockLogger.error(argThat(contains(logError)), any, any),
+        ]);
 
         verifyNoMoreInteractions(mockFirestore);
         verifyNoMoreInteractions(mockCollectionDespensas);
         verifyNoMoreInteractions(mockDocReferenceDespensa);
         verifyNoMoreInteractions(mockSnapshotDespensa);
+        verifyNoMoreInteractions(mockLogger);
       });
 
       test('deve retornar Failure ao lançar FirebaseException na collection',
@@ -206,8 +244,14 @@ void main() {
         verifyNever(mockDocReferenceDespensa.get());
         verifyNever(mockSnapshotDespensa.data());
 
+        verifyInOrder([
+          mockLogger.info(argThat(contains(logStart))),
+          mockLogger.error(argThat(contains(logError)), any, any),
+        ]);
+
         verifyNoMoreInteractions(mockFirestore);
         verifyNoMoreInteractions(mockCollectionDespensas);
+        verifyNoMoreInteractions(mockLogger);
       });
 
       test('deve retornar Failure ao lançar Exception inesperada na collection',
@@ -227,12 +271,18 @@ void main() {
 
         verify(mockFirestore.collection(DespensaFirestoreKeys.collectionName))
             .called(1);
+        verifyInOrder([
+          mockLogger.info(argThat(contains(logStart))),
+          mockLogger.error(argThat(contains(logError)), any, any),
+        ]);
+
         verifyNever(mockCollectionDespensas.add(any));
         verifyNever(mockDocReferenceDespensa.get());
         verifyNever(mockSnapshotDespensa.data());
 
         verifyNoMoreInteractions(mockFirestore);
         verifyNoMoreInteractions(mockCollectionDespensas);
+        verifyNoMoreInteractions(mockLogger);
       });
 
       test(
@@ -254,10 +304,18 @@ void main() {
             .called(1);
         verify(mockCollectionDespensas.add(any)).called(1);
         verify(mockDocReferenceDespensa.get()).called(1);
+
+        verifyInOrder([
+          mockLogger.info(argThat(contains(logStart))),
+          mockLogger.info(argThat(contains(logSuccess))),
+          mockLogger.error(argThat(contains(logError)), any, any),
+        ]);
+
         verifyNever(mockSnapshotDespensa.data());
 
         verifyNoMoreInteractions(mockFirestore);
         verifyNoMoreInteractions(mockCollectionDespensas);
+        verifyNoMoreInteractions(mockLogger);
       });
     });
   });

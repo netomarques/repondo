@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mockito/annotations.dart';
+import 'package:repondo/core/log/app_logger.dart';
 import 'package:repondo/features/auth/application/facades/exports.dart';
 import 'package:repondo/features/auth/application/usecases/exports.dart';
 import 'package:repondo/features/auth/domain/repositories/exports.dart';
@@ -28,6 +29,7 @@ import 'package:repondo/features/auth/domain/repositories/exports.dart';
   SignUpWithEmailUseCase,
   SignOutFromEmailAndPasswordUseCase,
   GetCurrentUserFromEmailUseCase,
-  ObserveUserFromEmailUseCase
+  ObserveUserFromEmailUseCase,
+  AppLogger
 ])
 void main() {}

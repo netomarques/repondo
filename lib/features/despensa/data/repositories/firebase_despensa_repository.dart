@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:repondo/core/exceptions/firestore_mapper_exception.dart';
+import 'package:repondo/core/log/exports.dart';
 import 'package:repondo/core/result/result.dart';
 import 'package:repondo/core/result/result_helpers.dart';
 import 'package:repondo/features/despensa/data/constants/exports.dart';
@@ -12,9 +13,12 @@ import 'package:repondo/features/despensa/domain/repositories/despensa_repositor
 
 class FirebaseDespensaRepository implements DespensaRepository {
   final FirebaseFirestore _firestore;
+  final AppLogger _logger;
 
-  FirebaseDespensaRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+  FirebaseDespensaRepository(
+      {FirebaseFirestore? firestore, required AppLogger logger})
+      : _firestore = firestore ?? FirebaseFirestore.instance,
+        _logger = logger;
 
   @override
   Future<Result<Despensa, DespensaException>> addMember(
@@ -27,6 +31,7 @@ class FirebaseDespensaRepository implements DespensaRepository {
   Future<Result<Despensa, DespensaException>> createDespensa(
       CreateDespensaParams params) async {
     return runCatching(() async {
+      _logger.info('Iniciando criação da despensa com os parâmetros: $params');
       final despensaModel = DespensaModel.fromCreateParams(params);
       final despensaRef = await _firestore
           .collection(DespensaFirestoreKeys.collectionName)
@@ -35,6 +40,8 @@ class FirebaseDespensaRepository implements DespensaRepository {
         DespensaFirestoreKeys.createdAt: FieldValue.serverTimestamp(),
         DespensaFirestoreKeys.updatedAt: FieldValue.serverTimestamp(),
       });
+
+      _logger.info('Despensa criada com sucesso: ${despensaRef.id}');
 
       // Retry para garantir que os campos foram persistidos
       const maxRetries = 5;
@@ -50,12 +57,17 @@ class FirebaseDespensaRepository implements DespensaRepository {
       }
 
       if (data == null || data.isEmpty) {
+        _logger.warning('Dados da despensa não encontrados após criação.');
         throw DespensaException(DespensaErrorMessages.fetchAfterCreateError);
       }
 
       final savedDespensaModel = DespensaModel.fromMap(data, despensaRef.id);
+      _logger.info('Despensa salva com sucesso: ${savedDespensaModel.id}');
+
       return savedDespensaModel.toEntity();
     }, (error) {
+      _logger.error('Erro ao criar despensa', error, StackTrace.current);
+
       if (error is DespensaException) {
         return error;
       }
