@@ -55,6 +55,20 @@
 
 ---
 
+### 🛠️ Tecnologias Utilizadas
+
+- **Flutter**: SDK para desenvolvimento multiplataforma
+- **Dart**: Linguagem principal do projeto
+- **Riverpod**: Gerenciamento de estado e injeção de dependências
+- **GoRouter**: Navegação declarativa e reativa
+- **Firebase**: Autenticação, Firestore, Crashlytics
+- **Mockito**: Mocks para testes
+- **TDD**: Desenvolvimento orientado a testes
+- **Arquitetura Limpa (Clean Architecture)**: Separação de responsabilidades por camadas
+- **MVVM (Model-View-ViewModel)**: Organização modular e reativa por feature
+
+---
+
 ### 🧱 Estrutura do Projeto
 
 O Repondo segue uma arquitetura baseada em **Clean Architecture**, **MVVM** e princípios **SOLID**, com separação clara entre camadas e organização por funcionalidades (features). Isso facilita a escalabilidade, testabilidade e manutenibilidade do projeto.
