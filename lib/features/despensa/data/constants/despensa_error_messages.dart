@@ -9,4 +9,7 @@ class DespensaErrorMessages {
   static const despensaUnknownError = 'Ocorreu um erro inesperado na despensa.';
   static const fetchAfterCreateError =
       'Erro ao recuperar os dados da despensa após criação.';
+  static const fetchAfterUpdateError =
+      'Erro ao recuperar os dados da despensa após atualização.';
+  static const despensaNotFound = 'Despensa não encontrada.';
 }

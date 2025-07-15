@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:repondo/core/exceptions/firestore_mapper_exception.dart';
+import 'package:repondo/core/firebase/retry_reader.dart';
 import 'package:repondo/core/log/exports.dart';
 import 'package:repondo/core/result/result.dart';
 import 'package:repondo/core/result/result_helpers.dart';
@@ -119,7 +120,54 @@ class FirebaseDespensaRepository implements DespensaRepository {
   @override
   Future<Result<Despensa, DespensaException>> updateDespensa(
       Despensa despensa) {
-    // TODO: implement updateDespensa
-    throw UnimplementedError();
+    return runCatching(() async {
+      _logger.info('Iniciando atualização da despensa');
+      final despensaModel = DespensaModel.fromEntity(despensa);
+      final despensaRef = _firestore
+          .collection(DespensaFirestoreKeys.collectionName)
+          .doc(despensa.id);
+      final despensaSnapshot = await despensaRef.get();
+      if (!despensaSnapshot.exists) {
+        _logger.error('Despensa não encontrada: ${despensa.id}');
+        throw DespensaException(DespensaErrorMessages.despensaNotFound);
+      }
+      final despensaMap = {
+        ...despensaModel.toMap(),
+        DespensaFirestoreKeys.updatedAt: FieldValue.serverTimestamp(),
+      };
+      await despensaRef.update(despensaMap);
+      _logger.info(
+          'Despensa atualizada no firestore com sucesso: ${despensaRef.id}');
+
+      // Retry para garantir carregamento dos dados da despensa
+      final data = await fetchWithRetry(docRef: despensaRef);
+
+      if (data == null || data.isEmpty) {
+        _logger.warning('Dados da despensa não encontrados após atualização.');
+        throw DespensaException(DespensaErrorMessages.fetchAfterUpdateError);
+      }
+
+      final updatedDespensaModel = DespensaModel.fromMap(data, despensaRef.id);
+      _logger.info(
+          'Finalizado atualização da despensa: ${updatedDespensaModel.id}');
+
+      return updatedDespensaModel.toEntity();
+    }, (error) {
+      _logger.error('Erro ao atualizar despensa', error, StackTrace.current);
+
+      if (error is DespensaException) {
+        return error;
+      }
+      if (error is FirestoreMapperException) {
+        return DespensaException(
+            'Erro ao mapear dados da despensa: ${error.message}');
+      }
+      if (error is FirebaseException) {
+        return fromFirebaseDespensaExceptionMapper(error);
+      }
+
+      return DespensaException(
+          'Erro ao atualizar despensa: ${DespensaErrorMessages.despensaUnknownError}');
+    });
   }
 }
