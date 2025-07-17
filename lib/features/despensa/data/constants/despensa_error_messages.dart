@@ -12,4 +12,5 @@ class DespensaErrorMessages {
   static const fetchAfterUpdateError =
       'Erro ao recuperar os dados da despensa após atualização.';
   static const despensaNotFound = 'Despensa não encontrada.';
+  static const userNotAuthenticated = 'Usuário não autenticado.';
 }

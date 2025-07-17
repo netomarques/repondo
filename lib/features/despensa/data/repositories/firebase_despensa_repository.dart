@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:repondo/core/exceptions/firestore_mapper_exception.dart';
 import 'package:repondo/core/firebase/retry_reader.dart';
 import 'package:repondo/core/log/exports.dart';
@@ -33,29 +34,28 @@ class FirebaseDespensaRepository implements DespensaRepository {
       CreateDespensaParams params) async {
     return runCatching(() async {
       _logger.info('Iniciando criação da despensa com os parâmetros: $params');
+
+      // Verifica se o usuário está autenticado
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        throw DespensaException(DespensaErrorMessages.userNotAuthenticated);
+      }
+
       final despensaModel = DespensaModel.fromCreateParams(params);
+      final now = FieldValue.serverTimestamp();
+      final despensaMap = {
+        ...despensaModel.toMap(),
+        DespensaFirestoreKeys.createdAt: now,
+        DespensaFirestoreKeys.updatedAt: now,
+      };
       final despensaRef = await _firestore
           .collection(DespensaFirestoreKeys.collectionName)
-          .add({
-        ...despensaModel.toMap(),
-        DespensaFirestoreKeys.createdAt: FieldValue.serverTimestamp(),
-        DespensaFirestoreKeys.updatedAt: FieldValue.serverTimestamp(),
-      });
+          .add(despensaMap);
 
       _logger.info('Despensa criada com sucesso: ${despensaRef.id}');
 
-      // Retry para garantir que os campos foram persistidos
-      const maxRetries = 5;
-      const delayBetweenRetries = Duration(milliseconds: 200);
-      Map<String, dynamic>? data;
-
-      for (var i = 0; i < maxRetries; i++) {
-        final snapshot = await despensaRef.get();
-        data = snapshot.data();
-
-        if (data != null && data.isNotEmpty) break;
-        await Future.delayed(delayBetweenRetries);
-      }
+      // Retry para garantir carregamento dos dados da despensa
+      final data = await fetchWithRetry(docRef: despensaRef);
 
       if (data == null || data.isEmpty) {
         _logger.warning('Dados da despensa não encontrados após criação.');
