@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:repondo/core/exceptions/firestore_mapper_exception.dart';
 import 'package:repondo/core/firebase/retry_reader.dart';
 import 'package:repondo/core/log/exports.dart';
-import 'package:repondo/core/result/result.dart';
-import 'package:repondo/core/result/result_helpers.dart';
+import 'package:repondo/core/result/exports.dart';
 import 'package:repondo/features/despensa/data/constants/exports.dart';
 import 'package:repondo/features/despensa/data/exceptions/firebase_despensa_exception_mapper.dart';
 import 'package:repondo/features/despensa/data/model/despensa_model.dart';
@@ -34,12 +32,6 @@ class FirebaseDespensaRepository implements DespensaRepository {
       CreateDespensaParams params) async {
     return runCatching(() async {
       _logger.info('Iniciando criação da despensa com os parâmetros: $params');
-
-      // Verifica se o usuário está autenticado
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        throw DespensaException(DespensaErrorMessages.userNotAuthenticated);
-      }
 
       final despensaModel = DespensaModel.fromCreateParams(params);
       final now = FieldValue.serverTimestamp();
@@ -122,6 +114,7 @@ class FirebaseDespensaRepository implements DespensaRepository {
       Despensa despensa) {
     return runCatching(() async {
       _logger.info('Iniciando atualização da despensa');
+
       final despensaModel = DespensaModel.fromEntity(despensa);
       final despensaRef = _firestore
           .collection(DespensaFirestoreKeys.collectionName)

@@ -13,6 +13,7 @@ import 'package:repondo/features/auth/application/facades/email_auth_facade.dart
 import 'package:repondo/features/auth/domain/entities/user_auth.dart' as _i5;
 import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart'
     as _i6;
+import 'package:repondo/features/auth/domain/services/auth_service.dart' as _i8;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -108,4 +109,51 @@ class MockEmailAuthFacade extends _i1.Mock implements _i2.EmailAuthFacade {
                 ),
           )
           as _i3.Future<_i4.Result<_i5.UserAuth?, _i6.AuthException>>);
+}
+
+/// A class which mocks [AuthService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockAuthService extends _i1.Mock implements _i8.AuthService {
+  MockAuthService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i3.Stream<_i4.Result<_i5.UserAuth?, _i6.AuthException>> get userStream =>
+      (super.noSuchMethod(
+            Invocation.getter(#userStream),
+            returnValue:
+                _i3.Stream<
+                  _i4.Result<_i5.UserAuth?, _i6.AuthException>
+                >.empty(),
+          )
+          as _i3.Stream<_i4.Result<_i5.UserAuth?, _i6.AuthException>>);
+
+  @override
+  _i3.Future<_i4.Result<_i5.UserAuth?, _i6.AuthException>> getCurrentUser() =>
+      (super.noSuchMethod(
+            Invocation.method(#getCurrentUser, []),
+            returnValue:
+                _i3.Future<_i4.Result<_i5.UserAuth?, _i6.AuthException>>.value(
+                  _i7.dummyValue<_i4.Result<_i5.UserAuth?, _i6.AuthException>>(
+                    this,
+                    Invocation.method(#getCurrentUser, []),
+                  ),
+                ),
+          )
+          as _i3.Future<_i4.Result<_i5.UserAuth?, _i6.AuthException>>);
+
+  @override
+  _i3.Future<_i4.Result<bool, _i6.AuthException>> isAuthenticated() =>
+      (super.noSuchMethod(
+            Invocation.method(#isAuthenticated, []),
+            returnValue: _i3.Future<_i4.Result<bool, _i6.AuthException>>.value(
+              _i7.dummyValue<_i4.Result<bool, _i6.AuthException>>(
+                this,
+                Invocation.method(#isAuthenticated, []),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Result<bool, _i6.AuthException>>);
 }

@@ -53,7 +53,9 @@ void main() {
       mockSnapshotDespensa = MockDocumentSnapshot();
 
       repository = FirebaseDespensaRepository(
-          firestore: mockFirestore, logger: mockLogger);
+        firestore: mockFirestore,
+        logger: mockLogger,
+      );
 
       when(mockFirestore.collection(DespensaFirestoreKeys.collectionName))
           .thenReturn(mockCollectionDespensas);
