@@ -20,6 +20,7 @@ void main() {
   const logSuccess = 'Despensa atualizada no firestore com sucesso';
   const logFinish = 'Finalizado atualização da despensa';
   const logError = 'Erro ao atualizar despensa';
+  const logAttempt = 'Tentativa';
   const expectedName = 'Despensa Atualizada';
 
   group('FirebaseDespensaRepository.updateDespensa', () {
@@ -56,6 +57,7 @@ void main() {
 
       // Snapshot after
       mockSnapshotAfter = MockDocumentSnapshot();
+      when(mockSnapshotAfter.exists).thenReturn(true);
       when(mockSnapshotAfter.data()).thenReturn(updatedDespensaMap);
 
       when(mockFirestore.collection(DespensaFirestoreKeys.collectionName))
@@ -111,6 +113,7 @@ void main() {
         verify(mockDocReferenceDespensa.get()).called(2);
         verify(mockSnapshotBefore.exists).called(1);
         verify(mockSnapshotAfter.data()).called(1);
+        verify(mockSnapshotAfter.exists).called(1);
         verify(mockDocReferenceDespensa.id).called(2);
         verify(mockDocReferenceDespensa.update(captureAny)).called(1);
 
@@ -140,6 +143,7 @@ void main() {
           null,
           <String, dynamic>{},
           null,
+          <String, dynamic>{},
           updatedDespensaMap
         ];
 
@@ -175,19 +179,21 @@ void main() {
         verify(mockFirestore.collection(DespensaFirestoreKeys.collectionName))
             .called(1);
         verify(mockCollectionDespensas.doc(despensa.id)).called(1);
-        verify(mockDocReferenceDespensa.get()).called(5);
+        verify(mockDocReferenceDespensa.get()).called(6);
         verify(mockSnapshotBefore.exists).called(1);
         verifyNever(mockSnapshotBefore.data());
-        verify(mockSnapshotAfter.data()).called(4);
-        verify(mockDocReferenceDespensa.id).called(2);
+        verify(mockSnapshotAfter.data()).called(5);
+        verify(mockSnapshotAfter.exists).called(5);
+        verify(mockDocReferenceDespensa.id).called(4);
         verify(mockDocReferenceDespensa.update(any)).called(1);
 
         verifyInOrder([
           mockLogger.info(argThat(contains(logStart))),
           mockLogger.info(argThat(contains(logSuccess))),
+          mockLogger.warning(argThat(contains(logAttempt))),
+          mockLogger.warning(argThat(contains(logAttempt))),
           mockLogger.info(argThat(contains(logFinish))),
         ]);
-        verifyNever(mockLogger.warning(any));
         verifyNever(mockLogger.error(any, any, any));
 
         verifyNoMoreInteractions(mockFirestore);

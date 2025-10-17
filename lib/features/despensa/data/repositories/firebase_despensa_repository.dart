@@ -47,12 +47,15 @@ class FirebaseDespensaRepository implements DespensaRepository {
       _logger.info('Despensa criada com sucesso: ${despensaRef.id}');
 
       // Retry para garantir carregamento dos dados da despensa
-      final data = await fetchWithRetry(docRef: despensaRef);
-
-      if (data == null || data.isEmpty) {
-        _logger.warning('Dados da despensa não encontrados após criação.');
-        throw DespensaException(DespensaErrorMessages.fetchAfterCreateError);
-      }
+      final resultRetry =
+          await fetchWithRetry(docRef: despensaRef, logger: _logger);
+      final data = resultRetry.fold(
+        (error) {
+          _logger.warning('Dados da despensa não encontrados após criação.');
+          throw DespensaException(DespensaErrorMessages.fetchAfterCreateError);
+        },
+        (data) => data,
+      );
 
       final savedDespensaModel = DespensaModel.fromMap(data, despensaRef.id);
       _logger.info('Despensa salva com sucesso: ${savedDespensaModel.id}');
@@ -90,9 +93,48 @@ class FirebaseDespensaRepository implements DespensaRepository {
   }
 
   @override
-  Future<Result<Despensa, DespensaException>> fetchDespensaById(String id) {
-    // TODO: implement fetchDespensaById
-    throw UnimplementedError();
+  Future<Result<Despensa, DespensaException>> fetchDespensaById({
+    required String despensaId,
+  }) {
+    return runCatching(() async {
+      _logger.info('Iniciando busca da despensa pelo ID: $despensaId');
+
+      final despensaRef = _firestore
+          .collection(DespensaFirestoreKeys.collectionName)
+          .doc(despensaId);
+
+      // Retry para garantir carregamento dos dados da despensa
+      final resultRetry =
+          await fetchWithRetry(docRef: despensaRef, logger: _logger);
+      final data = resultRetry.fold(
+        (error) {
+          _logger.error('Despensa não encontrada: $despensaId');
+          throw DespensaException(DespensaErrorMessages.despensaNotFound);
+        },
+        (data) => data,
+      );
+
+      final despensaModel = DespensaModel.fromMap(data, despensaRef.id);
+      _logger.info('Despensa encontrada com sucesso: ${despensaModel.id}');
+
+      return despensaModel.toEntity();
+    }, (error) {
+      _logger.error('Erro ao buscar despensa', error, StackTrace.current);
+
+      if (error is DespensaException) {
+        return error;
+      }
+      if (error is FirestoreMapperException) {
+        return DespensaException(
+            'Erro ao mapear dados da despensa: ${error.message}');
+      }
+      if (error is FirebaseException) {
+        return fromFirebaseDespensaExceptionMapper(error);
+      }
+
+      return DespensaException(
+          'Erro ao buscar despensa: ${DespensaErrorMessages.despensaUnknownError}');
+    });
   }
 
   @override
@@ -133,12 +175,16 @@ class FirebaseDespensaRepository implements DespensaRepository {
           'Despensa atualizada no firestore com sucesso: ${despensaRef.id}');
 
       // Retry para garantir carregamento dos dados da despensa
-      final data = await fetchWithRetry(docRef: despensaRef);
-
-      if (data == null || data.isEmpty) {
-        _logger.warning('Dados da despensa não encontrados após atualização.');
-        throw DespensaException(DespensaErrorMessages.fetchAfterUpdateError);
-      }
+      final resultRetry =
+          await fetchWithRetry(docRef: despensaRef, logger: _logger);
+      final data = resultRetry.fold(
+        (error) {
+          _logger
+              .warning('Dados da despensa não encontrados após atualização.');
+          throw DespensaException(DespensaErrorMessages.fetchAfterUpdateError);
+        },
+        (data) => data,
+      );
 
       final updatedDespensaModel = DespensaModel.fromMap(data, despensaRef.id);
       _logger.info(

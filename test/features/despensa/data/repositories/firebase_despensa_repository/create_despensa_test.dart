@@ -22,6 +22,8 @@ void main() {
   const logFetchAfterCreateWarning =
       'Dados da despensa não encontrados após criação.';
   const logError = 'Erro ao criar despensa';
+  const logErrorRetry = 'Erro ao buscar dados do documento';
+  const logAttempt = 'Tentativa';
 
   group('FirebaseDespensaRepository.createDespensa', () {
     late MockFirebaseFirestore mockFirestore;
@@ -64,6 +66,7 @@ void main() {
       when(mockDocReferenceDespensa.id).thenReturn(despensaId);
       when(mockDocReferenceDespensa.get())
           .thenAnswer((_) async => mockSnapshotDespensa);
+      when(mockSnapshotDespensa.exists).thenReturn(true);
       when(mockSnapshotDespensa.data()).thenReturn(savedMap);
     });
 
@@ -96,6 +99,7 @@ void main() {
 
         verify(mockDocReferenceDespensa.get()).called(1);
         verify(mockDocReferenceDespensa.id).called(2);
+        verify(mockSnapshotDespensa.exists).called(1);
         verify(mockSnapshotDespensa.data()).called(1);
 
         verifyInOrder([
@@ -147,15 +151,16 @@ void main() {
                   DespensaFirestoreKeys.memberIds, params.memberIds),
         ))).called(1);
         verify(mockDocReferenceDespensa.get()).called(4);
+        verify(mockSnapshotDespensa.exists).called(4);
         verify(mockSnapshotDespensa.data()).called(4);
-        verify(mockDocReferenceDespensa.id).called(2);
+        verify(mockDocReferenceDespensa.id).called(3);
 
         verifyInOrder([
           mockLogger.info(argThat(contains(logStart))),
           mockLogger.info(argThat(contains(logSuccess))),
+          mockLogger.warning(argThat(contains(logAttempt))),
           mockLogger.info(argThat(contains(logSaved))),
         ]);
-        verifyNever(mockLogger.warning(any));
         verifyNever(mockLogger.error(any, any, any));
 
         verifyNoMoreInteractions(mockFirestore);
@@ -170,6 +175,8 @@ void main() {
       test(
           'deve retornar Failure quando data do snapshot for null após 5 tentativas',
           () async {
+        const logDespensaEmpty = 'vazio';
+
         when(mockSnapshotDespensa.data()).thenReturn(null);
 
         final result = await repository.createDespensa(params);
@@ -201,13 +208,18 @@ void main() {
                 params.memberIds,
               ),
         ))).called(1);
-        verify(mockDocReferenceDespensa.id).called(1);
+        verify(mockDocReferenceDespensa.id).called(5);
         verify(mockDocReferenceDespensa.get()).called(5);
+        verify(mockSnapshotDespensa.exists).called(5);
         verify(mockSnapshotDespensa.data()).called(5);
 
         verifyInOrder([
           mockLogger.info(argThat(contains(logStart))),
           mockLogger.info(argThat(contains(logSuccess))),
+          mockLogger.warning(argThat(contains(logAttempt))),
+          mockLogger.warning(argThat(contains(logAttempt))),
+          mockLogger.info(argThat(contains(logDespensaEmpty))),
+          mockLogger.error(argThat(contains(logErrorRetry)), any, any),
           mockLogger.warning(argThat(contains(logFetchAfterCreateWarning))),
           mockLogger.error(argThat(contains(logError)), any, any),
         ]);
@@ -300,7 +312,8 @@ void main() {
         expect(result, isA<Failure<Despensa, DespensaException>>());
         final error = result.error!;
         expect(error, isA<DespensaException>());
-        expect(error.message, contains(DespensaErrorMessages.permissionDenied));
+        expect(error.message,
+            contains(DespensaErrorMessages.fetchAfterCreateError));
 
         verify(mockFirestore.collection(DespensaFirestoreKeys.collectionName))
             .called(1);
@@ -310,6 +323,8 @@ void main() {
         verifyInOrder([
           mockLogger.info(argThat(contains(logStart))),
           mockLogger.info(argThat(contains(logSuccess))),
+          mockLogger.error(argThat(contains(logErrorRetry)), any, any),
+          mockLogger.warning(argThat(contains(logFetchAfterCreateWarning))),
           mockLogger.error(argThat(contains(logError)), any, any),
         ]);
 

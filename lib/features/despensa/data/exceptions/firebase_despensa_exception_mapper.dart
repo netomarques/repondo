@@ -5,7 +5,7 @@ import 'package:repondo/features/despensa/domain/exceptions/exports.dart';
 DespensaException fromFirebaseDespensaExceptionMapper(FirebaseException error) {
   switch (error.code) {
     case FirebaseDespensaErrorCodes.permissionDenied:
-      return PermissionDeniedException(code: error.code);
+      return DespensaPermissionDeniedException(code: error.code);
     default:
       return DespensaUnknownException(code: error.code);
   }

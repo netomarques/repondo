@@ -8,7 +8,9 @@ abstract class DespensaRepository {
       CreateDespensaParams params);
   Future<Result<Despensa, DespensaException>> deleteDespensa(String id);
   Future<Result<Despensa, DespensaException>> updateDespensa(Despensa despensa);
-  Future<Result<Despensa, DespensaException>> fetchDespensaById(String id);
+  Future<Result<Despensa, DespensaException>> fetchDespensaById({
+    required String despensaId,
+  });
   Future<Result<Despensa, DespensaException>> fetchAllByUser(String userId);
   Future<Result<Despensa, DespensaException>> addMember(
       String despensaId, String userId);
