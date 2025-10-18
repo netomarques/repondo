@@ -55,7 +55,7 @@ void main() {
         memberIds: expectedDespensa.memberIds,
       );
 
-      final result = await repository.createDespensa(params);
+      final result = await repository.createDespensa(params: params);
 
       expect(result, isA<Success<Despensa, DespensaException>>(),
           reason: 'Deve retornar sucesso ao criar despensa');
@@ -92,7 +92,7 @@ void main() {
         memberIds: [],
       );
 
-      final result = await repository.createDespensa(params);
+      final result = await repository.createDespensa(params: params);
 
       expect(result, isA<Failure<Despensa, DespensaException>>());
       final error = result.error!;

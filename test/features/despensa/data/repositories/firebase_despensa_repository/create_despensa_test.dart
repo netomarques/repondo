@@ -75,7 +75,7 @@ void main() {
           'deve criar despensa com sucesso e retornar Success<Despensa, DespensaException>',
           () async {
         // act
-        final result = await repository.createDespensa(params);
+        final result = await repository.createDespensa(params: params);
 
         // assert
         expect(result, isA<Success<Despensa, DespensaException>>());
@@ -130,7 +130,7 @@ void main() {
           return mockSnapshotDespensa;
         });
 
-        final result = await repository.createDespensa(params);
+        final result = await repository.createDespensa(params: params);
 
         // assert
         expect(result, isA<Success<Despensa, DespensaException>>());
@@ -179,7 +179,7 @@ void main() {
 
         when(mockSnapshotDespensa.data()).thenReturn(null);
 
-        final result = await repository.createDespensa(params);
+        final result = await repository.createDespensa(params: params);
 
         expect(result, isA<Failure<Despensa, DespensaException>>());
         expect(result.error, isA<DespensaException>());
@@ -242,7 +242,7 @@ void main() {
         );
 
         // Act
-        final result = await repository.createDespensa(params);
+        final result = await repository.createDespensa(params: params);
 
         // Assert
         expect(result, isA<Failure<Despensa, DespensaException>>());
@@ -275,7 +275,7 @@ void main() {
         when(mockFirestore.collection(DespensaFirestoreKeys.collectionName))
             .thenThrow(Exception(message));
 
-        final result = await repository.createDespensa(params);
+        final result = await repository.createDespensa(params: params);
 
         expect(result, isA<Failure<Despensa, DespensaException>>());
         final error = result.error!;
@@ -307,7 +307,7 @@ void main() {
         when(mockDocReferenceDespensa.get())
             .thenThrow(FirebaseException(plugin: plugin, code: code));
 
-        final result = await repository.createDespensa(params);
+        final result = await repository.createDespensa(params: params);
 
         expect(result, isA<Failure<Despensa, DespensaException>>());
         final error = result.error!;

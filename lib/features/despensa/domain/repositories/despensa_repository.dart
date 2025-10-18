@@ -4,8 +4,9 @@ import 'package:repondo/features/despensa/domain/exceptions/despensa_exception.d
 import 'package:repondo/features/despensa/domain/params/create_despensa_params.dart';
 
 abstract class DespensaRepository {
-  Future<Result<Despensa, DespensaException>> createDespensa(
-      CreateDespensaParams params);
+  Future<Result<Despensa, DespensaException>> createDespensa({
+    required CreateDespensaParams params,
+  });
   Future<Result<Despensa, DespensaException>> deleteDespensa(String id);
   Future<Result<Despensa, DespensaException>> updateDespensa(Despensa despensa);
   Future<Result<Despensa, DespensaException>> fetchDespensaById({

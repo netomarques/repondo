@@ -28,8 +28,9 @@ class FirebaseDespensaRepository implements DespensaRepository {
   }
 
   @override
-  Future<Result<Despensa, DespensaException>> createDespensa(
-      CreateDespensaParams params) async {
+  Future<Result<Despensa, DespensaException>> createDespensa({
+    required CreateDespensaParams params,
+  }) async {
     return runCatching(() async {
       _logger.info('Iniciando criação da despensa com os parâmetros: $params');
 
