@@ -12,6 +12,15 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:firebase_core/firebase_core.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i6;
+import 'package:repondo/core/result/result.dart' as _i9;
+import 'package:repondo/features/despensa/domain/entities/despensa.dart'
+    as _i10;
+import 'package:repondo/features/despensa/domain/exceptions/despensa_exception.dart'
+    as _i11;
+import 'package:repondo/features/despensa/domain/params/create_despensa_params.dart'
+    as _i12;
+import 'package:repondo/features/despensa/domain/repositories/despensa_repository.dart'
+    as _i8;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -1095,4 +1104,156 @@ class MockDocumentSnapshot<T extends Object?> extends _i1.Mock
   @override
   dynamic operator [](Object? field) =>
       super.noSuchMethod(Invocation.method(#[], [field]));
+}
+
+/// A class which mocks [DespensaRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockDespensaRepository extends _i1.Mock
+    implements _i8.DespensaRepository {
+  MockDespensaRepository() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.Future<_i9.Result<_i10.Despensa, _i11.DespensaException>> createDespensa({
+    required _i12.CreateDespensaParams? params,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#createDespensa, [], {#params: params}),
+            returnValue: _i5.Future<
+              _i9.Result<_i10.Despensa, _i11.DespensaException>
+            >.value(
+              _i6.dummyValue<_i9.Result<_i10.Despensa, _i11.DespensaException>>(
+                this,
+                Invocation.method(#createDespensa, [], {#params: params}),
+              ),
+            ),
+          )
+          as _i5.Future<_i9.Result<_i10.Despensa, _i11.DespensaException>>);
+
+  @override
+  _i5.Future<_i9.Result<_i10.Despensa, _i11.DespensaException>> deleteDespensa(
+    String? id,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#deleteDespensa, [id]),
+            returnValue: _i5.Future<
+              _i9.Result<_i10.Despensa, _i11.DespensaException>
+            >.value(
+              _i6.dummyValue<_i9.Result<_i10.Despensa, _i11.DespensaException>>(
+                this,
+                Invocation.method(#deleteDespensa, [id]),
+              ),
+            ),
+          )
+          as _i5.Future<_i9.Result<_i10.Despensa, _i11.DespensaException>>);
+
+  @override
+  _i5.Future<_i9.Result<_i10.Despensa, _i11.DespensaException>> updateDespensa(
+    _i10.Despensa? despensa,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#updateDespensa, [despensa]),
+            returnValue: _i5.Future<
+              _i9.Result<_i10.Despensa, _i11.DespensaException>
+            >.value(
+              _i6.dummyValue<_i9.Result<_i10.Despensa, _i11.DespensaException>>(
+                this,
+                Invocation.method(#updateDespensa, [despensa]),
+              ),
+            ),
+          )
+          as _i5.Future<_i9.Result<_i10.Despensa, _i11.DespensaException>>);
+
+  @override
+  _i5.Future<_i9.Result<_i10.Despensa, _i11.DespensaException>>
+  fetchDespensaById({required String? despensaId}) =>
+      (super.noSuchMethod(
+            Invocation.method(#fetchDespensaById, [], {
+              #despensaId: despensaId,
+            }),
+            returnValue: _i5.Future<
+              _i9.Result<_i10.Despensa, _i11.DespensaException>
+            >.value(
+              _i6.dummyValue<_i9.Result<_i10.Despensa, _i11.DespensaException>>(
+                this,
+                Invocation.method(#fetchDespensaById, [], {
+                  #despensaId: despensaId,
+                }),
+              ),
+            ),
+          )
+          as _i5.Future<_i9.Result<_i10.Despensa, _i11.DespensaException>>);
+
+  @override
+  _i5.Future<_i9.Result<_i10.Despensa, _i11.DespensaException>> fetchAllByUser(
+    String? userId,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#fetchAllByUser, [userId]),
+            returnValue: _i5.Future<
+              _i9.Result<_i10.Despensa, _i11.DespensaException>
+            >.value(
+              _i6.dummyValue<_i9.Result<_i10.Despensa, _i11.DespensaException>>(
+                this,
+                Invocation.method(#fetchAllByUser, [userId]),
+              ),
+            ),
+          )
+          as _i5.Future<_i9.Result<_i10.Despensa, _i11.DespensaException>>);
+
+  @override
+  _i5.Future<_i9.Result<_i10.Despensa, _i11.DespensaException>> addMember(
+    String? despensaId,
+    String? userId,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#addMember, [despensaId, userId]),
+            returnValue: _i5.Future<
+              _i9.Result<_i10.Despensa, _i11.DespensaException>
+            >.value(
+              _i6.dummyValue<_i9.Result<_i10.Despensa, _i11.DespensaException>>(
+                this,
+                Invocation.method(#addMember, [despensaId, userId]),
+              ),
+            ),
+          )
+          as _i5.Future<_i9.Result<_i10.Despensa, _i11.DespensaException>>);
+
+  @override
+  _i5.Future<_i9.Result<_i10.Despensa, _i11.DespensaException>> removeMember(
+    String? despensaId,
+    String? userId,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#removeMember, [despensaId, userId]),
+            returnValue: _i5.Future<
+              _i9.Result<_i10.Despensa, _i11.DespensaException>
+            >.value(
+              _i6.dummyValue<_i9.Result<_i10.Despensa, _i11.DespensaException>>(
+                this,
+                Invocation.method(#removeMember, [despensaId, userId]),
+              ),
+            ),
+          )
+          as _i5.Future<_i9.Result<_i10.Despensa, _i11.DespensaException>>);
+
+  @override
+  _i5.Future<_i9.Result<_i10.Despensa, _i11.DespensaException>> isUserAdmin(
+    String? despensaId,
+    String? userId,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#isUserAdmin, [despensaId, userId]),
+            returnValue: _i5.Future<
+              _i9.Result<_i10.Despensa, _i11.DespensaException>
+            >.value(
+              _i6.dummyValue<_i9.Result<_i10.Despensa, _i11.DespensaException>>(
+                this,
+                Invocation.method(#isUserAdmin, [despensaId, userId]),
+              ),
+            ),
+          )
+          as _i5.Future<_i9.Result<_i10.Despensa, _i11.DespensaException>>);
 }
