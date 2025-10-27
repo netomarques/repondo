@@ -2,25 +2,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:repondo/core/result/exports.dart';
-import 'package:repondo/features/auth/application/providers/facades/email_auth_facade_provider.dart';
-import 'package:repondo/features/auth/domain/exceptions/auth_exception.dart';
+import 'package:repondo/features/despensa/application/providers/facades/despensa_facade_provider.dart';
+import 'package:repondo/features/despensa/domain/exceptions/despensa_exception.dart';
 
-import '../../../../../core/notifier_test_context.dart';
-import '../../../mocks/email_auth_mocks.mocks.dart';
+import '../../../core/notifier_test_context.dart';
+import '../mocks/despensa_mocks.mocks.dart';
 
-/// Tupla nomeada com o Notifier testado e a lista de estados emitidos
-Future<NotifierTestContext<T, NotifierT>>
-    buildNotifierTestContext<T, NotifierT extends AutoDisposeAsyncNotifier<T>>({
-  required MockEmailAuthFacade facade,
+Future<NotifierTestContext<T, NotifierT>> buildDespensaNotifierTestContext<T,
+    NotifierT extends AutoDisposeAsyncNotifier<T>>({
+  required MockDespensaFacade facade,
   required AutoDisposeAsyncNotifierProvider<NotifierT, T> notifierProvider,
-  required Result<T, AuthException> dummyResult,
+  required Result<T, DespensaException> dummyResult,
 }) async {
   // Configuração do valor dummy para evitar MissingDummyValueError
-  provideDummy<Result<T, AuthException>>(dummyResult);
+  provideDummy<Result<T, DespensaException>>(dummyResult);
 
   // Cria um container com a dependência substituída pelo mock
   final container = ProviderContainer(overrides: [
-    emailAuthFacadeProvider.overrideWithValue(facade),
+    despensaFacadeProvider.overrideWithValue(facade),
   ]);
 
   // Garante que o container será fechado após os testes
