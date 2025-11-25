@@ -10,6 +10,10 @@ String? authRedirectLogic({
   required String currentLocation,
 }) {
   String? maybeRedirectTo(String location) {
+    if (currentLocation.startsWith(location)) {
+      return currentLocation;
+    }
+
     return currentLocation == location ? null : location;
   }
 

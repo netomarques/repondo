@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:repondo/features/auth/presentation/notifiers/email_auth_notifier/get_current_email_notifier.dart';
 import 'package:repondo/features/auth/presentation/notifiers/email_auth_notifier/sign_out_email_notifier.dart';
+import 'package:repondo/features/despensa/presentation/router/despensa_route_locations.dart';
 
 class HomePage extends ConsumerWidget {
   static HomePage builder(BuildContext context, GoRouterState state) =>
@@ -23,14 +24,33 @@ class HomePage extends ConsumerWidget {
       data: (user) => user == null
           ? Scaffold(body: Center(child: Text('Erro ao carregar usuário')))
           : Scaffold(
+              resizeToAvoidBottomInset: false,
               appBar: AppBar(
                 title: const Text('Repondo'),
                 actions: [
-                  IconButton(
-                    onPressed: () async => await notifier.signOut(),
-                    icon: const Icon(Icons.logout),
-                    tooltip: 'Sair',
-                  ),
+                  PopupMenuButton<String>(
+                    onSelected: (value) async {
+                      switch (value) {
+                        case 'criar':
+                          context.pushNamed(
+                              DespensaRouteLocations.despensaCreateName);
+                          break;
+                        case 'sair':
+                          await notifier.signOut();
+                          break;
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        value: 'criar',
+                        child: Text('Criar despensa'),
+                      ),
+                      const PopupMenuItem(
+                        value: 'sair',
+                        child: Text('Sair'),
+                      ),
+                    ],
+                  )
                 ],
               ),
               body: Center(
