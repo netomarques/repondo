@@ -12,7 +12,7 @@ class FirebaseItemRepository implements ItemRepository {
   final AppLogger _logger;
 
   FirebaseItemRepository(
-      {required FirebaseFirestore? firestore, required AppLogger logger})
+      {FirebaseFirestore? firestore, required AppLogger logger})
       : _firestore = firestore ?? FirebaseFirestore.instance,
         _logger = logger;
 
