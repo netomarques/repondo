@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:repondo/features/auth/presentation/notifiers/email_auth_notifier/get_current_email_notifier.dart';
 import 'package:repondo/features/auth/presentation/notifiers/email_auth_notifier/sign_out_email_notifier.dart';
 import 'package:repondo/features/despensa/presentation/router/despensa_route_locations.dart';
+import 'package:repondo/features/item/presentation/router/item_route_locations.dart';
 
 class HomePage extends ConsumerWidget {
   static HomePage builder(BuildContext context, GoRouterState state) =>
@@ -31,9 +32,12 @@ class HomePage extends ConsumerWidget {
                   PopupMenuButton<String>(
                     onSelected: (value) async {
                       switch (value) {
-                        case 'criar':
+                        case 'criar-despensa':
                           context.pushNamed(
                               DespensaRouteLocations.despensaCreateName);
+                          break;
+                        case 'criar-item':
+                          context.pushNamed(ItemRouteLocations.itemCreateName);
                           break;
                         case 'sair':
                           await notifier.signOut();
@@ -42,8 +46,12 @@ class HomePage extends ConsumerWidget {
                     },
                     itemBuilder: (context) => [
                       const PopupMenuItem(
-                        value: 'criar',
+                        value: 'criar-despensa',
                         child: Text('Criar despensa'),
+                      ),
+                      const PopupMenuItem(
+                        value: 'criar-item',
+                        child: Text('Criar item'),
                       ),
                       const PopupMenuItem(
                         value: 'sair',

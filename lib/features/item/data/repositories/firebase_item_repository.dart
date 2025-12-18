@@ -3,6 +3,7 @@ import 'package:repondo/core/exceptions/firestore_exception_mapper.dart';
 import 'package:repondo/core/exports.dart';
 import 'package:repondo/core/firebase/retry_reader.dart';
 import 'package:repondo/core/log/exports.dart';
+import 'package:repondo/features/despensa/data/constants/despensa_firestore_keys.dart';
 import 'package:repondo/features/item/data/exceptions/firebase_item_exception_mapper.dart';
 import 'package:repondo/features/item/data/exports.dart';
 import 'package:repondo/features/item/domain/exports.dart';
@@ -30,6 +31,8 @@ class FirebaseItemRepository implements ItemRepository {
       };
 
       final itemRef = await _firestore
+          .collection(DespensaFirestoreKeys.collectionName)
+          .doc(despensaId)
           .collection(ItemFirestoreKeys.collectionName)
           .add(itemMap);
       _logger.info('Item criado com sucesso: ${itemRef.id}');
