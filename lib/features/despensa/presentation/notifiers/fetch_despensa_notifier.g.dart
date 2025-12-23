@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'despensa_facade_provider.dart';
+part of 'fetch_despensa_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$despensaFacadeHash() => r'6e728318667633f84dfbe170416ed2bc444f2516';
+String _$fetchDespensaNotifierHash() =>
+    r'd19556f76bd93529beacde5e3058e4461dd8d472';
 
-/// See also [despensaFacade].
-@ProviderFor(despensaFacade)
-final despensaFacadeProvider = AutoDisposeProvider<DespensaFacade>.internal(
-  despensaFacade,
-  name: r'despensaFacadeProvider',
+/// See also [FetchDespensaNotifier].
+@ProviderFor(FetchDespensaNotifier)
+final fetchDespensaNotifierProvider =
+    AutoDisposeAsyncNotifierProvider<FetchDespensaNotifier, Despensa?>.internal(
+  FetchDespensaNotifier.new,
+  name: r'fetchDespensaNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$despensaFacadeHash,
+      : _$fetchDespensaNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef DespensaFacadeRef = AutoDisposeProviderRef<DespensaFacade>;
+typedef _$FetchDespensaNotifier = AutoDisposeAsyncNotifier<Despensa?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -67,4 +67,48 @@ class FirebaseItemRepository implements ItemRepository {
       };
     });
   }
+
+  @override
+  Future<Result<List<Item>, ItemException>> fetchItems({
+    required String despensaId,
+  }) {
+    return runCatching(() async {
+      _logger.info('Buscando itens da despensa: $despensaId');
+
+      final querySnapshot = await _firestore
+          .collection(DespensaFirestoreKeys.collectionName)
+          .doc(despensaId)
+          .collection(ItemFirestoreKeys.collectionName)
+          .get();
+
+      final items = querySnapshot.docs.map((doc) {
+        final model = ItemModel.fromMap(doc.data(), doc.id);
+        return model.toEntity();
+      }).toList();
+
+      _logger.info(
+        'Itens carregados com sucesso. Total: ${items.length}',
+      );
+
+      return items;
+    }, (error) {
+      _logger.error(
+        'Erro ao buscar itens da despensa: $despensaId',
+        error,
+        StackTrace.current,
+      );
+
+      return switch (error) {
+        ItemException itemException => itemException,
+        FirestoreMapperException firestoreMapperException =>
+          ItemUnknownException(
+            code: firestoreMapperException.code,
+          ),
+        FirebaseException firebaseException => fromFirebaseItemExceptionMapper(
+            fromFirestoreExceptionMapper(firebaseException),
+          ),
+        _ => ItemUnknownException(code: 'unknown'),
+      };
+    });
+  }
 }

@@ -10,7 +10,7 @@ import 'package:mockito/src/dummies.dart' as _i8;
 import 'package:repondo/core/result/result.dart' as _i4;
 import 'package:repondo/features/despensa/application/facades/despensa_facade.dart'
     as _i2;
-import 'package:repondo/features/despensa/application/usecases/create_despensa_use_case.dart'
+import 'package:repondo/features/despensa/application/usecases/exports.dart'
     as _i9;
 import 'package:repondo/features/despensa/domain/entities/despensa.dart' as _i5;
 import 'package:repondo/features/despensa/domain/exceptions/despensa_exception.dart'
@@ -52,6 +52,25 @@ class MockDespensaFacade extends _i1.Mock implements _i2.DespensaFacade {
               _i8.dummyValue<_i4.Result<_i5.Despensa, _i6.DespensaException>>(
                 this,
                 Invocation.method(#createDespensa, [], {#params: params}),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Result<_i5.Despensa, _i6.DespensaException>>);
+
+  @override
+  _i3.Future<_i4.Result<_i5.Despensa, _i6.DespensaException>> fetchDespensa({
+    required String? despensaId,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#fetchDespensa, [], {#despensaId: despensaId}),
+            returnValue: _i3.Future<
+              _i4.Result<_i5.Despensa, _i6.DespensaException>
+            >.value(
+              _i8.dummyValue<_i4.Result<_i5.Despensa, _i6.DespensaException>>(
+                this,
+                Invocation.method(#fetchDespensa, [], {
+                  #despensaId: despensaId,
+                }),
               ),
             ),
           )

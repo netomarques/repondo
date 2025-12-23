@@ -6,4 +6,8 @@ abstract class ItemRepository {
     required CreateItemParams params,
     required String despensaId,
   });
+
+  Future<Result<List<Item>, ItemException>> fetchItems({
+    required String despensaId,
+  });
 }
