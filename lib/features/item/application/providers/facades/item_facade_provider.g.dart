@@ -6,7 +6,7 @@ part of 'item_facade_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$itemFacadeHash() => r'b56b8ce82d5e4a9ca70d9e9010b6e4787c553ec3';
+String _$itemFacadeHash() => r'3e01fb34cdf664a27b2652b02129930fef230132';
 
 /// See also [itemFacade].
 @ProviderFor(itemFacade)

@@ -69,7 +69,7 @@ class FirebaseItemRepository implements ItemRepository {
   }
 
   @override
-  Future<Result<List<Item>, ItemException>> fetchItems({
+  Future<Result<List<Item>, ItemException>> fetchDespensaItems({
     required String despensaId,
   }) {
     return runCatching(() async {
