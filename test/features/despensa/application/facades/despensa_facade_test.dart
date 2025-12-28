@@ -13,6 +13,7 @@ void main() {
   group('DespensaFacade', () {
     late DespensaFacade despensaFacade;
     late MockCreateDespensaUseCase mockCreateDespensaUseCase;
+    late MockFetchDespensaUseCase mockFetchDespensaUseCase;
 
     final expectedDespensa = DespensaTestFactory.create();
     final params = CreateDespensaParams(
@@ -26,9 +27,11 @@ void main() {
 
     setUp(() {
       mockCreateDespensaUseCase = MockCreateDespensaUseCase();
+      mockFetchDespensaUseCase = MockFetchDespensaUseCase();
 
       despensaFacade = DespensaFacade(
         createDespensaUseCase: mockCreateDespensaUseCase,
+        fetchDespensaUseCase: mockFetchDespensaUseCase,
       );
 
       provideDummy<Result<Despensa, DespensaException>>(successDespensa);
@@ -49,6 +52,23 @@ void main() {
         expect(result, isA<Success<Despensa, DespensaException>>());
         verify(mockCreateDespensaUseCase.execute(params: params)).called(1);
       });
+
+      test(
+          'deve chamar fetch() do FetchDespensaUseCase e retornar um Success<Despensa, DespensaException>',
+          () async {
+        // Arrange
+        when(mockFetchDespensaUseCase.fetch(despensaId: anyNamed('despensaId')))
+            .thenAnswer((_) async => successDespensa);
+
+        // Act
+        final result =
+            await despensaFacade.fetchDespensa(despensaId: 'despensaId');
+
+        // Assert
+        expect(result, isA<Success<Despensa, DespensaException>>());
+        verify(mockFetchDespensaUseCase.fetch(despensaId: 'despensaId'))
+            .called(1);
+      });
     });
 
     group('casos de erro', () {
@@ -68,6 +88,26 @@ void main() {
         // Assert
         expect(result, isA<Failure<Despensa, DespensaException>>());
         verify(mockCreateDespensaUseCase.execute(params: params)).called(1);
+      });
+
+      test(
+          'deve chamar fetch() do FetchDespensaUseCase e retornar um Failure<Despensa, DespensaException>',
+          () async {
+        final failureDespensa = Failure<Despensa, DespensaException>(
+            DespensaException('Erro ao buscar despensa'));
+
+        // Arrange
+        when(mockFetchDespensaUseCase.fetch(despensaId: anyNamed('despensaId')))
+            .thenAnswer((_) async => failureDespensa);
+
+        // Act
+        final result =
+            await despensaFacade.fetchDespensa(despensaId: 'despensaId');
+
+        // Assert
+        expect(result, isA<Failure<Despensa, DespensaException>>());
+        verify(mockFetchDespensaUseCase.fetch(despensaId: 'despensaId'))
+            .called(1);
       });
     });
   });

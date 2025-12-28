@@ -22,5 +22,5 @@ class DespensaFacade {
   Future<Result<Despensa, DespensaException>> fetchDespensa({
     required String despensaId,
   }) =>
-      _fetchDespensaUseCase.execute(despensaId: despensaId);
+      _fetchDespensaUseCase.fetch(despensaId: despensaId);
 }

@@ -103,3 +103,30 @@ class MockCreateDespensaUseCase extends _i1.Mock
           )
           as _i3.Future<_i4.Result<_i5.Despensa, _i6.DespensaException>>);
 }
+
+/// A class which mocks [FetchDespensaUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockFetchDespensaUseCase extends _i1.Mock
+    implements _i9.FetchDespensaUseCase {
+  MockFetchDespensaUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i3.Future<_i4.Result<_i5.Despensa, _i6.DespensaException>> fetch({
+    required String? despensaId,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#fetch, [], {#despensaId: despensaId}),
+            returnValue: _i3.Future<
+              _i4.Result<_i5.Despensa, _i6.DespensaException>
+            >.value(
+              _i8.dummyValue<_i4.Result<_i5.Despensa, _i6.DespensaException>>(
+                this,
+                Invocation.method(#fetch, [], {#despensaId: despensaId}),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Result<_i5.Despensa, _i6.DespensaException>>);
+}

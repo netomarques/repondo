@@ -9,7 +9,7 @@ class FetchDespensaUseCase {
 
   FetchDespensaUseCase(this._repository);
 
-  Future<Result<Despensa, DespensaException>> execute({
+  Future<Result<Despensa, DespensaException>> fetch({
     required String despensaId,
   }) =>
       _repository.fetchDespensaById(despensaId: despensaId);
