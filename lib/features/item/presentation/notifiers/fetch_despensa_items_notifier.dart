@@ -13,7 +13,7 @@ class FetchDespensaItemsNotifier extends _$FetchDespensaItemsNotifier {
   @override
   Future<List<Item>> build() async => <Item>[];
 
-  Future<void> fetchItems(String despensaId) async {
+  Future<void> fetchItems({required String despensaId}) async {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {

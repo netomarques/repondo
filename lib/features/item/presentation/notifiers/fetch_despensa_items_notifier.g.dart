@@ -7,7 +7,7 @@ part of 'fetch_despensa_items_notifier.dart';
 // **************************************************************************
 
 String _$fetchDespensaItemsNotifierHash() =>
-    r'276ffcde4014ed2c82d677954bdbe4df4a6b3304';
+    r'604be2882e4708653255d3291001097d080da2ce';
 
 /// See also [FetchDespensaItemsNotifier].
 @ProviderFor(FetchDespensaItemsNotifier)

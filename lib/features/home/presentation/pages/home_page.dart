@@ -7,7 +7,9 @@ import 'package:repondo/features/auth/presentation/notifiers/email_auth_notifier
 import 'package:repondo/features/despensa/domain/entities/despensa.dart';
 import 'package:repondo/features/despensa/presentation/notifiers/fetch_despensa_notifier.dart';
 import 'package:repondo/features/despensa/presentation/router/despensa_route_locations.dart';
+import 'package:repondo/features/item/presentation/notifiers/fetch_despensa_items_notifier.dart';
 import 'package:repondo/features/item/presentation/router/item_route_locations.dart';
+import 'package:repondo/features/item/presentation/widgets/despensa_items_list.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   static HomePage builder(BuildContext context, GoRouterState state) =>
@@ -24,9 +26,12 @@ class _HomePageState extends ConsumerState<HomePage> {
   initState() {
     super.initState();
     Future.microtask(() {
-      ref.read(fetchDespensaNotifierProvider.notifier).fetchDespensa(
-            despensaId: 'CIqqhHFZNMS9rpQ0uVu4',
-          );
+      ref
+          .read(fetchDespensaNotifierProvider.notifier)
+          .fetchDespensa(despensaId: 'CIqqhHFZNMS9rpQ0uVu4');
+      ref
+          .read(fetchDespensaItemsNotifierProvider.notifier)
+          .fetchItems(despensaId: 'CIqqhHFZNMS9rpQ0uVu4');
     });
   }
 
@@ -35,7 +40,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     final userAsync = ref.watch(getCurrentEmailNotifierProvider);
     final notifier = ref.read(signOutEmailNotifierProvider.notifier);
     final despensaAsync = ref.watch(fetchDespensaNotifierProvider);
-    // final itemsAsync = ref.watch(fetchItemsNotifierProvider);
+    final itemsAsync = ref.watch(fetchDespensaItemsNotifierProvider);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -94,6 +99,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               user.email!,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
+          const Expanded(child: DespensaItemsList()),
         ],
       ),
     );
