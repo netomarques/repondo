@@ -111,4 +111,40 @@ class FirebaseItemRepository implements ItemRepository {
       };
     });
   }
+
+  @override
+  Future<Result<void, ItemException>> deleteItem({
+    required String despensaId,
+    required String itemId,
+  }) {
+    return runCatching(() async {
+      _logger
+          .info('Iniciando exclusão do item: $itemId da despensa: $despensaId');
+
+      final itemRef = _firestore
+          .collection(DespensaFirestoreKeys.collectionName)
+          .doc(despensaId)
+          .collection(ItemFirestoreKeys.collectionName)
+          .doc(itemId);
+
+      await itemRef.delete();
+
+      _logger
+          .info('Item excluído com sucesso: $itemId da despensa: $despensaId');
+    }, (error) {
+      _logger.error(
+        'Erro ao deletar item: $itemId da despensa: $despensaId',
+        error,
+        StackTrace.current,
+      );
+
+      return switch (error) {
+        ItemException itemException => itemException,
+        FirebaseException firebaseException => fromFirebaseItemExceptionMapper(
+            fromFirestoreExceptionMapper(firebaseException),
+          ),
+        _ => ItemUnknownException(code: 'unknown'),
+      };
+    });
+  }
 }

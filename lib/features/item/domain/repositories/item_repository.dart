@@ -10,4 +10,9 @@ abstract class ItemRepository {
   Future<Result<List<Item>, ItemException>> fetchDespensaItems({
     required String despensaId,
   });
+
+  Future<Result<void, ItemException>> deleteItem({
+    required String despensaId,
+    required String itemId,
+  });
 }

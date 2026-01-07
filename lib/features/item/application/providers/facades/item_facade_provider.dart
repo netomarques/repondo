@@ -9,9 +9,11 @@ part 'item_facade_provider.g.dart';
 ItemFacade itemFacade(Ref ref) {
   final createItemUseCase = ref.read(createItemUseCaseProvider);
   final fetchDespensaItemsUseCase = ref.read(fetchDespensaItemsUseCaseProvider);
+  final deleteItemUseCase = ref.read(deleteItemUseCaseProvider);
 
   return ItemFacade(
     createItemUseCase: createItemUseCase,
     fetchDespensaItemsUseCase: fetchDespensaItemsUseCase,
+    deleteItemUseCase: deleteItemUseCase,
   );
 }

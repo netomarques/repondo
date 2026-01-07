@@ -7,12 +7,15 @@ import 'package:repondo/features/item/domain/params/create_item_params.dart';
 class ItemFacade {
   final CreateItemUseCase _createItemUseCase;
   final FetchDespensaItemsUseCase _fetchDespensaItemsUseCase;
+  final DeleteItemUseCase _deleteItemUseCase;
 
   ItemFacade({
     required CreateItemUseCase createItemUseCase,
     required FetchDespensaItemsUseCase fetchDespensaItemsUseCase,
+    required DeleteItemUseCase deleteItemUseCase,
   })  : _createItemUseCase = createItemUseCase,
-        _fetchDespensaItemsUseCase = fetchDespensaItemsUseCase;
+        _fetchDespensaItemsUseCase = fetchDespensaItemsUseCase,
+        _deleteItemUseCase = deleteItemUseCase;
 
   Future<Result<Item, ItemException>> createItem({
     required CreateItemParams params,
@@ -24,4 +27,10 @@ class ItemFacade {
     required String despensaId,
   }) =>
       _fetchDespensaItemsUseCase.fetch(despensaId: despensaId);
+
+  Future<Result<void, ItemException>> deleteItem({
+    required String despensaId,
+    required String itemId,
+  }) =>
+      _deleteItemUseCase.execute(despensaId: despensaId, itemId: itemId);
 }
