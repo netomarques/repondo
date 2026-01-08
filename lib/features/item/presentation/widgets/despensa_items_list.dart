@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repondo/features/item/domain/entities/item.dart';
+import 'package:repondo/features/item/presentation/notifiers/delete_item_notifier.dart';
 import 'package:repondo/features/item/presentation/notifiers/fetch_despensa_items_notifier.dart';
 
 class DespensaItemsList extends ConsumerWidget {
@@ -38,22 +39,66 @@ class DespensaItemsList extends ConsumerWidget {
   }
 }
 
-class _ItemTile extends StatelessWidget {
+class _ItemTile extends ConsumerWidget {
   final Item item;
 
   const _ItemTile({required this.item});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
       title: Text(item.name),
       subtitle: Text(
         'Quantidade: ${item.quantity} ${item.unit}',
       ),
-      trailing: const Icon(Icons.chevron_right),
-      onTap: () {
-        // Futuro: navegar para detalhe do item
-      },
+      trailing: PopupMenuButton<String>(
+        onSelected: (value) async {
+          if (value == 'delete') {
+            await _confirmAndDelete(context, ref);
+          }
+        },
+        itemBuilder: (_) => const [
+          PopupMenuItem(
+            value: 'delete',
+            child: Text('Excluir'),
+          ),
+        ],
+      ),
     );
+  }
+
+  Future<void> _confirmAndDelete(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Excluir item'),
+        content: const Text('Deseja realmente excluir este item?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Excluir'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    await ref.read(deleteItemNotifierProvider.notifier).deleteItem(
+          despensaId: 'CIqqhHFZNMS9rpQ0uVu4', // ou provider global
+          itemId: item.id,
+        );
+
+    // Atualiza lista após delete
+    ref
+        .read(fetchDespensaItemsNotifierProvider.notifier)
+        .fetchItems(despensaId: 'CIqqhHFZNMS9rpQ0uVu4');
   }
 }

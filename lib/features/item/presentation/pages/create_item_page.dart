@@ -9,6 +9,7 @@ import 'package:repondo/features/item/domain/entities/item.dart';
 import 'package:repondo/features/item/domain/exceptions/item_exception.dart';
 import 'package:repondo/features/item/domain/params/create_item_params.dart';
 import 'package:repondo/features/item/presentation/notifiers/create_item_notifier.dart';
+import 'package:repondo/features/item/presentation/notifiers/fetch_despensa_items_notifier.dart';
 import 'package:repondo/features/item/presentation/widgets/create_item_form.dart';
 
 class CreateItemPage extends ConsumerStatefulWidget {
@@ -122,6 +123,10 @@ class _CreateItemPageState extends ConsumerState<CreateItemPage> {
     await ref
         .read(createItemNotifierProvider.notifier)
         .createItem(params, 'CIqqhHFZNMS9rpQ0uVu4');
+
+    ref
+        .read(fetchDespensaItemsNotifierProvider.notifier)
+        .fetchItems(despensaId: 'CIqqhHFZNMS9rpQ0uVu4');
   }
 
   @override
