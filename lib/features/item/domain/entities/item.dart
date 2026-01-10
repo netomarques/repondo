@@ -7,6 +7,8 @@ class Item extends Equatable {
   final String category;
   final String unit;
   final String addedBy;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
 
   const Item({
     required this.id,
@@ -15,8 +17,11 @@ class Item extends Equatable {
     required this.category,
     required this.unit,
     required this.addedBy,
+    required this.createdAt,
+    this.updatedAt,
   });
 
   @override
-  List<Object?> get props => [id, name, quantity, category, unit, addedBy];
+  List<Object?> get props =>
+      [id, name, quantity, category, unit, addedBy, createdAt, updatedAt];
 }

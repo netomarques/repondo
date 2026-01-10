@@ -15,4 +15,9 @@ abstract class ItemRepository {
     required String despensaId,
     required String itemId,
   });
+
+  Future<Result<Item, ItemException>> updateItem({
+    required UpdateItemParams params,
+    required String despensaId,
+  });
 }

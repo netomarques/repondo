@@ -21,6 +21,8 @@ mixin _$ItemModel {
   String get category;
   String get unit;
   String get addedBy;
+  DateTime? get createdAt;
+  DateTime? get updatedAt;
 
   /// Create a copy of ItemModel
   /// with the given fields replaced by the non-null parameter values.
@@ -41,16 +43,20 @@ mixin _$ItemModel {
             (identical(other.category, category) ||
                 other.category == category) &&
             (identical(other.unit, unit) || other.unit == unit) &&
-            (identical(other.addedBy, addedBy) || other.addedBy == addedBy));
+            (identical(other.addedBy, addedBy) || other.addedBy == addedBy) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, name, quantity, category, unit, addedBy);
+  int get hashCode => Object.hash(runtimeType, id, name, quantity, category,
+      unit, addedBy, createdAt, updatedAt);
 
   @override
   String toString() {
-    return 'ItemModel(id: $id, name: $name, quantity: $quantity, category: $category, unit: $unit, addedBy: $addedBy)';
+    return 'ItemModel(id: $id, name: $name, quantity: $quantity, category: $category, unit: $unit, addedBy: $addedBy, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 }
 
@@ -65,7 +71,9 @@ abstract mixin class $ItemModelCopyWith<$Res> {
       double quantity,
       String category,
       String unit,
-      String addedBy});
+      String addedBy,
+      DateTime? createdAt,
+      DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -86,6 +94,8 @@ class _$ItemModelCopyWithImpl<$Res> implements $ItemModelCopyWith<$Res> {
     Object? category = null,
     Object? unit = null,
     Object? addedBy = null,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_self.copyWith(
       id: freezed == id
@@ -112,6 +122,14 @@ class _$ItemModelCopyWithImpl<$Res> implements $ItemModelCopyWith<$Res> {
           ? _self.addedBy
           : addedBy // ignore: cast_nullable_to_non_nullable
               as String,
+      createdAt: freezed == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _self.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -125,7 +143,9 @@ class _ItemModel extends ItemModel {
       required this.quantity,
       required this.category,
       required this.unit,
-      required this.addedBy})
+      required this.addedBy,
+      this.createdAt,
+      this.updatedAt})
       : super._();
 
   @override
@@ -140,6 +160,10 @@ class _ItemModel extends ItemModel {
   final String unit;
   @override
   final String addedBy;
+  @override
+  final DateTime? createdAt;
+  @override
+  final DateTime? updatedAt;
 
   /// Create a copy of ItemModel
   /// with the given fields replaced by the non-null parameter values.
@@ -161,16 +185,20 @@ class _ItemModel extends ItemModel {
             (identical(other.category, category) ||
                 other.category == category) &&
             (identical(other.unit, unit) || other.unit == unit) &&
-            (identical(other.addedBy, addedBy) || other.addedBy == addedBy));
+            (identical(other.addedBy, addedBy) || other.addedBy == addedBy) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, name, quantity, category, unit, addedBy);
+  int get hashCode => Object.hash(runtimeType, id, name, quantity, category,
+      unit, addedBy, createdAt, updatedAt);
 
   @override
   String toString() {
-    return 'ItemModel(id: $id, name: $name, quantity: $quantity, category: $category, unit: $unit, addedBy: $addedBy)';
+    return 'ItemModel(id: $id, name: $name, quantity: $quantity, category: $category, unit: $unit, addedBy: $addedBy, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 }
 
@@ -188,7 +216,9 @@ abstract mixin class _$ItemModelCopyWith<$Res>
       double quantity,
       String category,
       String unit,
-      String addedBy});
+      String addedBy,
+      DateTime? createdAt,
+      DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -209,6 +239,8 @@ class __$ItemModelCopyWithImpl<$Res> implements _$ItemModelCopyWith<$Res> {
     Object? category = null,
     Object? unit = null,
     Object? addedBy = null,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_ItemModel(
       id: freezed == id
@@ -235,6 +267,14 @@ class __$ItemModelCopyWithImpl<$Res> implements _$ItemModelCopyWith<$Res> {
           ? _self.addedBy
           : addedBy // ignore: cast_nullable_to_non_nullable
               as String,
+      createdAt: freezed == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _self.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }

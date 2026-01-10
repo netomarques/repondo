@@ -8,5 +8,7 @@ class ItemFirestoreKeys {
   static const price = 'price';
   static const unit = 'unit';
   static const lastPurchasedAt = 'lastPurchasedAt';
+  static const createdAt = 'createdAt';
+  static const updatedAt = 'updatedAt';
   static const addedBy = 'addedBy';
 }

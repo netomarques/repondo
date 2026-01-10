@@ -17,20 +17,25 @@ abstract class ItemModel with _$ItemModel {
     required String category,
     required String unit,
     required String addedBy,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) = _ItemModel;
 
   factory ItemModel.fromMap(Map<String, dynamic> map, String documentId) {
     return ItemModel(
-      id: documentId,
-      name: FirestoreMapper.getRequired<String>(map, ItemFirestoreKeys.name),
-      quantity:
-          FirestoreMapper.getRequired<double>(map, ItemFirestoreKeys.quantity),
-      category:
-          FirestoreMapper.getRequired<String>(map, ItemFirestoreKeys.category),
-      unit: FirestoreMapper.getRequired<String>(map, ItemFirestoreKeys.unit),
-      addedBy:
-          FirestoreMapper.getRequired<String>(map, ItemFirestoreKeys.addedBy),
-    );
+        id: documentId,
+        name: FirestoreMapper.getRequired<String>(map, ItemFirestoreKeys.name),
+        quantity: FirestoreMapper.getRequired<double>(
+            map, ItemFirestoreKeys.quantity),
+        category: FirestoreMapper.getRequired<String>(
+            map, ItemFirestoreKeys.category),
+        unit: FirestoreMapper.getRequired<String>(map, ItemFirestoreKeys.unit),
+        addedBy:
+            FirestoreMapper.getRequired<String>(map, ItemFirestoreKeys.addedBy),
+        createdAt: FirestoreMapper.getRequiredDateTime(
+            map, ItemFirestoreKeys.createdAt),
+        updatedAt: FirestoreMapper.getOptionalDateTime(
+            map, ItemFirestoreKeys.updatedAt));
   }
 
   Map<String, dynamic> toMap() {
@@ -51,6 +56,8 @@ abstract class ItemModel with _$ItemModel {
       category: category,
       unit: unit,
       addedBy: addedBy,
+      createdAt: createdAt!,
+      updatedAt: updatedAt,
     );
   }
 
