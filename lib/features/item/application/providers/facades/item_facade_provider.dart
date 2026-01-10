@@ -10,10 +10,12 @@ ItemFacade itemFacade(Ref ref) {
   final createItemUseCase = ref.read(createItemUseCaseProvider);
   final fetchDespensaItemsUseCase = ref.read(fetchDespensaItemsUseCaseProvider);
   final deleteItemUseCase = ref.read(deleteItemUseCaseProvider);
+  final updateItemUseCase = ref.read(updateItemUseCaseProvider);
 
   return ItemFacade(
     createItemUseCase: createItemUseCase,
     fetchDespensaItemsUseCase: fetchDespensaItemsUseCase,
     deleteItemUseCase: deleteItemUseCase,
+    updateItemUseCase: updateItemUseCase,
   );
 }
