@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:repondo/features/item/domain/entities/item.dart';
 import 'package:repondo/features/item/presentation/notifiers/delete_item_notifier.dart';
 import 'package:repondo/features/item/presentation/notifiers/fetch_despensa_items_notifier.dart';
+import 'package:repondo/features/item/presentation/router/item_route_locations.dart';
 
 class DespensaItemsList extends ConsumerWidget {
   const DespensaItemsList({super.key});
@@ -53,11 +55,22 @@ class _ItemTile extends ConsumerWidget {
       ),
       trailing: PopupMenuButton<String>(
         onSelected: (value) async {
+          if (value == 'edit') {
+            context.pushNamed(
+              ItemRouteLocations.itemUpdateName,
+              extra: item,
+            );
+          }
+
           if (value == 'delete') {
             await _confirmAndDelete(context, ref);
           }
         },
         itemBuilder: (_) => const [
+          PopupMenuItem(
+            value: 'edit',
+            child: Text('Editar'),
+          ),
           PopupMenuItem(
             value: 'delete',
             child: Text('Excluir'),
